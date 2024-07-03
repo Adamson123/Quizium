@@ -1,0 +1,94 @@
+@font-face {
+  font-family: agbalumo;
+  src: url(../fonts/Agbalumo-Regular.ttf);
+}
+
+@font-face {
+  font-family: isidoraBold;
+  src: url(../fonts/IsidoraSansAltBold.otf);
+}
+@font-face {
+  font-family: isidoraSemiBold;
+  src: url(../fonts/IsidoraSansAltSemiBold.otf);
+}
+@font-face {
+  font-family: isidoraReg;
+  src: url(../fonts/IsidoraSansAltRegular.otf);
+}
+@font-face {
+  font-family: robotoc;
+  src: url("../fonts/RobotoCondensed-Regular.ttf");
+}
+@font-face {
+  font-family: isidoraLight;
+  src: url(../fonts/IsidoraSansAltLight.otf);
+}
+
+@font-face {
+  font-family: circularSpo;
+  src: url(../fonts/CircularSpotifyTxT-Light.ttf);
+}
+.robotoc {
+  font-family: robotoc;
+}
+
+.agbalumoFont {
+  font-family: agbalumo;
+}
+.isidoraBold {
+  font-family: isidoraBold;
+}
+.isidoraSemiBold {
+  font-family: isidoraSemiBold;
+}
+.isidoraReg {
+  font-family: isidoraReg;
+}
+.isidoraLight {
+  font-family: isidoraLight;
+}
+
+.insetShadow {
+  box-shadow: inset 0px -5px 0px rgba(0, 0, 0, 0.3);
+}
+.insetShadowTwo {
+  box-shadow: inset 0px -3px 0px rgba(0, 0, 0, 0.3);
+}
+.adora {
+  font-family: adora;
+}
+.circularSpo {
+  font-family: circularSpo;
+}
+
+.clicked:hover {
+  scale: 0.9;
+}
+
+.clicked {
+  transition: "scale 0.2s";
+}
+
+.dark {
+  --mainBg: 10, 8, 45;
+  --text-color: 255, 255, 255;
+  --shinyPurple: 249, 0, 158;
+  --light-gray: 94, 98, 99;
+  --gray-one: 46, 55, 86;
+  --gray-two: 125, 124, 124;
+  --gray-third: 156, 163, 175;
+  --gray-fourth: 60, 64, 65;
+  --placeholder: 255, 255, 255, 0.45;
+}
+
+.light {
+  --mainBg: 255, 255, 255;
+  --text-color: 0, 0, 0;
+  --shinyPurple: 249, 0, 158;
+  --light-gray: 94, 98, 99;
+  --gray-one: 200, 200, 200;
+  --gray-two: 155, 124, 124;
+  --gray-third: 156, 163, 175;
+  --gray-fourth: 60, 164, 65;
+  --placeholder: 0, 0, 0, 0.45;
+}

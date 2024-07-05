@@ -8,7 +8,6 @@ export const getInfoAtStart = (
 ) => {
   if (!logIt) {
     req.data = req.body;
-    console.log(req.data);
   }
   req.endpoint = req.path;
   req.requestTime = performance.now();
@@ -30,7 +29,7 @@ export const tableLog = async (
         status: res.statusCode,
         IPAddress: req.ip,
         responseTime: endTime - req.requestTime,
-        body: req.data,
+      
       });
       logIt = false;
     });

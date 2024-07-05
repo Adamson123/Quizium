@@ -1,10 +1,10 @@
 import { useQuery } from "react-query";
 
-const patchOptions = (info, head) => {
+const patchOptions = (info, head, method) => {
   const isFormData = info instanceof FormData;
 
   const options = {
-    method: "PATCH",
+    method: method ? method : "PATCH",
     credentials: "include",
     headers: {
       "Content-Type": head,
@@ -30,6 +30,7 @@ export const getUserFunc = () => {
     if (!res.ok) throw new Error("error signing up");
     const data = await res.json();
 
+    //console.log(data);
     return data;
   };
 
@@ -41,6 +42,40 @@ export const getUserFunc = () => {
 
   return { data, isLoading, error, isSuccess, refetch };
 };
+
+
+
+export const getProfilePicFunc = (info) => {
+  const getProfilePic = async () => {
+    try {
+      const res = await fetch(`/api/user/image`, patchOptions(info, "","GET"));
+      //const res = await axios.post(`http://localhost:3002/api/auth/signup`, info);
+
+      if (!res.ok) throw new Error("error getting pic");
+
+      let data = await res.blob();
+      data = URL.createObjectURL(data);
+    //  console.log(data);
+      return data;
+    } catch (error) {
+      console.log("error fr crt", error);
+    }
+  };
+
+  const { data: image, isLoading, error, isSuccess, refetch:refecthImage } =  useQuery({
+    queryFn: getProfilePic,
+    queryKey: ["image"],
+    retry: false,
+  });
+
+  
+
+  return { image, isLoading, error, isSuccess, refecthImage };
+};
+
+
+
+
 
 export const updatePersonalInfoFunc = async (info) => {
   try {
@@ -54,6 +89,8 @@ export const updatePersonalInfoFunc = async (info) => {
     console.log("error fr crt", error);
   }
 };
+
+
 
 
 

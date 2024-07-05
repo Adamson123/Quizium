@@ -3,17 +3,21 @@ import Grid from "gridfs-stream";
 import { GridFsStorage } from "multer-gridfs-storage";
 import multer from "multer";
 
-
-
 const conn = mongoose.connection;
-let gfs;
-
+export let gfs;
+export let gridfsBucket;
 export const connectToGridFs = async () => {
   try {
     conn.once("open", () => {
       gfs = Grid(conn.db, mongoose.mongo);
       gfs.collection("images");
+
+      gridfsBucket = new mongoose.mongo.GridFSBucket(conn.db, {
+        bucketName: "images",
+      });
       console.log("GridFS is connected and ready to use");
+
+      //console.log("gfs",gfs);
     });
   } catch (err) {
     console.error("Error connecting to GridFS DB", err);
@@ -27,14 +31,22 @@ conn.on("error", (err) => {
 const storage = new GridFsStorage({
   url: process.env.MONGO_URI,
   file: (req, file) => {
-    return new Promise((resolve, reject) => {
-      const _id = new mongoose.Types.ObjectId();
+    return new Promise(async (resolve, reject) => {
+      const isExist = await gfs.files.find({ filename: req.userId }).toArray();
+
+      //checking if file already exist
+      if (isExist.length > 0) {
+        //true delete file
+        console.log("file on delete");
+        isExist.forEach((f) => {
+          console.log(f._id);
+          gridfsBucket.delete(f._id);
+        });
+      }
+
       const fileInfo = {
-        filename: file.originalname,
+        filename: req.userId || file.filename,
         bucketName: "images",
-        userId: "req",
-        metadata: _id,
-        _id
       };
 
       resolve(fileInfo);

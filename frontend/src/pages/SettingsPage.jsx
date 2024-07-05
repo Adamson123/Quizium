@@ -1,60 +1,74 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SettingInputComp from "../components/SettingInputComp";
 import {
+  getProfilePicFunc,
   getUserFunc,
   updatePasswordFunc,
   updatePersonalInfoFunc,
 } from "../api/UserApi";
 import { toast } from "react-hot-toast";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 
 const SettingsPage = () => {
   const { data, refetch } = getUserFunc();
   const { email, name } = data;
 
+  const { image, refecthImage } = getProfilePicFunc();
   const { mutateAsync: updatePersonalData } = useMutation(
     updatePersonalInfoFunc
   );
 
   const { mutateAsync: updatePassword } = useMutation(updatePasswordFunc);
 
-  const [personalInput, setPersonalInput] = useState({ name, email, file: "" });
+  //declaring profile image value globally
+  const [profileImage, setProfileImage] = useState("");
+
+  const [imagePicked, setImagePicked] = useState("");
+
+  //value for email and name
+  const [personalInput, setPersonalInput] = useState({ name, file: "" });
+  //value for password new-passsword and confirm-password
   const [passwordInput, setPasswordInput] = useState({
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
   });
 
-  const [image, setimage] = useState("");
+  useEffect(() => {
+    setProfileImage((p) => (p = image));
+  }, [image]);
 
-  const handlePersonalInfoSubmit = async (
-    event
-  ) => {
+  //choosing and setting picked image
+  const chooseImage = (event) => {
+    const selectedImage = event.target.files[0];
+
+    setImagePicked((i) => (i = selectedImage));
+    setProfileImage((p) => (p = URL.createObjectURL(selectedImage)));
+  };
+
+  //submit image and name update
+  const handlePersonalInfoSubmit = async (event) => {
     event.preventDefault();
-    
+    if (name !== personalInput.name || imagePicked) {
+      const formdata = new FormData();
+      formdata.append("file", imagePicked);
+      formdata.append("name", personalInput.name);
 
-    const formdata = new FormData();
-    formdata.append("file", image);
-    formdata.append("name",  personalInput.name );
-
-    const personalDataUpdRes = await updatePersonalData(formdata);
-    const err = personalDataUpdRes.err;
-    if (err) {
-      toast.error(err);
-    } else {
-      refetch();
-      toast.success(personalDataUpdRes.msg);
+      const personalDataUpdRes = await updatePersonalData(formdata);
+      const err = personalDataUpdRes.err;
+      if (err) {
+        toast.error(err);
+      } else {
+        refetch();
+        refecthImage();
+        toast.success(personalDataUpdRes.msg);
+      }
+      setImagePicked("");
     }
   };
 
-  const chooseImage = (event) => {
-    setimage(event.target.files[0]);
-    console.log(event.target.value, image);
-  };
 
-  const handlePasswordSubmit = async (
-    event
-  ) => {
+  const handlePasswordSubmit = async (event) => {
     event.preventDefault();
 
     const passwordUpdRes = await updatePassword(passwordInput);
@@ -66,6 +80,8 @@ const SettingsPage = () => {
       toast.success(passwordUpdRes.msg);
     }
   };
+
+
   return (
     <div
       className="pt-16 bg-mainBg min-h-screen flex 
@@ -73,7 +89,7 @@ const SettingsPage = () => {
     >
       <div
         className="flex flex-col items-center 
-        w-full max-w-[450px] p-4  text-textColor "
+        w-full max-w-[500px] p-4  text-textColor "
       >
         <h2
           className="text-3xl text-center 
@@ -89,15 +105,29 @@ const SettingsPage = () => {
           <form
             onSubmit={handlePersonalInfoSubmit}
             className="mt-3 text-[13px]"
-            encType="multipart/form-data"
           >
             <div className="border-[2px] border-grayTwo rounded">
               <div className="flex flex-col  p-3 pb-5 border-b-[2px]  border-grayTwo ">
-                <input
-                  type="file"
-                  onChange={chooseImage}
-                  className="cursor-pointer"
-                />
+                <div className="profileImg w-[100px] h-[100px] relative mb-5">
+                  <img
+                    src={profileImage}
+                    alt="your profile image"
+                    className="w-full h-full rounded-full border object-cover"
+                  />
+
+                  <input
+                    type="file"
+                    onChange={chooseImage}
+                    className="cursor-pointer absolute bottom-0 right-0 w-6 rounded-full"
+                  />
+                  <span
+                    className="h-[33px] w-[33px] rounded-full 
+                  bg-shinyPurple insetShadow absolute bottom-[-2px] right-[-2px]
+                   pointer-events-none flex items-center
+                   justify-center cursor-pointer text-[15px] bi-camera"
+                  ></span>
+                </div>
+
                 {/* Username input */}
 
                 <SettingInputComp
@@ -105,7 +135,7 @@ const SettingsPage = () => {
                   setInput={setPersonalInput}
                   type="text"
                   name="name"
-                  maxLength={15}
+                  maxLength={17}
                   minLength={2}
                 />
               </div>
@@ -113,8 +143,7 @@ const SettingsPage = () => {
                 {/* Email input */}
 
                 <SettingInputComp
-                  input={personalInput.email}
-                  setInput={setPersonalInput}
+                  input={email}
                   type="email"
                   name="email"
                   disabled
@@ -126,8 +155,12 @@ const SettingsPage = () => {
               style={{
                 transition: "transform 0.2s",
               }}
-              className="hover:scale-[0.9] w-full rounded-[3px] mt-3 
-              p-3 bg-shinyPurple font-bold insetShadow"
+              className={`w-full rounded-[3px] mt-3 
+              p-3 ${
+                imagePicked || personalInput.name !== name
+                  ? "bg-shinyPurple hover:scale-[0.9]"
+                  : "bg-gray-400"
+              }  font-bold insetShadow`}
             >
               Save changes
             </button>

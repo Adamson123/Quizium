@@ -1,15 +1,15 @@
 import { useNavigate } from "react-router-dom";
-import { getUserFunc } from "../api/UserApi";
+import { getProfilePicFunc, getUserFunc } from "../api/UserApi";
 import { logoutUserFunc } from "../api/AuthUserApi";
 
 import { useMutation } from "react-query";
-
-
 
 const NavMenu = ({ show, setShow }) => {
   const { mutateAsync: logoutUser, data: logoutRes } =
     useMutation(logoutUserFunc);
   const { data } = getUserFunc();
+  const { name } = data;
+  const { image } = getProfilePicFunc();
   const navigate = useNavigate();
 
   const handleLogoutUser = async () => {
@@ -21,11 +21,11 @@ const NavMenu = ({ show, setShow }) => {
 
   return (
     <>
-      {/* close NavMenu  */}
+      {/* close NavMenu and transparent background */}
       <div
         onClick={() => setShow((o) => (o = !o))}
         className={`fixed right-0 left-0 top-0 bottom-0
-      ${show ? "visible" : "hidden"}  bg-[rgba(0,0,0,0.59)] md:hidden`}
+      ${show ? "visible" : "hidden"}  bg-[rgba(0,0,0,0.59)] z-4 md:hidden`}
       ></div>
 
       {/* NavMenu */}
@@ -33,14 +33,13 @@ const NavMenu = ({ show, setShow }) => {
         style={{
           transition: "width 0.3s ease-in-out",
         }}
-        className={`fixed py-4 left-0 top-0 bottom-0 
-    ${
-      show ? "w-[180px]" : "w-0"
-    } agbalumo overflow-hidden md:w-[180px] bg-mainBg`}
-      >
+        className ={`fixed z-20 py-4 left-0 top-0 bottom-0 
+        ${show ? "w-[180px]" : "w-0"} 
+        agbalumo overflow-hidden md:w-[180px] bg-mainBg`}
+          >
         <div
           className="h-full w-full flex flex-col 
-        px-3 md:border-r border-grayOne"
+        px-3 md:border-r border-grayOne "
         >
           {/* logo and profile container */}
           <div
@@ -55,10 +54,22 @@ const NavMenu = ({ show, setShow }) => {
             </h1>
 
             {/* name display and profile link */}
-            <div className="flex items-end  mt-12 cursor-pointer box-border gap-[0.5px] justify-start">
-              <span className="bi-person  mb-[2px] text-[16px] text-textColor"></span>
-              <span className="circularSpo break-words text-[16px] tracking-tighter text-textColor">
-                {data.name}
+            <div
+              className="flex items-center  mt-12 cursor-pointer 
+              box-border gap-[0.5px] justify-start"
+            >
+              <span
+                className="overflow-hidden mb-[5px] text-[16px] 
+              border rounded-full text-textColor h-[30px] min-w-[30px] mr-1"
+              >
+                <img
+                  src={image}
+                  alt="profile image"
+                  className="w-full h-full object-cover"
+                />
+              </span>
+              <span className="circularSpo text-[15px] tracking-tighter text-textColor">
+                {name}
               </span>
             </div>
           </div>
@@ -66,7 +77,7 @@ const NavMenu = ({ show, setShow }) => {
           {/* Nav links */}
           <div
             className="flex flex-col text-nowrap justify-between
-           h-44 text-textColor isidoraSemiBold mt-4 "
+           h-48 text-textColor isidoraSemiBold mt-4"
           >
             <div
               onClick={() => {

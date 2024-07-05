@@ -65,14 +65,19 @@
   scale: 0.9;
 }
 
-.clicked {
-  transition: "scale 0.2s";
+.hideScroll::-webkit-scrollbar {
+  display: none;
+}
+.hideScroll {
+  scrollbar-width: none;
+  /* -ms-overflow-style: none; */
 }
 
 .dark {
   --mainBg: 10, 8, 45;
   --text-color: 255, 255, 255;
-  --shinyPurple: 249, 0, 158;
+  --shiny-purple: 249, 0, 158;
+  --blurry-purple: 249, 0, 158, 0.3;
   --light-gray: 94, 98, 99;
   --gray-one: 46, 55, 86;
   --gray-two: 125, 124, 124;
@@ -84,7 +89,8 @@
 .light {
   --mainBg: 255, 255, 255;
   --text-color: 0, 0, 0;
-  --shinyPurple: 249, 0, 158;
+  --shiny-purple: 249, 0, 158;
+  --blurry-purple: 249, 0, 158, 0.3;
   --light-gray: 94, 98, 99;
   --gray-one: 200, 200, 200;
   --gray-two: 155, 124, 124;

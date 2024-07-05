@@ -3,9 +3,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { loginUserFunc } from "../api/AuthUserApi";
 import { toast } from "react-hot-toast";
 import { useMutation } from "react-query";
+
 const LoginPage = () => {
   const [info, setInfo] = useState({ email: "", password: "" });
   const [show, setShow] = useState(false);
+
   const { mutateAsync: loginUser } = useMutation(loginUserFunc);
   const navigate = useNavigate();
   const handleInfo = (event) => {
@@ -83,8 +85,11 @@ const LoginPage = () => {
           <div className="mt-[18px] text-center">
             <button
               type="submit"
+              style={{
+                transition: "transform 0.2s",
+              }}
               className="isidoraBold p-2 w-[300px] h-[50px] rounded-[5px]
-             bg-shinyPurple  outline-none text-[20px] insetShadow clicked"
+             bg-shinyPurple  outline-none text-[20px] insetShadow hover:scale-[0.9]"
             >
               LOGIN
             </button>

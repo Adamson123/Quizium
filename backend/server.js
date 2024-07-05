@@ -43,7 +43,7 @@ app.use(errorMiddleware);
 const start = async () => {
   try {
     connectToDB();
-    connectToGridFs();
+   connectToGridFs();
     app.listen(3002, () => {
       console.log("Quizium server is on!!! ./backend/server");
     });

@@ -1,3 +1,5 @@
+import daisyui from 'daisyui';
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -16,7 +18,8 @@ export default {
       colors: {
         mainBg: "rgb(var(--mainBg))",
         textColor:"rgb(var(--text-color))",
-        shinyPurple: "rgb(var(--shinyPurple))",
+        shinyPurple: "rgb(var(--shiny-purple))",
+        blurryPurple: "rgba(var(--blurry-purple))",
         lightGray: " rgb(var(--light-gray))",
         grayOne: "rgb(var(--gray-one))",
         grayTwo: "rgb(var(--gray-two))",
@@ -29,4 +32,7 @@ export default {
   plugins: [
     require("daisyui")
   ],
+  daisyui:{
+    themes:["synthwave"]
+  }
 };

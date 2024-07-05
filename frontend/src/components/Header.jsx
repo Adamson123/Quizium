@@ -6,7 +6,7 @@ const Header = () => {
   return (
     <>
       <div
-        className="bg-mainBg px-3 pb-2 pt-[17px] fixed left-0 
+        className="bg-mainBg z-10 px-3 pb-2 pt-[17px] fixed left-0 
       right-0 top-0 md:left-[180px] "
       >
         <div

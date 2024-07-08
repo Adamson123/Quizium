@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { getProfilePicFunc, getUserFunc } from "../api/UserApi";
 import { logoutUserFunc } from "../api/AuthUserApi";
 
@@ -80,9 +80,10 @@ const NavMenu = ({ show, setShow }) => {
            h-48 text-textColor isidoraSemiBold mt-4"
           >
             <div
+             to='/'
               onClick={() => {
                 setShow((s) => (s = false));
-                navigate("/");
+               navigate("/");
               }}
               className="cursor-pointer hover:text-shinyPurple"
             >
@@ -94,9 +95,10 @@ const NavMenu = ({ show, setShow }) => {
               <span>Your Libary</span>
             </div>
             <div
+            // to="/setting"
               onClick={() => {
                 setShow((s) => (s = false));
-                navigate("/settings");
+               navigate("/settings");
               }}
               className="cursor-pointer hover:text-shinyPurple"
             >

@@ -13,5 +13,8 @@ export const router = express.Router();
 
 router.get("/", jwtCheckAndVerify, getUser);
 router.get("/image",jwtCheckAndVerify,getProfileImg)
+router.get("/upload",upload.single("file"),(req,res)=>{
+    res.json({msg:"uploaded"})
+})
 router.patch("/personal", jwtCheckAndVerify, upload.single("file"), updatePersonalInfo);
 router.patch("/password", jwtCheckAndVerify, updatePassword);

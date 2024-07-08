@@ -13,7 +13,7 @@ const SettingsPage = () => {
   const { data, refetch } = getUserFunc();
   const { email, name } = data;
 
-  const { image, refecthImage } = getProfilePicFunc();
+  const { image, refecthImage, isLoading: imageLoading } = getProfilePicFunc();
   const { mutateAsync: updatePersonalData } = useMutation(
     updatePersonalInfoFunc
   );
@@ -67,7 +67,6 @@ const SettingsPage = () => {
     }
   };
 
-
   const handlePasswordSubmit = async (event) => {
     event.preventDefault();
 
@@ -80,7 +79,6 @@ const SettingsPage = () => {
       toast.success(passwordUpdRes.msg);
     }
   };
-
 
   return (
     <div
@@ -109,12 +107,15 @@ const SettingsPage = () => {
             <div className="border-[2px] border-grayTwo rounded">
               <div className="flex flex-col  p-3 pb-5 border-b-[2px]  border-grayTwo ">
                 <div className="profileImg w-[100px] h-[100px] relative mb-5">
-                  <img
-                    src={profileImage}
-                    alt="your profile image"
-                    className="w-full h-full rounded-full border object-cover"
-                  />
-
+                  {imageLoading ? (
+                    <div className="skeleton w-full h-full rounded-full"></div>
+                  ) : (
+                    <img
+                      src={profileImage}
+                      alt="your profile image"
+                      className="w-full h-full rounded-full border object-cover"
+                    />
+                  )}
                   <input
                     type="file"
                     onChange={chooseImage}

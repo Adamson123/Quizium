@@ -17,9 +17,12 @@ export const getUser = async (req, res) => {
 
 export const getProfileImg = async (req, res) => {
   const { userId } = req;
-  const file = await gfs.files.findOne({ filename: userId });
+  let file = await gfs.files.findOne({ filename: userId });
+  //if user profile related to the user was not found switch to default user profile image
+  if (!file) {
+    file = await gfs.files.findOne({ filename: "newUser" });
+  }
 
-  console.log(userId);
   const readStream = gridfsBucket.openDownloadStream(file._id);
 
   readStream.pipe(res);

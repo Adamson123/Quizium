@@ -32,7 +32,6 @@ app.use(tableLog);
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 
-
 app.get("/", (req, res) => {
   res.send("welcome to EduFrenzy server🎉");
 });
@@ -43,7 +42,7 @@ app.use(errorMiddleware);
 const start = async () => {
   try {
     connectToDB();
-   connectToGridFs();
+    connectToGridFs();
     app.listen(3002, () => {
       console.log("Quizium server is on!!! ./backend/server");
     });

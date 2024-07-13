@@ -1,0 +1,43 @@
+ const [quizCover, setQuizCover] = useState([]);
+    const [skip, setSkip] = useState(0);
+
+    const skipRef = useRef(0);
+    const { data, refetch, isLoading } = getQiuzCoverFunc(skip, 6);
+    const quizChef = useRef();
+
+    useEffect(() => {
+        if (skip === 0) {
+            setQuizCover((q) => (q = data));
+        }
+    }, [data]);
+
+    const isLastQuizOnView = () => {
+        console.log(skipRef.current);
+        if (
+            quizChef.current.scrollLeft + quizChef.current.clientWidth >=
+                quizChef.current.scrollWidth - 150 &&
+            skipRef.current < 4
+        ) {
+            skipRef.current += 4;
+            setSkip((s) => (s = skipRef.current));
+        }
+    };
+
+    useEffect(() => {
+        if (skip > 0) {
+            refetch();
+
+            if (data !== quizCover) {
+                const quizCover_2 = [...quizCover, ...data];
+                setQuizCover((q) => (q = quizCover_2));
+            }
+        }
+    }, [skip, data]);
+
+    useEffect(() => {
+        window.addEventListener("resize", isLastQuizOnView);
+
+        return () => {
+            window.removeEventListener("resize", isLastQuizOnView);
+        };
+    }, []);

@@ -1,100 +1,101 @@
 @font-face {
-  font-family: agbalumo;
-  src: url(../fonts/Agbalumo-Regular.ttf);
+    font-family: agbalumo;
+    src: url(../fonts/Agbalumo-Regular.ttf);
 }
 
 @font-face {
-  font-family: isidoraBold;
-  src: url(../fonts/IsidoraSansAltBold.otf);
+    font-family: isidoraBold;
+    src: url(../fonts/IsidoraSansAltBold.otf);
 }
 @font-face {
-  font-family: isidoraSemiBold;
-  src: url(../fonts/IsidoraSansAltSemiBold.otf);
+    font-family: isidoraSemiBold;
+    src: url(../fonts/IsidoraSansAltSemiBold.otf);
 }
 @font-face {
-  font-family: isidoraReg;
-  src: url(../fonts/IsidoraSansAltRegular.otf);
+    font-family: isidoraReg;
+    src: url(../fonts/IsidoraSansAltRegular.otf);
 }
 @font-face {
-  font-family: robotoc;
-  src: url("../fonts/RobotoCondensed-Regular.ttf");
+    font-family: robotoc;
+    src: url("../fonts/RobotoCondensed-Regular.ttf");
 }
 @font-face {
-  font-family: isidoraLight;
-  src: url(../fonts/IsidoraSansAltLight.otf);
+    font-family: isidoraLight;
+    src: url(../fonts/IsidoraSansAltLight.otf);
 }
 
 @font-face {
-  font-family: circularSpo;
-  src: url(../fonts/CircularSpotifyTxT-Light.ttf);
+    font-family: circularSpo;
+    src: url(../fonts/CircularSpotifyTxT-Light.ttf);
 }
 .robotoc {
-  font-family: robotoc;
+    font-family: robotoc;
 }
 
 .agbalumoFont {
-  font-family: agbalumo;
+    font-family: agbalumo;
 }
 .isidoraBold {
-  font-family: isidoraBold;
+    font-family: isidoraBold;
 }
 .isidoraSemiBold {
-  font-family: isidoraSemiBold;
+    font-family: isidoraSemiBold;
 }
 .isidoraReg {
-  font-family: isidoraReg;
+    font-family: isidoraReg;
 }
 .isidoraLight {
-  font-family: isidoraLight;
+    font-family: isidoraLight;
 }
 
 .insetShadow {
-  box-shadow: inset 0px -5px 0px rgba(0, 0, 0, 0.3);
+    box-shadow: inset 0px -5px 0px rgba(0, 0, 0, 0.3);
 }
 .insetShadowTwo {
-  box-shadow: inset 0px -3px 0px rgba(0, 0, 0, 0.3);
+    box-shadow: inset 0px -3px 0px rgba(0, 0, 0, 0.3);
 }
 .adora {
-  font-family: adora;
+    font-family: adora;
 }
 .circularSpo {
-  font-family: circularSpo;
+    font-family: circularSpo;
 }
 
 .clicked:hover {
-  scale: 0.9;
+    scale: 0.9;
 }
-
-.hideScroll::-webkit-scrollbar {
-  display: none;
+body::-webkit-scrollbar-track:horizontal {
+    border-radius: 2px;
+    background: red;
 }
-.hideScroll {
-  scrollbar-width: none;
-  /* -ms-overflow-style: none; */
+body::-webkit-scrollbar-thumb:horizontal {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background: red;
+    border-radius: 2px;
 }
 
 .dark {
-  --mainBg: 10, 8, 45;
-  --text-color: 255, 255, 255;
-  --shiny-purple: 249, 0, 158;
-  --blurry-purple: 249, 0, 158, 0.3;
-  --light-gray: 94, 98, 99;
-  --gray-one: 46, 55, 86;
-  --gray-two: 125, 124, 124;
-  --gray-third: 156, 163, 175;
-  --gray-fourth: 60, 64, 65;
-  --placeholder: 255, 255, 255, 0.45;
+    --mainBg: 10, 8, 45;
+    --text-color: 255, 255, 255;
+    --shiny-purple: 249, 0, 158;
+    --blurry-purple: 249, 0, 158, 0.3;
+    --light-gray: 94, 98, 99;
+    --gray-one: 46, 55, 86;
+    --gray-two: 125, 124, 124;
+    --gray-third: 156, 163, 175;
+    --gray-fourth: 60, 64, 65;
+    --placeholder: 255, 255, 255, 0.45;
 }
 
 .light {
-  --mainBg: 255, 255, 255;
-  --text-color: 0, 0, 0;
-  --shiny-purple: 249, 0, 158;
-  --blurry-purple: 249, 0, 158, 0.3;
-  --light-gray: 94, 98, 99;
-  --gray-one: 200, 200, 200;
-  --gray-two: 155, 124, 124;
-  --gray-third: 156, 163, 175;
-  --gray-fourth: 60, 164, 65;
-  --placeholder: 0, 0, 0, 0.45;
+    --mainBg: 255, 255, 255;
+    --text-color: 0, 0, 0;
+    --shiny-purple: 249, 0, 158;
+    --blurry-purple: 249, 0, 158, 0.3;
+    --light-gray: 94, 98, 99;
+    --gray-one: 200, 200, 200;
+    --gray-two: 155, 124, 124;
+    --gray-third: 156, 163, 175;
+    --gray-fourth: 60, 164, 65;
+    --placeholder: 0, 0, 0, 0.45;
 }

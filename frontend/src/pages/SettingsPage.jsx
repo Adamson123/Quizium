@@ -1,227 +1,235 @@
-import { useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import SettingInputComp from "../components/SettingInputComp";
-import {
-  getProfilePicFunc,
-  getUserFunc,
-  updatePasswordFunc,
-  updatePersonalInfoFunc,
-} from "../api/UserApi";
+import { updatePasswordFunc, updatePersonalInfoFunc } from "../api/UserApi";
 import { toast } from "react-hot-toast";
-import { useMutation, useQuery } from "react-query";
+import { useMutation } from "react-query";
+import { dataContext } from "../layouts/layout";
 
 const SettingsPage = () => {
-  const { data, refetch } = getUserFunc();
-  const { email, name } = data;
+    //user info coming from layout component
+    const { refetch, profileImage, setProfileImage, email, name, isLoading } =
+        useContext(dataContext);
 
-  const { image, refecthImage, isLoading: imageLoading } = getProfilePicFunc();
-  const { mutateAsync: updatePersonalData } = useMutation(
-    updatePersonalInfoFunc
-  );
+    //function for updating personal info (profile image and username)
+    const { mutateAsync: updatePersonalData } = useMutation(
+        updatePersonalInfoFunc
+    );
 
-  const { mutateAsync: updatePassword } = useMutation(updatePasswordFunc);
+    //function for updating user password
+    const { mutateAsync: updatePassword } = useMutation(updatePasswordFunc);
 
-  //declaring profile image value globally
-  const [profileImage, setProfileImage] = useState("");
+    //declaring profile image value globally
+    const [profileImage_2, setProfileImage_2] = useState(profileImage);
 
-  const [imagePicked, setImagePicked] = useState("");
+    //image picked from the user
+    const [imagePicked, setImagePicked] = useState("");
 
-  //value for email and name
-  const [personalInput, setPersonalInput] = useState({ name, file: "" });
-  //value for password new-passsword and confirm-password
-  const [passwordInput, setPasswordInput] = useState({
-    currentPassword: "",
-    newPassword: "",
-    confirmPassword: "",
-  });
+    //value for email and name when inputing
+    const [personalInput, setPersonalInput] = useState({ name });
+    //value for password new-passsword and confirm-password
+    const [passwordInput, setPasswordInput] = useState({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+    });
 
-  useEffect(() => {
-    setProfileImage((p) => (p = image));
-  }, [image]);
+    //function for setting image picked by the user
+    const chooseImage = (event) => {
+        const selectedImage = event.target.files[0];
+        setImagePicked((i) => (i = selectedImage));
+        //just to display the image the user is about pick
+        setProfileImage_2((p) => (p = URL.createObjectURL(selectedImage)));
+    };
 
-  //choosing and setting picked image
-  const chooseImage = (event) => {
-    const selectedImage = event.target.files[0];
+    //submit image and name update
+    const handlePersonalInfoSubmit = async (event) => {
+        event.preventDefault();
+        if (name !== personalInput.name || imagePicked) {
+            const formdata = new FormData();
+            formdata.append("file", imagePicked);
+            formdata.append("name", personalInput.name);
 
-    setImagePicked((i) => (i = selectedImage));
-    setProfileImage((p) => (p = URL.createObjectURL(selectedImage)));
-  };
+            const promise = updatePersonalData(formdata);
 
-  //submit image and name update
-  const handlePersonalInfoSubmit = async (event) => {
-    event.preventDefault();
-    if (name !== personalInput.name || imagePicked) {
-      const formdata = new FormData();
-      formdata.append("file", imagePicked);
-      formdata.append("name", personalInput.name);
+            toast.promise(promise, {
+                loading: "Updating...",
+                success: (data) => {
+                    return data.msg;
+                },
+                error: (data) => {
+                    return data.err;
+                },
+            });
+            const personalDataUpdRes = await promise;
+            refetch();
 
-      const personalDataUpdRes = await updatePersonalData(formdata);
-      const err = personalDataUpdRes.err;
-      if (err) {
-        toast.error(err);
-      } else {
-        refetch();
-        refecthImage();
-        toast.success(personalDataUpdRes.msg);
-      }
-      setImagePicked("");
-    }
-  };
+            setImagePicked((i) => (i = ""));
+            //update profile image to make it reflect in other components it's used
+            setProfileImage((p) => (p = profileImage_2));
+        }
+    };
 
-  const handlePasswordSubmit = async (event) => {
-    event.preventDefault();
+    const handlePasswordSubmit = async (event) => {
+        event.preventDefault();
 
-    const passwordUpdRes = await updatePassword(passwordInput);
-    const err = passwordUpdRes.err;
-    if (err) {
-      toast.error(err);
-    } else {
-      refetch();
-      toast.success(passwordUpdRes.msg);
-    }
-  };
+        const promise = updatePassword(passwordInput);
+        toast.promise(promise, {
+            loading: "Updating...",
+            success: (data) => {
+                return data.msg;
+            },
+            error: (data) => {
+                return data.err;
+            },
+        });
+        const passwordUpdRes = await promise;
+    };
 
-  return (
-    <div
-      className="pt-16 bg-mainBg min-h-screen flex 
+    return (
+        <div
+            className="pt-16 bg-mainBg min-h-screen flex 
     flex-col items-center md:pl-[180px]"
-    >
-      <div
-        className="flex flex-col items-center 
-        w-full max-w-[500px] p-4  text-textColor "
-      >
-        <h2
-          className="text-3xl text-center 
-        font-bold text-textColor isidora mb-7"
         >
-          Settings
-        </h2>
-        {/* Personal info content*/}
-        <div className=" isidoraReg w-full">
-          <h2 className="isidoraSemiBold">Personal Info</h2>
-          {/* Personal info form*/}
+            <div
+                className="flex flex-col items-center 
+        w-full max-w-[500px] p-4  text-textColor "
+            >
+                <h2
+                    className="text-3xl text-center 
+        font-bold text-textColor isidora mb-7"
+                >
+                    Settings
+                </h2>
+                {/* Personal info content*/}
+                <div className=" isidoraReg w-full">
+                    <h2 className="isidoraSemiBold">Personal Info</h2>
+                    {/* Personal info form*/}
 
-          <form
-            onSubmit={handlePersonalInfoSubmit}
-            className="mt-3 text-[13px]"
-          >
-            <div className="border-[2px] border-grayTwo rounded">
-              <div className="flex flex-col  p-3 pb-5 border-b-[2px]  border-grayTwo ">
-                <div className="profileImg w-[100px] h-[100px] relative mb-5">
-                  {imageLoading ? (
-                    <div className="skeleton w-full h-full rounded-full"></div>
-                  ) : (
-                    <img
-                      src={profileImage}
-                      alt="your profile image"
-                      className="w-full h-full rounded-full border object-cover"
-                    />
-                  )}
-                  <input
-                    type="file"
-                    onChange={chooseImage}
-                    className="cursor-pointer absolute bottom-0 right-0 w-6 rounded-full"
-                  />
-                  <span
-                    className="h-[33px] w-[33px] rounded-full 
+                    <form
+                        onSubmit={handlePersonalInfoSubmit}
+                        className="mt-3 text-[13px]"
+                    >
+                        <div className="border-[2px] border-grayTwo rounded">
+                            <div className="flex flex-col  p-3 pb-5 border-b-[2px]  border-grayTwo ">
+                                <div className="profileImg w-[100px] h-[100px] relative mb-5">
+                                    {isLoading ? (
+                                        <div className="skeleton w-full h-full rounded-full"></div>
+                                    ) : (
+                                        <img
+                                            src={profileImage_2}
+                                            alt="your profile image"
+                                            className="w-full h-full rounded-full border object-cover"
+                                        />
+                                    )}
+                                    <input
+                                        type="file"
+                                        onChange={chooseImage}
+                                        className="cursor-pointer absolute bottom-0 right-0 w-6 rounded-full"
+                                    />
+                                    <span
+                                        className="h-[33px] w-[33px] rounded-full 
                   bg-shinyPurple insetShadow absolute bottom-[-2px] right-[-2px]
                    pointer-events-none flex items-center
                    justify-center cursor-pointer text-[15px] bi-camera"
-                  ></span>
-                </div>
+                                    ></span>
+                                </div>
 
-                {/* Username input */}
+                                {/* Username input */}
 
-                <SettingInputComp
-                  input={personalInput.name}
-                  setInput={setPersonalInput}
-                  type="text"
-                  name="name"
-                  maxLength={17}
-                  minLength={2}
-                />
-              </div>
-              <div className="flex flex-col p-3 pb-5">
-                {/* Email input */}
+                                <SettingInputComp
+                                    input={personalInput.name}
+                                    setInput={setPersonalInput}
+                                    type="text"
+                                    name="name"
+                                    maxLength={17}
+                                    minLength={2}
+                                />
+                            </div>
+                            <div className="flex flex-col p-3 pb-5">
+                                {/* Email input */}
 
-                <SettingInputComp
-                  input={email}
-                  type="email"
-                  name="email"
-                  disabled
-                />
-              </div>
-            </div>
-            <button
-              type="submit"
-              style={{
-                transition: "transform 0.2s",
-              }}
-              className={`w-full rounded-[3px] mt-3 
+                                <SettingInputComp
+                                    input={email}
+                                    type="email"
+                                    name="email"
+                                    disabled
+                                />
+                            </div>
+                        </div>
+                        <button
+                            type="submit"
+                            style={{
+                                transition: "transform 0.2s",
+                            }}
+                            className={`w-full rounded-[3px] mt-3 
               p-3 ${
-                imagePicked || personalInput.name !== name
-                  ? "bg-shinyPurple hover:scale-[0.9]"
-                  : "bg-gray-400"
+                  imagePicked || personalInput.name !== name
+                      ? "bg-shinyPurple hover:scale-[0.9]"
+                      : "bg-gray-400"
               }  font-bold insetShadow`}
-            >
-              Save changes
-            </button>
-          </form>
+                        >
+                            Save changes
+                        </button>
+                    </form>
 
-          {/* Password info */}
-        </div>
-        {/* Password content*/}
-        <div className=" isidoraReg w-full mt-7">
-          <h2 className="isidoraSemiBold">Password</h2>
-          {/* Password info form*/}
+                    {/* Password info */}
+                </div>
+                {/* Password content*/}
+                <div className=" isidoraReg w-full mt-7">
+                    <h2 className="isidoraSemiBold">Password</h2>
+                    {/* Password info form*/}
 
-          <form onSubmit={handlePasswordSubmit} className="mt-3 text-[13px]">
-            <div className="border-[2px] border-grayTwo rounded">
-              <div className="flex flex-col  p-3 pb-5 border-grayTwo ">
-                {/* Current Password input */}
+                    <form
+                        onSubmit={handlePasswordSubmit}
+                        className="mt-3 text-[13px]"
+                    >
+                        <div className="border-[2px] border-grayTwo rounded">
+                            <div className="flex flex-col  p-3 pb-5 border-grayTwo ">
+                                {/* Current Password input */}
 
-                <SettingInputComp
-                  input={passwordInput.currentPassword}
-                  setInput={setPasswordInput}
-                  type="text"
-                  name="current Password"
-                />
-              </div>
-              <div className="flex flex-col p-3 pb-5">
-                {/* New Password input */}
+                                <SettingInputComp
+                                    input={passwordInput.currentPassword}
+                                    setInput={setPasswordInput}
+                                    type="text"
+                                    name="current Password"
+                                />
+                            </div>
+                            <div className="flex flex-col p-3 pb-5">
+                                {/* New Password input */}
 
-                <SettingInputComp
-                  input={passwordInput.newPassword}
-                  setInput={setPasswordInput}
-                  type="password"
-                  name="new Password"
-                />
-              </div>
-              <div className="flex flex-col p-3 pb-5">
-                {/* Confirm New Password input */}
+                                <SettingInputComp
+                                    input={passwordInput.newPassword}
+                                    setInput={setPasswordInput}
+                                    type="password"
+                                    name="new Password"
+                                />
+                            </div>
+                            <div className="flex flex-col p-3 pb-5">
+                                {/* Confirm New Password input */}
 
-                <SettingInputComp
-                  input={passwordInput.confirmPassword}
-                  setInput={setPasswordInput}
-                  type="password"
-                  name="confirm Password"
-                />
-              </div>
-            </div>
-            <button
-              type="submit"
-              style={{
-                transition: "transform 0.2s",
-              }}
-              className="hover:scale-[0.9] w-full rounded-[3px] mt-3 p-3
+                                <SettingInputComp
+                                    input={passwordInput.confirmPassword}
+                                    setInput={setPasswordInput}
+                                    type="password"
+                                    name="confirm Password"
+                                />
+                            </div>
+                        </div>
+                        <button
+                            type="submit"
+                            style={{
+                                transition: "transform 0.2s",
+                            }}
+                            className="hover:scale-[0.9] w-full rounded-[3px] mt-3 p-3
              bg-shinyPurple font-bold insetShadow "
-            >
-              Change Password
-            </button>
-          </form>
+                        >
+                            Change Password
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default SettingsPage;

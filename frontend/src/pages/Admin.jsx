@@ -1,4 +1,4 @@
-import RandomQuestions from "../components/AdminPageComponents/English";
+import Mathematics from "../components/AdminPageComponents/Mathematics";
 
 const Admin = () => {
     return (
@@ -54,7 +54,7 @@ const Admin = () => {
                 </div>
             </div>
 
-            <RandomQuestions />
+            <Mathematics />
         </div>
     );
 };

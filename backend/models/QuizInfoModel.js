@@ -48,7 +48,6 @@ const QuizInfoSchema = new mongoose.Schema({
     coverImg: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "quiz-images",
-        required: true,
     },
     numOfPlays: [
         {

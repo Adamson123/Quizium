@@ -3,12 +3,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { loginUserFunc } from "../api/AuthUserApi";
 import { toast } from "react-hot-toast";
 import { useMutation } from "react-query";
+import Loading from "../components/ui/Loading";
 
 const LoginPage = () => {
     const [info, setInfo] = useState({ email: "", password: "" });
     const [show, setShow] = useState(false);
 
-    const { mutateAsync: loginUser } = useMutation(loginUserFunc);
+    const { mutateAsync: loginUser, isLoading } = useMutation(loginUserFunc);
     const navigate = useNavigate();
     const handleInfo = (event) => {
         setInfo(
@@ -18,22 +19,24 @@ const LoginPage = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const promise = loginUser({ ...info });
+        if (!isLoading) {
+            const promise = loginUser({ ...info });
 
-        toast.promise(promise, {
-            loading: "Logging In",
-            success: (data) => {
-                //console.log(data.msg);
-                return data.msg;
-            },
-            error: (data) => {
-                return data.err;
-            },
-        });
-        const newData = await promise;
-        //alert(newData.err);
+            toast.promise(promise, {
+                loading: "Logging In",
+                success: (data) => {
+                    //console.log(data.msg);
+                    return data.msg;
+                },
+                error: (data) => {
+                    return data.err;
+                },
+            });
+            const newData = await promise;
+            //alert(newData.err);
 
-        if (newData.msg) navigate("/");
+            if (newData.msg) navigate("/");
+        }
     };
 
     return (
@@ -100,10 +103,16 @@ const LoginPage = () => {
                             style={{
                                 transition: "transform 0.2s",
                             }}
-                            className="isidoraBold p-2 w-[300px] h-[50px] rounded-[5px]
-             bg-shinyPurple  outline-none text-[20px] insetShadow hover:scale-[0.9]"
+                            className={`isidoraBold p-2 w-[300px] h-[50px] rounded-[5px]
+            ${
+                isLoading ? "bg-grayTwo" : "bg-shinyPurple"
+            }   outline-none text-[20px] insetShadow hover:scale-[0.9]`}
                         >
-                            LOGIN
+                            {isLoading ? (
+                                <Loading classame={"loading-md"} />
+                            ) : (
+                                "LOGIN"
+                            )}
                         </button>
                         <Link to="/signup">
                             <p className="isidoraBold text-textColor mt-2">

@@ -11,35 +11,38 @@ export const createQuiz = async (req, res) => {
         throw new CustomError("Please fill all required fields", 400);
     }
 
-    const defaultImage = "668fda636463ba0f347e8a73";
-
-    //at first we are saving the quiz with a default cover image so that we can use the quiz id
-    let newQuiz = await QuizInfoModel.create({
-        title,
-        category,
-        timeLimit,
-        coverImg: defaultImage,
-        description,
-        visibility,
-        applyTime,
-        createdBy: req.userId,
-    });
+    let newQuiz;
 
     if (req.file) {
         const { buffer, mimetype } = req.file;
 
         const image = await QuizImageModel.create({
-            quizId: newQuiz._id,
             image: {
                 data: buffer,
                 contentType: mimetype,
             },
         });
-        //then we are updating the quiz with the id of the cover img
-        newQuiz = await QuizInfoModel.findByIdAndUpdate(
-            { _id: newQuiz._id },
-            { coverImg: image._id }
-        );
+
+        newQuiz = await QuizInfoModel.create({
+            title,
+            category,
+            timeLimit,
+            description,
+            visibility,
+            coverImg: image._id,
+            applyTime,
+            createdBy: req.userId,
+        });
+    } else {
+        newQuiz = await QuizInfoModel.create({
+            title,
+            category,
+            timeLimit,
+            description,
+            visibility,
+            applyTime,
+            createdBy: req.userId,
+        });
     }
 
     res.status(201).json({
@@ -89,11 +92,6 @@ export const editQuiz = async (req, res) => {
                 },
             });
         } else {
-            /*if the id of the image is equal to defaultImage which means the user is still
-        using quizzes default image , when this quiz settings  is being updated 
-        create new image instead of updating quizzes default cover images*/
-            //prevents default image from being modified
-
             const image = await QuizImageModel.create({
                 quizId: newQuiz._id,
                 image: {

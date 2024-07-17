@@ -1,10 +1,6 @@
 import mongoose from "mongoose";
 
 const quizImageSchema = new mongoose.Schema({
-    quizId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "quizinfos",
-    },
     image: {
         data: Buffer,
         contentType: String,
@@ -12,5 +8,3 @@ const quizImageSchema = new mongoose.Schema({
 });
 
 export const QuizImageModel = mongoose.model("quiz-images", quizImageSchema);
-
-

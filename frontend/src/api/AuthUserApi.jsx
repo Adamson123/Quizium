@@ -1,3 +1,5 @@
+import { delayTest } from "../utils/delayTest";
+
 const postOptions = (info) => {
     return {
         method: "POST",
@@ -11,6 +13,7 @@ const postOptions = (info) => {
 
 export const createUserFunc = async (info) => {
     try {
+        // await delayTest();
         const res = await fetch(`/api/auth/signup`, postOptions(info));
         //const res = await axios.post(`http://localhost:3002/api/auth/signup`, info);
 
@@ -30,13 +33,14 @@ export const createUserFunc = async (info) => {
 
 export const loginUserFunc = async (info) => {
     try {
+        // await delayTest();
+
         const res = await fetch(`/api/auth/login`, postOptions(info));
         //const res = await axios.post(`http://localhost:3002/api/auth/login`, info);
 
         const data = await res.json();
 
         if (!res.ok) {
-            console.log(data);
             throw new Error(data.err);
         }
         return data;
@@ -53,7 +57,6 @@ export const logoutUserFunc = async () => {
         const data = await res.json();
 
         if (!res.ok) {
-            console.log(data);
             throw new Error(data.err);
         }
 

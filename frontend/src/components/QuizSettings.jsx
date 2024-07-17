@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import displayImage from "../assets/images/empty2.png";
+import quiziumImg from "../assets/images/defaultCover/quizium-8.webp";
 import { createQuizFunc } from "../api/QuizApi";
 import { useMutation } from "react-query";
 import toast from "react-hot-toast";
@@ -316,7 +316,7 @@ const QuizSettings = (props) => {
                                     src={
                                         pickedImage
                                             ? URL.createObjectURL(pickedImage)
-                                            : displayImage
+                                            : quiziumImg
                                     }
                                     className="w-full h-full object-cover rounded shadow-md"
                                     alt="quiz cover image display"

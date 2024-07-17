@@ -2,16 +2,17 @@ import { createContext, useState } from "react";
 import Header from "../components/Header";
 import { getUserFunc } from "../api/UserApi";
 import BufferToObjUrl from "../utils/BufferToObjUrl";
+import newUser from "../assets/images/defaultProfile/newUser.png";
 
 export const dataContext = createContext();
 
 const Layout = ({ children }) => {
     const { data, refetch } = getUserFunc();
 
-    const { profileImg, email, name, isLoading } = data;
+    let { profileImg, email, name, isLoading } = data;
 
     const [profileImage, setProfileImage] = useState(
-        BufferToObjUrl(profileImg.image.data.data)
+        profileImg ? BufferToObjUrl(profileImg.image.data.data) : newUser
     );
 
     const value = {

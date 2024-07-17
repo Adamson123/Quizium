@@ -16,6 +16,14 @@ const QuestionsSchema = mongoose.Schema({
             answer: String,
             explanation: String,
             timeLimit: Number,
+            options: [
+                {
+                    text: String,
+                    isCorrect: Boolean,
+                },
+            ],
         },
     ],
 });
+
+export const QuestionsModel = mongoose.model("questions", QuestionsSchema);

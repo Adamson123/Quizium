@@ -5,7 +5,7 @@ import Skeleton from "./ui/Skeleton";
 const GeneralKnowledge = () => {
     const [quizCover, setQuizCover] = useState([]);
 
-    const { data } = getQiuzCoverFunc(0, 5);
+    const { data } = getQiuzCoverFunc(0, 9);
 
     useEffect(() => {
         setQuizCover((q) => (q = data));
@@ -20,7 +20,7 @@ const GeneralKnowledge = () => {
             <div
                 className="hideScroll scrollbar-thumb-red-700 quizShelf flex 
                 gap-4 overflow-x-auto overflow-auto
-             overflow-y-hidden pt-1 scroll-smooth"
+             overflow-y-hidden py-2  scroll-smooth"
             >
                 {/* Quiz */}
 

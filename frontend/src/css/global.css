@@ -51,6 +51,9 @@
 .insetShadow {
     box-shadow: inset 0px -5px 0px rgba(0, 0, 0, 0.3);
 }
+.outsetShadow {
+    box-shadow: inset -1px -1px 0px rgba(0, 0, 0, 0.3);
+}
 .insetShadowTwo {
     box-shadow: inset 0px -3px 0px rgba(0, 0, 0, 0.3);
 }

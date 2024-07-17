@@ -16,33 +16,30 @@ export const signup = async (req, res) => {
 
     if (userExist) throw new CustomError("Email has already been used", 400);
 
-    const defaultImage = "668eb9c8a2d25990fff7249d";
-
     const hashedPassword = await hashPassword(password);
 
-    let user = await UsersModel.create({
-        ...req.body,
-        password: hashedPassword,
-        profileImg: defaultImage,
-    });
+    let user;
 
     if (req.file) {
         const { buffer, mimetype } = req.file;
 
-        console.log("buffer", buffer);
-
         const image = await ProfImageModel.create({
-            profId: user._id,
             image: {
                 data: buffer,
                 contentType: mimetype,
             },
         });
 
-        user = await UsersModel.findByIdAndUpdate(
-            { _id: user._id },
-            { profileImg: image._id }
-        );
+        user = await UsersModel.create({
+            ...req.body,
+            password: hashedPassword,
+            profileImg: image_id,
+        });
+    } else {
+        user = await UsersModel.create({
+            ...req.body,
+            password: hashedPassword,
+        });
     }
 
     handleTokenAndCookie(user._id, res);

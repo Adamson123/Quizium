@@ -13,4 +13,4 @@ const quizImageSchema = new mongoose.Schema({
 
 export const QuizImageModel = mongoose.model("quiz-images", quizImageSchema);
 
-//export default QuizImageModel;
+

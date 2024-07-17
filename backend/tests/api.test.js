@@ -57,7 +57,6 @@ describe("GET /api/user", () => {
             .get("/api/user")
             .set("Cookie", cookie[0]);
 
-        console.log(cookie[0], res.body);
         expect(res.body).toBeDefined();
     });
 });

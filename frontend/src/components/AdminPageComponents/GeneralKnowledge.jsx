@@ -2,10 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import { getQiuzCoverFunc } from "../../api/QuizApi";
 import QuizCard from "./ui/QuizCard";
 import Skeleton from "./ui/Skeleton";
-const Mathematics = () => {
+const GeneralKnowledge = () => {
     const [quizCover, setQuizCover] = useState([]);
 
-    const { data } = getQiuzCoverFunc(0, 7);
+    const { data } = getQiuzCoverFunc(0, 5);
 
     useEffect(() => {
         setQuizCover((q) => (q = data));
@@ -14,11 +14,12 @@ const Mathematics = () => {
     return (
         <div>
             <h3 className="text-[16px] mb-3 font-semibold">
-                Mathematics Questions
+                Genaral knowledge
             </h3>
             {/* random question roll*/}
             <div
-                className="hideScroll scrollbar-thumb-red-700 quizShelf flex gap-4 overflow-x-auto overflow-auto
+                className="hideScroll scrollbar-thumb-red-700 quizShelf flex 
+                gap-4 overflow-x-auto overflow-auto
              overflow-y-hidden pt-1 scroll-smooth"
             >
                 {/* Quiz */}
@@ -42,4 +43,4 @@ const Mathematics = () => {
     );
 };
 
-export default Mathematics;
+export default GeneralKnowledge;

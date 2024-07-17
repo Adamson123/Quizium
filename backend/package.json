@@ -4,7 +4,7 @@
     "main": "server.js",
     "type": "module",
     "scripts": {
-        "test": "jest auth.test.js user.test.js --watch",
+        "test": "jest --watch",
         "start": "node server.js",
         "dev": "nodemon server.js"
     },

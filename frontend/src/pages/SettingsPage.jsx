@@ -36,9 +36,11 @@ const SettingsPage = () => {
     //function for setting image picked by the user
     const chooseImage = (event) => {
         const selectedImage = event.target.files[0];
-        setImagePicked((i) => (i = selectedImage));
-        //just to display the image the user is about pick
-        setProfileImage_2((p) => (p = URL.createObjectURL(selectedImage)));
+        if (selectedImage) {
+            setImagePicked((i) => (i = selectedImage));
+            //just to display the image the user is about pick
+            setProfileImage_2((p) => (p = URL.createObjectURL(selectedImage)));
+        }
     };
 
     //submit image and name update
@@ -52,7 +54,7 @@ const SettingsPage = () => {
             const promise = updatePersonalData(formdata);
 
             toast.promise(promise, {
-                loading: "Updating...",
+                loading: "Updating info...",
                 success: (data) => {
                     return data.msg;
                 },
@@ -74,7 +76,7 @@ const SettingsPage = () => {
 
         const promise = updatePassword(passwordInput);
         toast.promise(promise, {
-            loading: "Updating...",
+            loading: "Updating password...",
             success: (data) => {
                 return data.msg;
             },
@@ -124,7 +126,7 @@ const SettingsPage = () => {
                                     <input
                                         type="file"
                                         onChange={chooseImage}
-                                        className="cursor-pointer absolute bottom-0 right-0 w-6 rounded-full"
+                                        className="bg-transparent cursor-pointer absolute bottom-0 right-0 w-6 rounded-full"
                                     />
                                     <span
                                         className="h-[33px] w-[33px] rounded-full 
@@ -166,7 +168,7 @@ const SettingsPage = () => {
                   imagePicked || personalInput.name !== name
                       ? "bg-shinyPurple hover:scale-[0.9]"
                       : "bg-gray-400"
-              }  font-bold insetShadow`}
+              }  font-bold insetShadow isidoraBold`}
                         >
                             Save changes
                         </button>
@@ -190,7 +192,7 @@ const SettingsPage = () => {
                                 <SettingInputComp
                                     input={passwordInput.currentPassword}
                                     setInput={setPasswordInput}
-                                    type="text"
+                                    type="password"
                                     name="current Password"
                                 />
                             </div>
@@ -221,7 +223,7 @@ const SettingsPage = () => {
                                 transition: "transform 0.2s",
                             }}
                             className="hover:scale-[0.9] w-full rounded-[3px] mt-3 p-3
-             bg-shinyPurple font-bold insetShadow "
+             bg-shinyPurple font-bold insetShadow isidoraBold"
                         >
                             Change Password
                         </button>

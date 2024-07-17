@@ -3,6 +3,7 @@ const QuizInfoSchema = new mongoose.Schema({
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "users",
+        required: true,
     },
     title: {
         type: String,
@@ -11,12 +12,33 @@ const QuizInfoSchema = new mongoose.Schema({
     description: {
         type: String,
     },
-    subject: {
+    category: {
         type: String,
+        required: true,
+        enum: [
+            "General Knowledge",
+            "Entertainment",
+            "Science & Technology",
+            "Sports",
+            "Pop Culture",
+            "Academic",
+            "Lifestyle",
+            "Miscellaneuos",
+        ],
         required: true,
     },
     timeLimit: {
         type: Number,
+        required: true,
+    },
+    applyTime: {
+        type: String,
+        required: true,
+        enum: ["entire", "each"],
+    },
+    visibility: {
+        type: String,
+        enum: ["public", "private"],
         required: true,
     },
     questionsId: {
@@ -26,6 +48,7 @@ const QuizInfoSchema = new mongoose.Schema({
     coverImg: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "quiz-images",
+        required: true,
     },
     numOfPlays: [
         {

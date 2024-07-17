@@ -1,11 +1,16 @@
-import Mathematics from "../components/AdminPageComponents/Mathematics";
+import { useState } from "react";
+import GeneralKnowledge from "../components/AdminPageComponents/GeneralKnowledge";
+import QuizSettings from "../components/QuizSettings";
 
-const Admin = () => {
+const Explore = () => {
+    const [showQuizPanel, setShowQuizPanel] = useState(false);
     return (
         <div
             className="md:pl-[200px] isidoraReg text-textColor 
     py-[100px] px-[35px] bg-mainBg min-h-screen"
         >
+            <QuizSettings setShow={setShowQuizPanel} show={showQuizPanel} />
+
             <div className="mb-14 flex gap-5 w-full">
                 <div
                     className="bg-blurryPurple p-5 rounded w-full
@@ -43,6 +48,7 @@ const Admin = () => {
                     </div>
 
                     <button
+                        onClick={() => setShowQuizPanel(true)}
                         style={{
                             transition: "transform 0.2s",
                         }}
@@ -54,9 +60,9 @@ const Admin = () => {
                 </div>
             </div>
 
-            <Mathematics />
+            <GeneralKnowledge />
         </div>
     );
 };
 
-export default Admin;
+export default Explore;

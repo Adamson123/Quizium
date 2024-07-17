@@ -3,21 +3,22 @@ import BufferToObjUrl from "../../../utils/BufferToObjUrl";
 
 const QuizCard = ({ info }) => {
     const [image, setImage] = useState(
-        BufferToObjUrl(info.coverImg.image.data.data)
+        BufferToObjUrl(info.coverImg.image.data.data || "")
     );
     const [profImg, setCreatedBy] = useState(
-        BufferToObjUrl(info.createdBy.profileImg.image.data.data)
+        BufferToObjUrl(info.createdBy.profileImg.image.data.data || "")
     );
     return (
         <div
             className="border box-border border-solid
-border-gray-600 rounded h-[200px] min-w-[170px] cursor-pointer"
+border-gray-600 rounded h-[200px] min-w-[200px] cursor-pointer"
         >
             {/* Quiz image */}
             <div className="w-full h-[100px] bg-white rounded-tl rounded-tr">
                 <img
                     src={image}
-                    alt=""
+                    alt="quiz cover profile image"
+                    loading="lazy"
                     className="w-full h-full object-cover"
                 />
             </div>
@@ -27,7 +28,8 @@ border-gray-600 rounded h-[200px] min-w-[170px] cursor-pointer"
                     <span className="h-[25px] w-[25px] border rounded-full bg-black mr-1 overflow-hidden">
                         <img
                             src={profImg}
-                            alt=""
+                            alt="quiz creator profile image"
+                            loading="lazy"
                             className="w-full h-full object-cover"
                         />
                     </span>

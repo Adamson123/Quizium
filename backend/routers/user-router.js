@@ -6,7 +6,7 @@ import {
     updatePersonalInfo,
 } from "../controllers/user-controller.js";
 import multer from "multer";
-import { ProfImageModel } from "../models/ProfImageModel.js";
+import { ProfImagesModel } from "../models/ProfImagesModel.js";
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -18,7 +18,7 @@ router.get("/", getUser);
 router.post("/upload-prof", upload.single("file"), async (req, res) => {
     const { buffer, mimetype } = req.file;
 
-    await ProfImageModel.create({
+    await ProfImagesModel.create({
         // profId: userId,
         image: {
             data: buffer,

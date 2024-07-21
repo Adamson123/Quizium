@@ -1,53 +1,26 @@
 import { useQuery } from "react-query";
 
-const patchOptions = (info, head, method) => {
-    const isFormData = info instanceof FormData;
+import { requestOptions } from "./utils/RequestOptions";
 
-    const options = {
-        method: method ? method : "PATCH",
+export const getUser = async () => {
+    const res = await fetch(`/api/user`, {
         credentials: "include",
-        headers: {
-            "Content-Type": head,
-        },
-        body: isFormData ? info : JSON.stringify(info),
-    };
-
-    if (isFormData) {
-        // Delete the Content-Type header so that the browser can set it correctly
-        delete options.headers["Content-Type"];
-    }
-
-    return options;
-};
-
-export const getUserFunc = () => {
-    const getUser = async () => {
-        const res = await fetch(`/api/user`, {
-            credentials: "include",
-        });
-        //const res = await axios.post(`http://localhost:3002/api/auth/signup`, info);
-
-        if (!res.ok) throw new Error("error signing up");
-        const data = await res.json();
-        //console.log(data);
-        return data;
-    };
-
-    const { data, isLoading, error, isSuccess, refetch } = useQuery({
-        queryFn: getUser,
-        queryKey: ["user"],
-        retry: false,
     });
+    //const res = await axios.post(`http://localhost:3002/api/auth/signup`, info);
 
-    return { data, isLoading, error, isSuccess, refetch };
+    if (!res.ok) throw new Error("error signing up");
+    const data = await res.json();
+    //console.log(data);
+    return data;
 };
+
 
 export const getProfilePicFunc = (info) => {
     const getProfilePic = async () => {
         try {
             const res = await fetch(
                 `/api/user/image`,
-                patchOptions(info, "", "GET")
+                requestOptions(info, "", "GET")
             );
             //const res = await axios.post(`http://localhost:3002/api/auth/signup`, info);
 
@@ -79,7 +52,10 @@ export const getProfilePicFunc = (info) => {
 
 export const updatePersonalInfoFunc = async (info) => {
     try {
-        const res = await fetch(`/api/user/personal`, patchOptions(info, ""));
+        const res = await fetch(
+            `/api/user/personal`,
+            requestOptions(info, "", "PATCH")
+        );
         //const res = await axios.post(`http://localhost:3002/api/auth/signup`, info);
 
         const data = await res.json();
@@ -99,7 +75,7 @@ export const updatePasswordFunc = async (info) => {
     try {
         const res = await fetch(
             `/api/user/password`,
-            patchOptions(info, "application/json")
+            requestOptions(info, "application/json", "PATCH")
         );
         //const res = await axios.post(`http://localhost:3002/api/auth/signup`, info);
 

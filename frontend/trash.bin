@@ -41,3 +41,23 @@
             window.removeEventListener("resize", isLastQuizOnView);
         };
     }, []);
+
+
+
+
+
+
+
+    //////////////////////////////////
+
+      // onInput={(event) =>
+                                            //     updateOptionsFunc(
+                                            //         event,
+                                            //         option._id
+                                            //     )
+                                            // }
+                                            // onFocus={() =>
+                                            //     setUpdateText(
+                                            //         (u) => (u = false)
+                                            //     )
+                                            // }

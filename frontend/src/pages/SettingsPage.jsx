@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import SettingInputComp from "../components/SettingInputComp";
 import { updatePasswordFunc, updatePersonalInfoFunc } from "../api/UserApi";
 import { toast } from "react-hot-toast";
@@ -6,6 +6,7 @@ import { useMutation } from "react-query";
 import { dataContext } from "../layouts/layout";
 
 const SettingsPage = () => {
+    const uploadBtnRef = useRef();
     //user info coming from layout component
     const { refetch, profileImage, setProfileImage, email, name, isLoading } =
         useContext(dataContext);
@@ -62,6 +63,7 @@ const SettingsPage = () => {
                     return data.err;
                 },
             });
+
             const personalDataUpdRes = await promise;
             refetch();
 
@@ -124,16 +126,22 @@ const SettingsPage = () => {
                                         />
                                     )}
                                     <input
+                                        ref={uploadBtnRef}
                                         type="file"
                                         onChange={chooseImage}
-                                        className="bg-transparent cursor-pointer absolute bottom-0 right-0 w-6 rounded-full"
+                                        // className="bg-transparent cursor-pointer absolute bottom-0 right-0 w-6 rounded-full"
+                                        className="w-0 h-0 pointer-events-none"
                                     />
-                                    <span
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            uploadBtnRef.current.click();
+                                        }}
                                         className="h-[33px] w-[33px] rounded-full 
                   bg-shinyPurple insetShadow absolute bottom-[-2px] right-[-2px]
-                   pointer-events-none flex items-center
-                   justify-center cursor-pointer text-[15px] bi-camera"
-                                    ></span>
+                flex items-center
+                   justify-center cursor-pointer text-[15px] bi-camera clickable"
+                                    ></button>
                                 </div>
 
                                 {/* Username input */}
@@ -160,13 +168,10 @@ const SettingsPage = () => {
                         </div>
                         <button
                             type="submit"
-                            style={{
-                                transition: "transform 0.2s",
-                            }}
                             className={`w-full rounded-[3px] mt-3 
               p-3 ${
                   imagePicked || personalInput.name !== name
-                      ? "bg-shinyPurple hover:scale-[0.9]"
+                      ? "bg-shinyPurple clickable"
                       : "bg-gray-400"
               }  font-bold insetShadow isidoraBold`}
                         >
@@ -219,11 +224,8 @@ const SettingsPage = () => {
                         </div>
                         <button
                             type="submit"
-                            style={{
-                                transition: "transform 0.2s",
-                            }}
-                            className="hover:scale-[0.9] w-full rounded-[3px] mt-3 p-3
-             bg-shinyPurple font-bold insetShadow isidoraBold"
+                            className="clickable w-full rounded-[3px] mt-3 p-3
+             bg-shinyPurple font-bold insetShadow isidoraBold "
                         >
                             Change Password
                         </button>

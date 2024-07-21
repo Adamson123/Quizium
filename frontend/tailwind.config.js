@@ -9,10 +9,10 @@ export default {
     ],
     theme: {
         screens: {
-            sm: "360px",
-            md: "780px",
-            lg: "976px",
-            xl: "1440px",
+            sm: "640px",
+            md: "768px",
+            lg: "1024px",
+            xl: "1536px",
         },
         extend: {
             colors: {

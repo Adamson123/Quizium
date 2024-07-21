@@ -1,18 +1,19 @@
 import { Navigate, Outlet } from "react-router";
-import { getUserFunc } from "../api/UserApi";
+import { getUser } from "../api/UserApi";
 
 import PageIsLoading from "../components/ui/PageIsLoading";
+import { useQuery } from "react-query";
 
 const ProtectedRoutes = () => {
-  const { data, isLoading } = getUserFunc();
+    const { data, isLoading } = useQuery(["user"], getUser);
 
-  if (isLoading) {
-    return <PageIsLoading />;
-  }
+    if (isLoading) {
+        return <PageIsLoading />;
+    }
 
-  if (!data) return <Navigate to="login" />;
+    if (!data) return <Navigate to="login" />;
 
-  return <Outlet />;
+    return <Outlet />;
 };
 
 export default ProtectedRoutes;

@@ -2,7 +2,7 @@ import { UsersModel } from "../models/UsersModel.js";
 import { CustomError } from "../errors/CustomError.js";
 import { handleTokenAndCookie } from "../utils/handleTokenAndCookie.js";
 import { hashPassword } from "../utils/hashPassword.js";
-import { ProfImageModel } from "../models/ProfImageModel.js";
+import { ProfImagesModel } from "../models/ProfImagesModel.js";
 
 export const signup = async (req, res) => {
     console.log("somebody hit create user");
@@ -23,7 +23,7 @@ export const signup = async (req, res) => {
     if (req.file) {
         const { buffer, mimetype } = req.file;
 
-        const image = await ProfImageModel.create({
+        const image = await ProfImagesModel.create({
             image: {
                 data: buffer,
                 contentType: mimetype,
@@ -70,5 +70,5 @@ export const login = async (req, res) => {
 export const logout = async (req, res) => {
     console.log("somebody hit logout user");
     res.cookie("token", {});
-    res.status(200).json({ msg: "logged out successfully" });
+    return res.status(200).json({ msg: "logged out successfully" });
 };

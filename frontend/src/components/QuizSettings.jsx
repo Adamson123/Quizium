@@ -1,33 +1,42 @@
 import { useEffect, useRef, useState } from "react";
 import quiziumImg from "../assets/images/defaultCover/quizium-8.webp";
-import { createQuizFunc } from "../api/QuizApi";
+import { createQuiz, updateQuizSettings } from "../api/QuizApi";
 import { useMutation } from "react-query";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
+import BufferToObjUrl from "../utils/BufferToObjUrl";
 
 const QuizSettings = (props) => {
-    const { mutateAsync: createQuiz } = useMutation(createQuizFunc);
-    const [quizSettings, setQuizSettings] = useState({
-        title: "",
-        description: "",
-        timeLimit: 1,
-        applyTime: "entire",
-        visibility: "public",
-        category: "General Knowledge",
-    });
+    const { mutateAsync: createQuizFunc } = useMutation(createQuiz);
+    const [quizSettings, setQuizSettings] = useState(
+        !props.config
+            ? {
+                  title: "",
+                  description: "",
+                  timeLimit: 1,
+                  applyTime: "entire",
+                  visibility: "public",
+                  category: "General Knowledge",
+              }
+            : props.config
+    );
 
     const timeLimitRef = useRef();
+    const uploadBtnRef = useRef();
     const [pickedImage, setPickedImage] = useState("");
     const navigate = useNavigate();
 
     const handleQuizSettings = (event) => {
+        console.log(event.target.value);
         setQuizSettings(
             (q) => (q = { ...q, [event.target.name]: event.target.value })
         );
     };
 
     const handlePickedImage = (event) => {
-        setPickedImage((p) => (p = event.target.files[0]));
+        if (event.target.files[0]) {
+            setPickedImage((p) => (p = event.target.files[0]));
+        }
     };
 
     const scrollToTimeLimit = () => {
@@ -63,10 +72,16 @@ const QuizSettings = (props) => {
         formData.append("settings", JSON.stringify(quizSettings));
         formData.append("file", pickedImage);
 
-        const promise = createQuiz(formData);
+        //  if (!props.config) {
+        console.log("sending", quizSettings);
+        const promise = !props.config
+            ? createQuizFunc(formData)
+            : updateQuizSettings({ formData, id: props.id });
 
         toast.promise(promise, {
-            loading: "Creating quiz settings",
+            loading: !props.config
+                ? "Creating quiz settings"
+                : "Updating quiz settings",
             success: (data) => {
                 return data.msg;
             },
@@ -77,10 +92,20 @@ const QuizSettings = (props) => {
 
         const res = await promise;
         console.log("sent", { ...quizSettings, timeLimit: toSeconds() });
-        console.log("recieved", res);
+
         if (res.msg) {
-            navigate("/create_questions/" + res.quizId);
+            if (!props.config) {
+                navigate("/create-questions/" + res.quizId);
+            } else {
+                props.refetch();
+            }
         }
+    };
+
+    const fallbackToDefaultCover = () => {
+        return quizSettings.image
+            ? BufferToObjUrl(quizSettings.image.data.data)
+            : quiziumImg;
     };
 
     return (
@@ -235,12 +260,12 @@ const QuizSettings = (props) => {
                                                 quizSettings.applyTime ===
                                                 "entire"
                                             }
-                                            className="cursor-pointer radio radio-primary
+                                            className="cursor-pointer radio optionsChecked
                                         h-4 w-4 mt-1 mr-1 bg-transparent"
                                         />
                                         <label
                                             htmlFor="entire"
-                                            className="mr-2"
+                                            className="mr-2 cursor-pointer"
                                         >
                                             For entire quiz
                                         </label>
@@ -255,10 +280,13 @@ const QuizSettings = (props) => {
                                                 quizSettings.applyTime ===
                                                 "each"
                                             }
-                                            className="cursor-pointer radio radio-primary h-4 w-4 
+                                            className="cursor-pointer radio optionsChecked h-4 w-4 
                                         mt-1 mr-1"
                                         />
-                                        <label htmlFor="each">
+                                        <label
+                                            htmlFor="each"
+                                            className="cursor-pointer"
+                                        >
                                             For each questions
                                         </label>
                                     </div>
@@ -279,10 +307,13 @@ const QuizSettings = (props) => {
                                         checked={
                                             quizSettings.visibility === "public"
                                         }
-                                        className="cursor-pointer radio radio-primary
+                                        className="cursor-pointer radio optionsChecked
                                         h-4 w-4 mt-1 mr-1 bg-transparent"
                                     />
-                                    <label htmlFor="public" className="mr-2">
+                                    <label
+                                        htmlFor="public"
+                                        className="mr-2 cursor-pointer"
+                                    >
                                         Public
                                     </label>
 
@@ -296,10 +327,15 @@ const QuizSettings = (props) => {
                                             quizSettings.visibility ===
                                             "private"
                                         }
-                                        className="cursor-pointer radio radio-primary h-4 w-4 
+                                        className="cursor-pointer radio optionsChecked h-4 w-4 
                                         mt-1 mr-1"
                                     />
-                                    <label htmlFor="private">Private</label>
+                                    <label
+                                        htmlFor="private"
+                                        className="cursor-pointer"
+                                    >
+                                        Private
+                                    </label>
                                 </div>
                             </div>
                         </div>
@@ -316,7 +352,7 @@ const QuizSettings = (props) => {
                                     src={
                                         pickedImage
                                             ? URL.createObjectURL(pickedImage)
-                                            : quiziumImg
+                                            : fallbackToDefaultCover()
                                     }
                                     className="w-full h-full object-cover rounded shadow-md"
                                     alt="quiz cover image display"
@@ -324,14 +360,20 @@ const QuizSettings = (props) => {
                                 <input
                                     onChange={handlePickedImage}
                                     type="file"
-                                    className="absolute text-[12px] p-2
-                                     rounded top-2 right-2 isidoraBold w-28 cursor-pointer
-                                    bg-transparent"
+                                    // className="absolute text-[12px]
+                                    //  rounded top-3 right-4 isidoraBold w-0 cursor-pointer
+                                    // bg-transparent clickable"
+                                    className="w-0 h-0 pointer-events-none"
+                                    ref={uploadBtnRef}
                                 />
                                 <button
+                                    type="button"
+                                    onClick={() => {
+                                        uploadBtnRef.current.click();
+                                    }}
                                     className="absolute bg-shinyPurple text-[12px] p-2
                                      rounded top-2 right-2 insetShadow isidoraBold w-28 
-                                     pointer-events-none"
+                                    clickable shadow-md"
                                 >
                                     Choose Image
                                 </button>
@@ -344,8 +386,9 @@ const QuizSettings = (props) => {
                                 Category
                             </span>
                             <select
+                                value={quizSettings.category}
                                 onChange={handleQuizSettings}
-                                name="subject"
+                                name="category"
                                 className="py-2 px-3 bg-transparent
                             border-grayTwo border rounded focus:border-shinyPurple
                              outline-none text-[13px]"
@@ -377,18 +420,36 @@ const QuizSettings = (props) => {
                 <div className="flex justify-center mt-7 gap-3 isidoraBold">
                     <button
                         type="button"
-                        onClick={() => props.setShow(false)}
+                        onClick={() => {
+                            if (props.config) {
+                                setQuizSettings((q) => (q = props.config));
+                            } else {
+                                setQuizSettings(
+                                    (q) =>
+                                        (q = {
+                                            title: "",
+                                            description: "",
+                                            timeLimit: 1,
+                                            applyTime: "entire",
+                                            visibility: "public",
+                                            category: "General Knowledge",
+                                        })
+                                );
+                            }
+                            setPickedImage((p) => (p = ""));
+                            props.setShow(false);
+                        }}
                         className="w-24 h-10 insetShadow rounded
-                     bg-grayTwo text-[13px]"
+                     bg-grayTwo text-[13px] clickable"
                     >
                         Cancel
                     </button>
                     <button
                         type="submit"
                         className="w-24 h-10 insetShadow rounded
-                     bg-shinyPurple text-[13px]"
+                     bg-shinyPurple text-[13px] clickable"
                     >
-                        Create Quiz
+                        {!props.config ? "Create Quiz" : "Update Quiz"}
                     </button>
                 </div>
             </form>

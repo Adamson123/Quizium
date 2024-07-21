@@ -1,14 +1,14 @@
 import { createContext, useState } from "react";
 import Header from "../components/Header";
-import { getUserFunc } from "../api/UserApi";
+import { getUser } from "../api/UserApi";
 import BufferToObjUrl from "../utils/BufferToObjUrl";
 import newUser from "../assets/images/defaultProfile/newUser.png";
+import { useQuery } from "react-query";
 
 export const dataContext = createContext();
 
 const Layout = ({ children }) => {
-    const { data, refetch } = getUserFunc();
-
+    const { data, refetch } = useQuery(["user"], getUser, { retry: false });
     let { profileImg, email, name, isLoading } = data;
 
     const [profileImage, setProfileImage] = useState(

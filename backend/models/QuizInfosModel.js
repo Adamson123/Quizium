@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-const QuizInfoSchema = new mongoose.Schema({
+const QuizInfosSchema = new mongoose.Schema({
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "users",
@@ -34,12 +34,14 @@ const QuizInfoSchema = new mongoose.Schema({
     applyTime: {
         type: String,
         required: true,
+        default: "entire",
         enum: ["entire", "each"],
     },
     visibility: {
         type: String,
         enum: ["public", "private"],
         required: true,
+        default: "public",
     },
     questionsId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -49,12 +51,17 @@ const QuizInfoSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "quiz-images",
     },
+    draft: {
+        type: Boolean,
+        default: true,
+    },
     numOfPlays: [
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: "users",
         },
     ],
-});
+},{ timestamps: true });
 
-export const QuizInfoModel = mongoose.model("quiz-infos", QuizInfoSchema);
+export const QuizInfosModel = mongoose.model("quiz-infos", QuizInfosSchema);
+

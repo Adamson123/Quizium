@@ -25,11 +25,8 @@ const Explore = () => {
                     </div>
 
                     <button
-                        style={{
-                            transition: "transform 0.2s",
-                        }}
-                        className="bg-shinyPurple mt-3 rounded insetShadow 
-          text-xs px-3 py-2 isidoraBold hover:scale-[0.9]"
+                        className="clickable bg-shinyPurple mt-3 rounded insetShadow 
+          text-xs px-3 py-2 isidoraBold"
                     >
                         Join Quiz
                     </button>
@@ -49,11 +46,8 @@ const Explore = () => {
 
                     <button
                         onClick={() => setShowQuizPanel(true)}
-                        style={{
-                            transition: "transform 0.2s",
-                        }}
                         className="bg-shinyPurple mt-3 rounded 
-          insetShadow text-xs px-3 py-2 isidoraBold hover:scale-[0.9]"
+          insetShadow text-xs px-3 py-2 isidoraBold clickable"
                     >
                         Create a Quiz
                     </button>

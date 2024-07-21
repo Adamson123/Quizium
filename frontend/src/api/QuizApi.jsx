@@ -1,55 +1,25 @@
-import { useQuery } from "react-query";
+import { requestOptions } from "./utils/RequestOptions";
 
-const postOptions = (info, head, method) => {
-    const isFormData = info instanceof FormData;
-    console.log(isFormData);
-    const options = {
-        method: method ? method : "POST",
-        credentials: "include",
-        headers: {
-            "Content-Type": head,
-        },
-        body: isFormData ? info : JSON.stringify(info),
-    };
-
-    if (isFormData) {
-        // Delete the Content-Type header so that the browser can set it correctly
-        delete options.headers["Content-Type"];
-    }
-
-    return options;
-};
-
-export const getQiuzCoverFunc = (skip, limit) => {
-    const getQiuzCover = async () => {
-        try {
-            const res = await fetch(`/api/quiz?skip=${skip}&limit=${limit}`, {
-                credentials: "include",
-            });
-
-            const data = await res.json();
-
-            if (!res.ok) throw new Error(data.err);
-
-            return data;
-        } catch (error) {
-            console.log("error from get quiz cover", error);
-            throw { err: error.message };
-        }
-    };
-
-    const { data, isLoading, error, isSuccess, refetch } = useQuery({
-        queryFn: getQiuzCover,
-        queryKey: ["quiz-cover"],
-        retry: false,
-    });
-
-    return { data, isLoading, error, isSuccess, refetch };
-};
-
-export const createQuizFunc = async (info) => {
+export const getQiuzzes = async (skip, limit) => {
     try {
-        const res = await fetch(`/api/quiz`, postOptions(info));
+        const res = await fetch(`/api/quiz?skip=${skip}&limit=${limit}`, {
+            credentials: "include",
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) throw new Error(data.err);
+
+        return data;
+    } catch (error) {
+        console.log("error from get quiz cover", error);
+        throw { err: error.message };
+    }
+};
+
+export const createQuiz = async (info) => {
+    try {
+        const res = await fetch(`/api/quiz`, requestOptions(info, "", "POST"));
 
         const data = await res.json();
 
@@ -58,6 +28,38 @@ export const createQuizFunc = async (info) => {
         return data;
     } catch (error) {
         console.log("error fr crt", error);
+        throw { err: error.message };
+    }
+};
+
+export const updateQuizSettings = async (info) => {
+    try {
+        const res = await fetch(
+            `/api/quiz/${info.id}`,
+            requestOptions(info.formData, "", "PATCH")
+        );
+
+        const data = await res.json();
+
+        if (!res.ok) throw new Error(data.err);
+
+        return data;
+    } catch (error) {
+        console.log("error from  update quiz settings ", error);
+        throw { err: error.message };
+    }
+};
+
+export const getQuizWithQuestions = async (id) => {
+    try {
+        const res = await fetch(`/api/quiz/${id}`, {
+            credentials: "include",
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.err);
+        return data;
+    } catch (error) {
+        console.log("error from get single quiz cover", error);
         throw { err: error.message };
     }
 };

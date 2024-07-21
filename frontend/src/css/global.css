@@ -71,6 +71,47 @@
 .scrollbar {
     scrollbar-width: none;
 }
+[contenteditable="true"]:empty:not(:focus)::before {
+    content: attr(data-placeholder);
+    pointer-events: none;
+    display: block;
+    color: rgb(125, 124, 124);
+}
+
+.clickable:hover {
+    transform: scale(0.9);
+}
+.clickable {
+    transition: transform 0.2s;
+}
+.optionChecked0,
+.optionChecked1,
+.optionChecked2,
+.optionChecked3 {
+    border-width: 2px;
+}
+
+.optionChecked0:checked {
+    background: #e779c1;
+}
+
+.optionChecked1:checked {
+    background: #408fb9;
+}
+.optionChecked2:checked {
+    background: #e8bf05;
+}
+.optionChecked3:checked {
+    background: #e48775;
+}
+.optionsChecked {
+    border-color: rgb(249, 0, 158);
+    border-width: 2px;
+}
+.optionsChecked:checked {
+    background: rgb(249, 0, 158);
+}
+
 .dark {
     --mainBg: 10, 8, 45;
     --text-color: 255, 255, 255;

@@ -2,12 +2,14 @@ import { UsersModel } from "../models/UsersModel.js";
 import { CustomError } from "../errors/CustomError.js";
 import { hashPassword } from "../utils/hashPassword.js";
 import { gfs, gridfsBucket } from "../config/profileImagesCol.js";
-import { ProfImageModel } from "../models/ProfImageModel.js";
+import { ProfImagesModel } from "../models/ProfImagesModel.js";
 
 //get user info function
 export const getUser = async (req, res) => {
     const { userId } = req;
-    const userInfo = await UsersModel.findById(userId).populate("profileImg");
+    const userInfo = await UsersModel.findById(userId)
+        .populate("profileImg")
+        .select("-password");
 
     if (!userInfo) throw new CustomError("404 user not", 404);
 
@@ -24,11 +26,11 @@ export const updatePersonalInfo = async (req, res) => {
     if (file) {
         const { buffer, mimetype } = file;
 
-        let image = await ProfImageModel.findOne({ profId: userId });
+        let image = await ProfImagesModel.findOne({ profId: userId });
 
         //if the user doesn't have a profile image, create one
         if (!image) {
-            image = await ProfImageModel.create({
+            image = await ProfImagesModel.create({
                 profId: userId,
                 image: {
                     data: buffer,
@@ -37,7 +39,7 @@ export const updatePersonalInfo = async (req, res) => {
             });
         } else {
             //if they do, update it
-            image = await ProfImageModel.findOneAndUpdate(
+            image = await ProfImagesModel.findOneAndUpdate(
                 { profId: userId },
                 {
                     image: {

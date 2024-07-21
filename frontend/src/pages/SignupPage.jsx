@@ -107,10 +107,7 @@ const SignupPage = () => {
                     <div className="mt-[18px] text-center">
                         <button
                             type="submit"
-                            style={{
-                                transition: "transform 0.2s",
-                            }}
-                            className={`isidoraBold p-2 w-[300px] h-[50px] rounded-[5px]
+                            className={` clickable isidoraBold p-2 w-[300px] h-[50px] rounded-[5px]
                                 ${
                                     isLoading ? "bg-grayTwo" : "bg-shinyPurple"
                                 }   outline-none text-[20px] insetShadow hover:scale-[0.9]`}

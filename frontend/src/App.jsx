@@ -31,7 +31,7 @@ function App() {
                     }
                 />
                 <Route
-                    path="/create_questions/:id"
+                    path="/create-questions/:id"
                     element={<CreateQuestionPage />}
                 />
             </Route>

@@ -4,18 +4,23 @@ const QuestionsSchema = mongoose.Schema({
     parentId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "questions",
+        required: true,
     },
     questions: [
         {
-            id: mongoose.Schema.Types.ObjectId,
             question: String,
             image: {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: "questionsImages",
+                ref: "question-images",
             },
             answer: String,
             explanation: String,
             timeLimit: Number,
+            questionType: {
+                type: String,
+                enum: ["quiz", "trueFalse", "typeAnswer"],
+                required: true,
+            },
             options: [
                 {
                     text: String,

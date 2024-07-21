@@ -7,6 +7,7 @@ import { errorMiddleware } from "./middlewares/errorMiddleware.js";
 import { router as authRouter } from "./routers/auth-router.js";
 import { router as userRouter } from "./routers/user-router.js";
 import { router as quizRouter } from "./routers/quiz-router.js";
+import { router as questionRouter } from "./routers/question-router.js";
 import { notFoundMiddleWare } from "./middlewares/notFoundMiddleware.js";
 import { getInfoAtStart, tableLog } from "./utils/tableLog.js";
 
@@ -37,6 +38,7 @@ app.use(tableLog);
 app.use("/api/auth", authRouter);
 app.use("/api/user", jwtCheckAndVerify, userRouter);
 app.use("/api/quiz", jwtCheckAndVerify, quizRouter);
+app.use("/api/question", jwtCheckAndVerify, questionRouter);
 
 app.get("/", (req, res) => {
     res.send("welcome to EduFrenzy server🎉");

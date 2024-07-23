@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <body>
+        <img
+            src=""
+            width="400px"
+            height="400px"
+            style="border: 2px solid red"
+            class="image"
+        />
+        <script>
+            const imageElement = document.querySelector(".image");
+
+            const source = "./newUser.png";
+            imageElement.src = source;
+
+            // const image = new Image();
+
+            // image.src = source;
+
+            // const canvas = document.createElement("canvas");
+            // canvas.height = "500px";
+            // canvas.width = "500px";
+
+            // const ctx = canvas.getContext("2d");
+
+            // ctx.drawImage(image, 0, 0);
+
+            // document.body.appendChild(canvas);
+
+            // canvas.toBlob((blob) => {
+            //     console.log(blob);
+            // }, "image/webp");
+
+            new Promise((resolve, reject) => {
+                const img = new Image();
+                let canvas;
+                img.onload = () => {
+                    canvas = document.createElement("canvas");
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext("2d");
+                    ctx.drawImage(img, 0, 0);
+                    canvas.toBlob((blob) => {
+                        const file = new File([blob], "spi.jpg", {
+                            type: "image/webp",
+                            lastModified: 12345567575,
+                        });
+
+                        resolve(file);
+                    }, "image/webp");
+
+                    document.body.appendChild(canvas);
+                };
+                img.src = source;
+            }).then((file) => {
+                //imageElement.src = URL.createObjectURL(file);
+            });
+
+            //  renderImage();
+        </script>
+    </body>
+</html>

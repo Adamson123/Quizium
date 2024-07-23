@@ -16,6 +16,28 @@ export const signup = async (req, res) => {
 
     if (userExist) throw new CustomError("Email has already been used", 400);
 
+    if (password.length < 4) {
+        throw new CustomError(
+            "Password must be atleast 4 characters long",
+            400
+        );
+    }
+
+    if (name.length < 3) {
+        throw new CustomError(
+            "Username must be atleast 3 characters long",
+            400
+        );
+    } else if (name.length > 35) {
+        throw new CustomError("Username cannot exceed 35 characters", 400);
+    }
+
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!regex.test(email)) {
+        throw new CustomError("Please provide a valid email address", 400);
+    }
+
     const hashedPassword = await hashPassword(password);
 
     let user;

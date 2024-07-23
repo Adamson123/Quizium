@@ -1,12 +1,14 @@
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import quiziumImg from "../assets/images/defaultCover/quizium-8.webp";
 import { createQuiz, updateQuizSettings } from "../api/QuizApi";
 import { useMutation } from "react-query";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 import BufferToObjUrl from "../utils/BufferToObjUrl";
+import Loading from "./ui/Loading";
+import { convertToWebp } from "../utils/convertToWebp";
 
-const QuizSettings = (props) => {
+const QuizSettings = memo((props) => {
     const { mutateAsync: createQuizFunc } = useMutation(createQuiz);
     const [quizSettings, setQuizSettings] = useState(
         !props.config
@@ -21,9 +23,12 @@ const QuizSettings = (props) => {
             : props.config
     );
 
+    console.log("quiz settings rendered");
+
     const timeLimitRef = useRef();
     const uploadBtnRef = useRef();
     const [pickedImage, setPickedImage] = useState("");
+    const [convertingImage, setConvertingImage] = useState(false);
     const navigate = useNavigate();
 
     const handleQuizSettings = (event) => {
@@ -33,9 +38,21 @@ const QuizSettings = (props) => {
         );
     };
 
-    const handlePickedImage = (event) => {
-        if (event.target.files[0]) {
-            setPickedImage((p) => (p = event.target.files[0]));
+    const handlePickedImage = async (event) => {
+        const selectedImage = event.target.files[0];
+        if (selectedImage) {
+            let optimizedImage = selectedImage;
+            if (optimizedImage.name.split(".")[1] !== "webp") {
+                //convert to webp for performance
+                setConvertingImage(true);
+                optimizedImage = await convertToWebp(
+                    URL.createObjectURL(selectedImage),
+                    selectedImage.name
+                );
+                setConvertingImage(false);
+            }
+
+            setPickedImage(optimizedImage);
         }
     };
 
@@ -103,8 +120,8 @@ const QuizSettings = (props) => {
     };
 
     const fallbackToDefaultCover = () => {
-        return quizSettings.image
-            ? BufferToObjUrl(quizSettings.image.data.data)
+        return quizSettings.coverImg
+            ? BufferToObjUrl(quizSettings.coverImg.image.data.data)
             : quiziumImg;
     };
 
@@ -344,10 +361,21 @@ const QuizSettings = (props) => {
                     <div className="flex flex-col gap-12  flex-1">
                         <div className="h-[260px] flex flex-col gap-3">
                             <span className="text-[14px] font-bold">
-                                Cover image
+                                Cover image{" "}
+                                <span className="text-grayTwo text-[12px]">
+                                    (File supported - .png, .jpg, .jpeg, .webp)
+                                </span>
                             </span>
                             {/* Cover-image*/}
+
                             <div className="min-w-full rounded relative min-h-full">
+                                {convertingImage && (
+                                    <Loading
+                                        cus={
+                                            " loading-lg absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-shinyPurple"
+                                        }
+                                    />
+                                )}
                                 <img
                                     src={
                                         pickedImage
@@ -360,9 +388,7 @@ const QuizSettings = (props) => {
                                 <input
                                     onChange={handlePickedImage}
                                     type="file"
-                                    // className="absolute text-[12px]
-                                    //  rounded top-3 right-4 isidoraBold w-0 cursor-pointer
-                                    // bg-transparent clickable"
+                                    accept=".png, .jpg, .jpeg, .webp"
                                     className="w-0 h-0 pointer-events-none"
                                     ref={uploadBtnRef}
                                 />
@@ -436,7 +462,8 @@ const QuizSettings = (props) => {
                                         })
                                 );
                             }
-                            setPickedImage((p) => (p = ""));
+                            setPickedImage("");
+                            setConvertingImage(false);
                             props.setShow(false);
                         }}
                         className="w-24 h-10 insetShadow rounded
@@ -455,6 +482,6 @@ const QuizSettings = (props) => {
             </form>
         </div>
     );
-};
+});
 
 export default QuizSettings;

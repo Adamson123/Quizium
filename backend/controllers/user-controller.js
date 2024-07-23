@@ -1,7 +1,6 @@
 import { UsersModel } from "../models/UsersModel.js";
 import { CustomError } from "../errors/CustomError.js";
 import { hashPassword } from "../utils/hashPassword.js";
-import { gfs, gridfsBucket } from "../config/profileImagesCol.js";
 import { ProfImagesModel } from "../models/ProfImagesModel.js";
 
 //get user info function
@@ -23,36 +22,56 @@ export const updatePersonalInfo = async (req, res) => {
 
     if (!name) throw new CustomError("Please provide your new username", 400);
 
+    if (name.length < 3) {
+        throw new CustomError(
+            "Username must be atleast 3 characters long",
+            400
+        );
+    } else if (name.length > 35) {
+        throw new CustomError("Username cannot exceed 35 characters", 400);
+    }
+
+    const user = req.user;
+
+    let image;
     if (file) {
         const { buffer, mimetype } = file;
 
-        let image = await ProfImagesModel.findOne({ profId: userId });
+        image = await ProfImagesModel.findById(user.profileImg);
 
-        //if the user doesn't have a profile image, create one
-        if (!image) {
-            image = await ProfImagesModel.create({
-                profId: userId,
+        if (image) {
+            console.log("already here");
+            //if they do, update it
+            image = await ProfImagesModel.findOneAndUpdate(user.profileImg, {
                 image: {
                     data: buffer,
                     contentType: mimetype,
                 },
             });
         } else {
-            //if they do, update it
-            image = await ProfImagesModel.findOneAndUpdate(
-                { profId: userId },
-                {
-                    image: {
-                        data: buffer,
-                        contentType: mimetype,
-                    },
-                }
-            );
+            //if the user doesn't have a profile image, create one
+            console.log("not here");
+            image = await ProfImagesModel.create({
+                image: {
+                    data: buffer,
+                    contentType: mimetype,
+                },
+            });
         }
+
+        const updateImage = () => {
+            const hasProfileImg = () => {
+                return user.profileImg && user.profileImg;
+            };
+            /*return profile image id if one was created or updated above, else return 
+              the id of the old profileImg of the quiz if there is one else nothing🙄
+            */
+            return image ? image._id : hasProfileImg();
+        };
 
         await UsersModel.findByIdAndUpdate(
             { _id: userId },
-            { name, profileImg: image._id }
+            { name, profileImg: updateImage() }
         );
 
         return res
@@ -67,7 +86,7 @@ export const updatePersonalInfo = async (req, res) => {
 
 //update password function
 export const updatePassword = async (req, res) => {
-    const { currentPassword, newPassword } = req.body;
+    const { currentPassword, newPassword, confirmPassword } = req.body;
     const { userId } = req;
 
     if (!currentPassword || !newPassword)
@@ -75,8 +94,21 @@ export const updatePassword = async (req, res) => {
             "Please provide both current and new passwords",
             400
         );
+    if (newPassword.length < 4) {
+        throw new CustomError(
+            "Password must be atleast 4 characters long",
+            400
+        );
+    }
 
-    const user = await UsersModel.findById(userId);
+    if (newPassword !== confirmPassword) {
+        throw new CustomError(
+            "New password and Confirm password inputs does not match",
+            400
+        );
+    }
+
+    const user = req.user;
 
     if (!user) throw new CustomError("User not found", 404);
 

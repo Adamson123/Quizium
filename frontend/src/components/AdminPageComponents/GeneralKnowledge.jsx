@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { getQiuzzes } from "../../api/QuizApi";
 import QuizCard from "./ui/QuizCard";
 import Skeleton from "./ui/Skeleton";
 import { useQuery } from "react-query";
 const GeneralKnowledge = () => {
-    const [quizCover, setQuizCover] = useState([]);
+    // const [quizCover, setQuizCover] = useState([]);
 
     const { data, isLoading, error, isSuccess, refetch } = useQuery(
         ["quiz-cover"],
@@ -13,9 +13,14 @@ const GeneralKnowledge = () => {
 
     //getQiuzzesFunc(0, 9);
 
-    useEffect(() => {
-        console.log(data);
-        setQuizCover((q) => (q = data));
+    // useEffect(() => {
+    //     console.log(data);
+    //     setQuizCover((q) => (q = data));
+    // }, [data]);
+
+    console.log("general knowledge rendered");
+    const quizCover = useMemo(() => {
+        return data;
     }, [data]);
 
     return (

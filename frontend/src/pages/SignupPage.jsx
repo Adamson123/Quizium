@@ -61,7 +61,8 @@ const SignupPage = () => {
                             type="text"
                             placeholder="Username"
                             required
-                            minLength={2}
+                            minLength={3}
+                            maxLength={35}
                             className=" placeholder:text-placeholder isidoraBold p-2 w-[300px] h-[50px] rounded-[5px]
              bg-grayOne border-[3px]
              outline-none text-textColor text-[17px] border-lightGray"
@@ -87,7 +88,6 @@ const SignupPage = () => {
                                 type={show ? "text" : "password"}
                                 placeholder="Password"
                                 required
-                                maxLength={15}
                                 minLength={4}
                                 className="placeholder:text-placeholder isidoraBold p-2 pr-7 w-[300px] h-[50px] rounded-[5px]
              bg-grayOne border-[3px] outline-none text-textColor text-[17px] 
@@ -113,7 +113,7 @@ const SignupPage = () => {
                                 }   outline-none text-[20px] insetShadow hover:scale-[0.9]`}
                         >
                             {isLoading ? (
-                                <Loading classame={"loading-md"} />
+                                <Loading cus={"loading-md"} />
                             ) : (
                                 "SIGN UP"
                             )}

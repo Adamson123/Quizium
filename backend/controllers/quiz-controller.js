@@ -90,41 +90,35 @@ export const createQuiz = async (req, res) => {
 };
 
 export const updateSingleQuizSettings = async (req, res) => {
-    console.log(req.body.settings);
     const { title, category, applyTime, timeLimit, description, visibility } =
         JSON.parse(req.body.settings);
 
-    // console.log(req.body.settings);
-    const quizId = req.params.id;
+    const { id } = req.params;
 
-    console.log("from edit quiz setting body", visibility);
     if (!title || !category || !timeLimit) {
         throw new CustomError("Please fill all required fields", 400);
     }
 
-    const quiz = await QuizInfosModel.findById(quizId);
-
-    if (!quiz) {
-        throw new CustomError("404 quiz not found", 404);
-    }
+    const quiz = req.quiz;
 
     let updatedQuiz;
 
+    let image;
     if (req.file) {
         const { buffer, mimetype } = req.file;
 
-        const imageExist = await QuizImagesModel.findById(quizId);
-
-        let image;
+        const imageExist = await QuizImagesModel.findById(quiz.coverImg);
 
         if (imageExist) {
-            image = await QuizImagesModel.findByIdAndUpdate(quizId, {
+            console.log("already here");
+            image = await QuizImagesModel.findByIdAndUpdate(quiz.coverImg, {
                 image: {
                     data: buffer,
                     contentType: mimetype,
                 },
             });
         } else {
+            console.log("already here");
             image = await QuizImagesModel.create({
                 image: {
                     data: buffer,
@@ -132,34 +126,32 @@ export const updateSingleQuizSettings = async (req, res) => {
                 },
             });
         }
-        updatedQuiz = await QuizInfosModel.findByIdAndUpdate(quizId, {
-            title,
-            category,
-            applyTime,
-            timeLimit,
-            description,
-            visibility,
-            coverImg: image._id,
-        });
-        console.log(" hit file was sent");
-    } else {
-        updatedQuiz = await QuizInfosModel.findByIdAndUpdate(quizId, {
-            title,
-            category,
-            applyTime,
-            timeLimit,
-            description,
-            visibility,
-        });
-
-        console.log("hit no file was sent");
     }
+
+    const updateImage = () => {
+        const hasCoverImg = () => {
+            return quiz.coverImg && quiz.coverImg;
+        };
+        /*return cover image id if one was created or updated above, else return 
+          the id of the old coverimg of the quiz if there is one else nothing🙄
+        */
+        return image ? image._id : hasCoverImg();
+    };
+
+    console.log(updateImage(), "cover image iddddd");
+    updatedQuiz = await QuizInfosModel.findByIdAndUpdate(id, {
+        title,
+        category,
+        applyTime,
+        timeLimit,
+        description,
+        visibility,
+        coverImg: updateImage(),
+    });
 
     const toAddTimeLimit = () => {
         return applyTime === "entire" ? 0 : timeLimit;
     };
-
-    console.log("timeLimit", toAddTimeLimit());
 
     //update time limit for all questions in the questions array
     await QuestionsModel.findOneAndUpdate(
@@ -175,7 +167,7 @@ export const updateSingleQuizSettings = async (req, res) => {
 
     return res.status(201).json({
         msg: "Quiz settings has been updated successfully",
-        quizId: updatedQuiz._id,
+        id: updatedQuiz._id,
     });
 };
 
@@ -205,11 +197,11 @@ export const getSingleQuizWithQuestions = async (req, res) => {
         })
         .populate({
             path: "questionsId",
+            populate: { path: "questions.image" },
+            /* populate question and question image which is been refrenced
+              in each questions
+            */
         });
-
-    if (!quiz) {
-        throw new CustomError("404 quiz not found", 404);
-    }
 
     return res.status(200).json(quiz);
 };

@@ -4,6 +4,8 @@ import { updatePasswordFunc, updatePersonalInfoFunc } from "../api/UserApi";
 import { toast } from "react-hot-toast";
 import { useMutation } from "react-query";
 import { dataContext } from "../layouts/layout";
+import { convertToWebp } from "../utils/convertToWebp";
+import Loading from "../components/ui/Loading";
 
 const SettingsPage = () => {
     const uploadBtnRef = useRef();
@@ -20,7 +22,7 @@ const SettingsPage = () => {
     const { mutateAsync: updatePassword } = useMutation(updatePasswordFunc);
 
     //declaring profile image value globally
-    const [profileImage_2, setProfileImage_2] = useState(profileImage);
+    // const [profileImage_2, setProfileImage_2] = useState(profileImage);
 
     //image picked from the user
     const [imagePicked, setImagePicked] = useState("");
@@ -34,13 +36,23 @@ const SettingsPage = () => {
         confirmPassword: "",
     });
 
+    const [convertingImage, setConvertingImage] = useState(false);
     //function for setting image picked by the user
-    const chooseImage = (event) => {
+    const chooseImage = async (event) => {
         const selectedImage = event.target.files[0];
         if (selectedImage) {
-            setImagePicked((i) => (i = selectedImage));
-            //just to display the image the user is about pick
-            setProfileImage_2((p) => (p = URL.createObjectURL(selectedImage)));
+            let optimizedImage = selectedImage;
+            if (optimizedImage.name.split(".")[1] !== "webp") {
+                //convert to webp for performance
+                setConvertingImage(true);
+                optimizedImage = await convertToWebp(
+                    URL.createObjectURL(selectedImage),
+                    selectedImage.name
+                );
+                setConvertingImage(false);
+            }
+
+            setImagePicked(optimizedImage);
         }
     };
 
@@ -65,12 +77,22 @@ const SettingsPage = () => {
             });
 
             const personalDataUpdRes = await promise;
-            refetch();
+            await refetch();
 
-            setImagePicked((i) => (i = ""));
+            if (personalDataUpdRes.msg) {
+                setProfileImage(URL.createObjectURL(imagePicked));
+                setImagePicked("");
+            }
             //update profile image to make it reflect in other components it's used
-            setProfileImage((p) => (p = profileImage_2));
         }
+    };
+
+    const allPasswordFieldFilled = () => {
+        return (
+            passwordInput.currentPassword &&
+            passwordInput.newPassword &&
+            passwordInput.confirmPassword
+        );
     };
 
     const handlePasswordSubmit = async (event) => {
@@ -119,11 +141,27 @@ const SettingsPage = () => {
                                     {isLoading ? (
                                         <div className="skeleton w-full h-full rounded-full"></div>
                                     ) : (
-                                        <img
-                                            src={profileImage_2}
-                                            alt="your profile image"
-                                            className="w-full h-full rounded-full border object-cover"
-                                        />
+                                        <div className="w-full h-full relative">
+                                            {convertingImage && (
+                                                <Loading
+                                                    cus={
+                                                        "absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-shinyPurple"
+                                                    }
+                                                />
+                                            )}
+                                            <img
+                                                src={
+                                                    imagePicked
+                                                        ? URL.createObjectURL(
+                                                              imagePicked
+                                                          )
+                                                        : profileImage
+                                                }
+                                                alt="your profile image"
+                                                className="w-full h-full rounded-full
+                                                border object-cover"
+                                            />
+                                        </div>
                                     )}
                                     <input
                                         ref={uploadBtnRef}
@@ -172,11 +210,27 @@ const SettingsPage = () => {
               p-3 ${
                   imagePicked || personalInput.name !== name
                       ? "bg-shinyPurple clickable"
-                      : "bg-gray-400"
+                      : "bg-grayTwo"
               }  font-bold insetShadow isidoraBold`}
                         >
                             Save changes
                         </button>
+                        {
+                            //online show up if an image is picked or name is changed
+                            (imagePicked || personalInput.name !== name) && (
+                                <button
+                                    onClick={() => {
+                                        setImagePicked("");
+                                        setPersonalInput({ name });
+                                    }}
+                                    type="button"
+                                    className={`w-full rounded-[3px] mt-3 font-bold insetShadow
+                            isidoraBold bg-grayTwo clickable p-3`}
+                                >
+                                    Cancel
+                                </button>
+                            )
+                        }
                     </form>
 
                     {/* Password info */}
@@ -223,9 +277,15 @@ const SettingsPage = () => {
                             </div>
                         </div>
                         <button
-                            type="submit"
-                            className="clickable w-full rounded-[3px] mt-3 p-3
-             bg-shinyPurple font-bold insetShadow isidoraBold "
+                            type={`${
+                                allPasswordFieldFilled() ? "submit" : "button"
+                            }`}
+                            className={`${
+                                allPasswordFieldFilled() && "clickable"
+                            } w-full rounded-[3px] mt-3 p-3
+             ${
+                 allPasswordFieldFilled() ? "bg-shinyPurple" : "bg-grayTwo"
+             } font-bold insetShadow isidoraBold`}
                         >
                             Change Password
                         </button>

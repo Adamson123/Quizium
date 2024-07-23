@@ -106,7 +106,7 @@ const LoginPage = () => {
             }   outline-none text-[20px] insetShadow clickable`}
                         >
                             {isLoading ? (
-                                <Loading classame={"loading-md"} />
+                                <Loading cus={"loading-md"} />
                             ) : (
                                 "LOGIN"
                             )}

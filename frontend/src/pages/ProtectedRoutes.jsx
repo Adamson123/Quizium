@@ -5,7 +5,7 @@ import PageIsLoading from "../components/ui/PageIsLoading";
 import { useQuery } from "react-query";
 
 const ProtectedRoutes = () => {
-    const { data, isLoading } = useQuery(["user"], getUser);
+    const { data, isLoading } = useQuery(["user"], getUser, { retry: false });
 
     if (isLoading) {
         return <PageIsLoading />;

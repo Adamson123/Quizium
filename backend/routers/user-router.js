@@ -14,20 +14,6 @@ const upload = multer({ storage });
 export const router = express.Router();
 
 router.get("/", getUser);
-//router.get("/image", getProfileImg);
-router.post("/upload-prof", upload.single("file"), async (req, res) => {
-    const { buffer, mimetype } = req.file;
-
-    await ProfImagesModel.create({
-        // profId: userId,
-        image: {
-            data: buffer,
-            contentType: mimetype,
-        },
-    });
-
-    res.json({ msg: "uploaded To Profile Images collection" });
-});
 router.patch("/personal", upload.single("file"), updatePersonalInfo);
 
 router.patch("/password", updatePassword);

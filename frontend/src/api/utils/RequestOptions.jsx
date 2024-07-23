@@ -1,8 +1,6 @@
 export const requestOptions = (data, head, method) => {
     const isFormData = data instanceof FormData;
 
-    console.log(data);
-
     const options = {
         method: method,
         credentials: "include",

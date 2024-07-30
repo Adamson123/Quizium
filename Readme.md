@@ -11,7 +11,7 @@ Note: More features will be added in the future
 -   Add cover images to thier quizzes
 -   Add time limit and description to thier quizzes
 -   Make thier quiz private or public
--   Users can add images and descriptions to the thier questions
+-   Users can add images and descriptions to thier questions
 
 *   Ability to select the type of answer or question they want
 

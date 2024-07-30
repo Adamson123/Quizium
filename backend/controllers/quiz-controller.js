@@ -57,6 +57,7 @@ export const createQuiz = async (req, res) => {
                 explanation: "",
                 timeLimit: toAddTimeLimit(),
                 questionType: "quiz",
+                answerOption: "singleAnswer",
                 options: [
                     {
                         text: "",

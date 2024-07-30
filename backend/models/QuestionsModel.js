@@ -13,14 +13,20 @@ const QuestionsSchema = mongoose.Schema({
                 type: mongoose.Schema.Types.ObjectId,
                 ref: "question-images",
             },
-            answer: String,
+            answer: Array,
             explanation: String,
             timeLimit: Number,
+            answerOption: {
+                required: true,
+                type: String,
+                enum: ["singleAnswer", "multiSelect"],
+            },
             questionType: {
                 type: String,
                 enum: ["quiz", "trueFalse", "typeAnswer"],
                 required: true,
             },
+
             options: [
                 {
                     text: String,

@@ -5,7 +5,7 @@ import ProtectedRoutes from "./pages/ProtectedRoutes";
 import Layout from "./layouts/layout";
 import Explore from "./pages/Explore";
 import SettingsPage from "./pages/SettingsPage";
-import CreateQuestionPage from "./pages/CreateQuestionPage";
+import CreateQuestPage from "./pages/CreateQuestPage";
 
 function App() {
     return (
@@ -32,7 +32,7 @@ function App() {
                 />
                 <Route
                     path="/create-questions/:id"
-                    element={<CreateQuestionPage />}
+                    element={<CreateQuestPage />}
                 />
             </Route>
             <Route

@@ -7,6 +7,7 @@ export const convertToWebp = async (src, name) => {
             canvas = document.createElement("canvas");
             canvas.width = img.width;
             canvas.height = img.height;
+            console.log(img.height, "img width", img.width, "img height");
             const ctx = canvas.getContext("2d");
             ctx.drawImage(img, 0, 0);
             canvas.toBlob((blob) => {

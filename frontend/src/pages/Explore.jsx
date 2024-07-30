@@ -1,5 +1,5 @@
 import { useState } from "react";
-import GeneralKnowledge from "../components/AdminPageComponents/GeneralKnowledge";
+import GeneralKnowledge from "../components/ExploreComps/GeneralKnowledge";
 import QuizSettings from "../components/QuizSettings";
 
 const Explore = () => {

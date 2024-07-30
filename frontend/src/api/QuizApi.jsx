@@ -40,7 +40,7 @@ export const updateQuizSettings = async (info) => {
             requestOptions(info.formData, "", "PATCH")
         );
 
-        const data =  await res.json();
+        const data = await res.json();
 
         if (!res.ok) throw new Error(data.err);
 

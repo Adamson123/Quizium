@@ -1,0 +1,7 @@
+{
+    "AutoPreview.serverURL": "http://localhost:5173/",
+    "AutoPreview.background": "white",
+    "AutoPreview.center": false,
+    "AutoPreview.locked": false,
+    "AutoPreview.packageManager": "npm"
+}

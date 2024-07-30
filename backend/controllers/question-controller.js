@@ -28,7 +28,27 @@ export const createQuestion = async (req, res) => {
         { new: true, upsert: true }
     );
 
-    return res.status(201).json({ msg: "Question created" });
+    const updatedQuiz = await QuizInfosModel.findById(id)
+        .populate("coverImg") // populate quiz cover image
+        .populate({
+            path: "createdBy",
+            select: "-password",
+            populate: { path: "profileImg" } /*populate quiz
+        creator info and creator profile image which is been refrenced from 
+        user/creator info 
+        */,
+        })
+        .populate({
+            path: "questionsId",
+            populate: { path: "questions.image" },
+            /* populate question and question image which is been refrenced
+          in each questions
+        */
+        });
+
+    //console.log(updatedQuiz, id);
+
+    return res.status(201).json({ msg: "Question created", quiz: updatedQuiz });
 };
 
 export const updateQuestion = async (req, res) => {
@@ -86,10 +106,28 @@ export const updateQuestion = async (req, res) => {
                 "questions.$.answer": data.answer,
                 "questions.$.explanation": data.explanation,
                 "questions.$.questionType": data.questionType,
+                "questions.$.answerOption": data.answerOption,
                 "questions.$.image": image && image._id,
             },
         }
     );
 
-    return res.status(200).json({ msg: "Question updated" });
+    const updatedQuiz = await QuizInfosModel.findById(quiz._id)
+        .populate("coverImg") // populate quiz cover image
+        .populate({
+            path: "createdBy",
+            select: "-password",
+            populate: { path: "profileImg" } /*populate quiz
+            creator info and creator profile image which is been refrenced from 
+            user/creator info 
+            */,
+        })
+        .populate({
+            path: "questionsId",
+            populate: { path: "questions.image" },
+            /* populate question and question image which is been refrenced
+              in each questions
+            */
+        });
+    return res.status(200).json({ msg: "Question updated", quiz: updatedQuiz });
 };

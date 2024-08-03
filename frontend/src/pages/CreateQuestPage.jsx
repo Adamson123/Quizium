@@ -11,7 +11,7 @@ import QuizzesMenu from "../components/CreateQuestComps/QuizzesMenu";
 import RightSection from "../components/CreateQuestComps/RightSection";
 import Question from "../components/CreateQuestComps/Question";
 import toast from "react-hot-toast";
-
+import RenderTest from "../utils/RenderTest";
 const CreateQuestPage = () => {
     const { id } = useParams();
     const { data, isLoading, error, refetch } = useQuery(
@@ -23,7 +23,8 @@ const CreateQuestPage = () => {
     );
 
     const { mutateAsync: createQuestionFunc } = useMutation(createQuestion);
-    const { mutateAsync: updateQuestionFunc } = useMutation(updateQuestion);
+    const { mutateAsync: updateQuestionFunc, isLoading: updatingQuest } =
+        useMutation(updateQuestion);
 
     //all quiz questions
     const [allQuestions, setAllQuestions] = useState();
@@ -36,6 +37,7 @@ const CreateQuestPage = () => {
 
     const [imagePicked, setPickedImage] = useState();
     const [showRightSect, setShowRightSect] = useState(false);
+    const [showSaveNoti, setShowSaveNoti] = useState(false);
     const config = useMemo(() => {
         if (data) {
             return {
@@ -91,6 +93,7 @@ const CreateQuestPage = () => {
                 ],
                 questionType: "quiz",
                 answerOption: "singleAnswer",
+                answer: [],
             },
             id,
         };
@@ -114,7 +117,10 @@ const CreateQuestPage = () => {
     };
 
     const handleUpdateQuiz = async () => {
-        if ((allQuestions_2 !== allQuestions || imagePicked) && !isLoading) {
+        if (
+            (allQuestions_2 !== allQuestions || imagePicked) &&
+            !updatingQuest
+        ) {
             console.log("updating quiz");
             const formData = new FormData();
             formData.append("file", imagePicked);
@@ -124,11 +130,23 @@ const CreateQuestPage = () => {
                 data: formData,
                 id,
             };
+            // const res = await updateQuestionFunc(data);
+
+            //setAllQuestions(res.quiz.questionsId.questions);
+            setAllQuestions_2(allQuestions);
+
             const res = await updateQuestionFunc(data);
 
-            setAllQuestions(res.quiz.questionsId.questions);
-            setAllQuestions_2(res.quiz.questionsId.questions);
+            if (res.err) {
+                return toast.error("Error saving previous changes");
+            }
 
+            if (imagePicked) {
+                setAllQuestions(res.quiz.questionsId.questions);
+                setAllQuestions_2(res.quiz.questionsId.questions);
+            }
+
+            setShowSaveNoti(false);
             setPickedImage("");
         }
     };
@@ -138,6 +156,21 @@ const CreateQuestPage = () => {
             handleUpdateQuiz();
         }
     }, [imagePicked]);
+
+    useEffect(() => {
+        const preventReload = (event) => {
+            if (allQuestions !== allQuestions_2) {
+                event.preventDefault();
+                event.returnValue = "";
+                setShowSaveNoti(true);
+            }
+        };
+        window.addEventListener("beforeunload", preventReload);
+
+        return () => {
+            window.removeEventListener("beforeunload", preventReload);
+        };
+    });
 
     console.log("create question re-rendered");
 
@@ -152,6 +185,11 @@ const CreateQuestPage = () => {
             <Header
                 setShow={setShowQuizPanel}
                 setShowRightSect={setShowRightSect}
+                handleUpdateQuiz={handleUpdateQuiz}
+                allQuestions={allQuestions}
+                allQuestions_2={allQuestions_2}
+                updatingQuest={updatingQuest}
+                showSaveNoti={showSaveNoti}
             />
 
             {config && (
@@ -165,7 +203,10 @@ const CreateQuestPage = () => {
             )}
 
             {/* Question , Right Section  , Quizzes Menu*/}
-            <div className="min-h-screen pt-28 pb-32 px-7 slg:pr-[330px] lg:pr-[300px] lg:pl-20">
+            <div
+                className="min-h-screen pt-28 pb-32 px-7 slg:pr-[330px] 
+            lg:pr-[300px] lg:pl-20 relative"
+            >
                 {/*  Enter Question &  options container*/}
                 <Question
                     allQuestions={allQuestions}
@@ -174,6 +215,7 @@ const CreateQuestPage = () => {
                     currentQuestion={currentQuestion}
                     imagePicked={imagePicked}
                     setPickedImage={setPickedImage}
+                    allQuestions_2={allQuestions_2}
                 />
                 {/* right section( Answer Options , Quiz type , Delete ) */}
                 {singleQuestion && (
@@ -186,6 +228,7 @@ const CreateQuestPage = () => {
                         handleUpdateQuiz={handleUpdateQuiz}
                         showRightSect={showRightSect}
                         setShowRightSect={setShowRightSect}
+                        allQuestions_2={allQuestions_2}
                     />
                 )}
                 {/* quizzes menu  */}
@@ -197,6 +240,7 @@ const CreateQuestPage = () => {
                     setCurrentQuestion={setCurrentQuestion}
                     currentQuestion={currentQuestion}
                     setAllQuestions={setAllQuestions}
+                    singleQuestion={singleQuestion}
                 />
             </div>
         </div>

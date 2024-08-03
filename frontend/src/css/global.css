@@ -139,6 +139,21 @@
     transform: translateX(-50%);
     /*transform: translateY(-50%);*/
 }
+.tickColor:checked::before {
+    content: "\2713";
+    color: white;
+    text-align: center;
+    font-size: 11px;
+    font-weight: bold;
+}
+.tickColor::before {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    color: transparent;
+}
 
 .dark {
     --mainBg: 10, 8, 45;

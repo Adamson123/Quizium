@@ -3,6 +3,7 @@ import BufferToObjUrl from "../../utils/BufferToObjUrl";
 import Warning from "../ui/Warning";
 import { convertToWebp } from "../../utils/convertToWebp";
 import Loading from "../ui/Loading";
+import Options from "./Options";
 
 const Question = ({
     allQuestions,
@@ -11,88 +12,44 @@ const Question = ({
     currentQuestion,
     imagePicked,
     setPickedImage,
+    allQuestions_2,
 }) => {
     const questionRef = useRef(null);
-    const optionRefs = useRef([]);
+
+    const acceptedAns = useRef([]);
     const uploadRef = useRef();
 
-    const [optionsTextColor, setOptionsTextColor] = useState([
-        "#e779c1",
-        "#408fb9",
-        "#e8bf05",
-        "#e48775",
-    ]);
-
-    const [optionsText, setOptionsText] = useState([]);
-    const [questionText, setQuestionText] = useState("");
-
-    // displaying question and options if singleQuestion array has been populated
+    // adding text to options if singleQuestion array has been populated and it's latest version has been updated in the server
     useEffect(() => {
-        if (singleQuestion) {
+        if (singleQuestion && allQuestions_2 === allQuestions) {
             questionRef.current.innerText = singleQuestion.question;
-
-            // Add text to options
-            singleQuestion.options.forEach((option, i) => {
-                optionRefs.current[i].innerText = option.text;
-            });
-
-            setOptionsText(singleQuestion.options);
-            setQuestionText(singleQuestion.question);
         }
     }, [singleQuestion, currentQuestion]);
 
-    const updateOptions = (event, id) => {
-        const updatedOption = optionsText.map((o) => {
-            return o._id !== id ? o : { ...o, text: event.target.innerText };
-        });
-        setOptionsText(updatedOption);
-    };
-
-    //will be called when mouse is out, and will update options in the main allQuestions array
-    const updateMainOptions = () => {
-        //replacing  old options with optionsText
-        if (optionsText !== singleQuestion.options) {
-            const updatedSingleQuestion = {
-                ...singleQuestion,
-                options: optionsText,
-            };
-
-            const updatedMultipleQuestion = allQuestions.map((q, i) => {
-                return i !== currentQuestion ? q : updatedSingleQuestion;
-            });
-            setAllQuestions((a) => (a = updatedMultipleQuestion));
-        }
-    };
-
     //will be called when user is typing...
     const updateQuestion = (event) => {
-        setQuestionText(event.target.innerText);
-    };
+        const updatedSingleQuestion = {
+            ...singleQuestion,
+            question: event.target.innerText,
+        };
 
-    //will be called when mouse is out, and will update question in the main allQuestions array
-    const updateMainQuestion = () => {
-        if (questionText !== singleQuestion.question) {
-            const updatedSingleQuestion = {
-                ...singleQuestion,
-                question: questionText,
-            };
+        const updatedMultipleQuestion = allQuestions.map((q, i) => {
+            return i !== currentQuestion ? q : updatedSingleQuestion;
+        });
 
-            const updatedMultipleQuestion = allQuestions.map((q, i) => {
-                return i !== currentQuestion ? q : updatedSingleQuestion;
-            });
-
-            setAllQuestions(updatedMultipleQuestion);
-        }
+        setAllQuestions(updatedMultipleQuestion);
     };
 
     //for updating answer
     const updateAnswer = (event) => {
         const modifyAnswerArray = () => {
+            //remove the value if it is already part of the answer array
             if (singleQuestion.answer.includes(event.target.value)) {
                 return singleQuestion.answer.filter((a) => {
                     return a !== event.target.value;
                 });
             } else {
+                //else join it with other answers
                 return [...singleQuestion.answer, event.target.value];
             }
         };
@@ -131,6 +88,137 @@ const Question = ({
         }
     };
 
+    useEffect(() => {
+        if (
+            acceptedAns.current.length &&
+            singleQuestion.questionType === "typeAnswer" &&
+            singleQuestion &&
+            allQuestions_2 === allQuestions
+        ) {
+            acceptedAns.current.forEach((_, i) => {
+                acceptedAns.current[i].innerText = singleQuestion.answer[i];
+            });
+        }
+        console.log(acceptedAns);
+    }, [singleQuestion, currentQuestion]);
+
+    const updateAnswerForTypeAnswer = (event, index) => {
+        const filterAnswer = singleQuestion.answer.map((ans, i) => {
+            return i === index ? event.target.innerText : ans;
+        });
+
+        console.log(filterAnswer);
+        const updatedSingleQuestion = {
+            ...singleQuestion,
+            answer:
+                singleQuestion.answer.length - 1 < index
+                    ? [...singleQuestion.answer, event.target.innerText]
+                    : filterAnswer,
+        };
+
+        const updatedMultipleQuestion = allQuestions.map((q, i) => {
+            return i !== currentQuestion ? q : updatedSingleQuestion;
+        });
+
+        setAllQuestions(updatedMultipleQuestion);
+    };
+
+    const optionsToRender = () => {
+        if (singleQuestion.questionType === "trueFalse") {
+            return (
+                <div className="flex gap-4">
+                    <div
+                        className="relative
+            rounded text-center 
+            p-2 px-10 w-full min-h-36 text-wrap break-words
+            flex items-center justify-center cursor-pointer clickable
+             bg-mainBg text-2xl insetShadow"
+                    >
+                        <input
+                            onChange={updateAnswer}
+                            type="radio"
+                            checked={singleQuestion.answer.includes("true")}
+                            className="absolute left-3 
+                               checked:bg-grayOne w-7 h-7 radio top-3"
+                            name="option"
+                            value="true"
+                        />
+                        True
+                    </div>
+                    <div
+                        className="relative
+            rounded text-cente
+            p-2 px-10 w-full min-h-36 text-wrap break-words
+            flex items-center justify-center cursor-pointer 
+            clickable bg-red-600  text-2xl  insetShadow"
+                    >
+                        <input
+                            onChange={updateAnswer}
+                            type="radio"
+                            checked={singleQuestion.answer.includes("false")}
+                            className="absolute left-3 
+                            checked:bg-red-600  w-7 h-7 radio top-3"
+                            name="option"
+                            value="false"
+                        />
+                        False
+                    </div>
+                </div>
+            );
+        } else if (singleQuestion.questionType === "typeAnswer") {
+            return (
+                <div className="flex flex-col items-center gap-3">
+                    <div
+                        className="p-2 text-[15px] w-full text-center 
+                        outline-none rounded text-white py-5 border border-grayOne"
+                        data-placeholder="Enter Answer..."
+                        contentEditable="true"
+                        ref={(el) => {
+                            acceptedAns.current[0] = el;
+                        }}
+                        onInput={(event) => updateAnswerForTypeAnswer(event, 0)}
+                    ></div>
+                    <div className="px-4 py-2 bg-grayTwo text-[12px]">
+                        {" "}
+                        Other Valid Answers{" "}
+                    </div>
+                    <div
+                        className="p-2 text-[15px] w-full text-center 
+                        outline-none rounded text-white py-5 border border-grayOne"
+                        data-placeholder="Enter Answer..."
+                        contentEditable="true"
+                        ref={(el) => {
+                            acceptedAns.current[1] = el;
+                        }}
+                        onInput={(event) => updateAnswerForTypeAnswer(event, 1)}
+                    ></div>
+                    <div
+                        className="p-2 text-[15px] w-full text-center 
+                        outline-none rounded text-white py-5 border border-grayOne"
+                        data-placeholder="Enter Answer..."
+                        contentEditable="true"
+                        ref={(el) => {
+                            acceptedAns.current[2] = el;
+                        }}
+                        onInput={(event) => updateAnswerForTypeAnswer(event, 2)}
+                    ></div>
+                </div>
+            );
+        } else {
+            const options = (
+                <Options
+                    updateAnswer={updateAnswer}
+                    singleQuestion={singleQuestion}
+                    setAllQuestions={setAllQuestions}
+                    currentQuestion={currentQuestion}
+                    allQuestions={allQuestions}
+                    allQuestions_2={allQuestions_2}
+                />
+            );
+            return options;
+        }
+    };
+
     return (
         <div className="w-full smd:max-w-[580px] lg:max-w-[570px] m-auto">
             {/*  Enter Question */}
@@ -142,13 +230,14 @@ const Question = ({
             >
                 <div
                     onInput={updateQuestion}
-                    onMouseOut={updateMainQuestion}
                     className="w-full font-bold outline-none overflow-y-auto max-h-full"
                     contentEditable
                     data-placeholder="Enter question..."
                     ref={questionRef}
                 />
-                {singleQuestion && !singleQuestion.question && <Warning />}
+                {singleQuestion && !singleQuestion.question.trim(" ") && (
+                    <Warning text={"Field should not be empty"} />
+                )}
             </div>
             {/* Upload Image */}
             <div
@@ -207,58 +296,7 @@ const Question = ({
 
             {/*  Enter Options */}
             <div className="flex flex-col gap-4 mt-10">
-                {singleQuestion &&
-                    singleQuestion.options.map((option, i) => {
-                        return (
-                            <div
-                                style={{
-                                    borderColor: optionsTextColor[i],
-                                    color: optionsTextColor[i],
-                                }}
-                                key={i}
-                                className={`relative bg-mainBg border-2
-                                rounded text-center
-                                text-[15px] p-2 px-10 w-full min-h-16 text-wrap break-words
-                                flex items-center justify-center`}
-                            >
-                                <input
-                                    onChange={updateAnswer}
-                                    style={{
-                                        borderColor: optionsTextColor[i],
-                                    }}
-                                    value={option._id}
-                                    checked={singleQuestion.answer.includes(
-                                        option._id
-                                    )}
-                                    type={
-                                        singleQuestion.answerOption ===
-                                        "singleAnswer"
-                                            ? "radio"
-                                            : "checkbox"
-                                    }
-                                    className={`absolute left-3 ${
-                                        singleQuestion.answerOption ===
-                                        "singleAnswer"
-                                            ? `radio optionChecked${i}`
-                                            : `checkbox`
-                                    } w-5 h-5 ${i} `}
-                                    name="option"
-                                />
-
-                                <div
-                                    onInput={(event) =>
-                                        updateOptions(event, option._id)
-                                    }
-                                    onMouseOut={updateMainOptions}
-                                    className={`w-full outline-none overflow-y-auto  max-h-full`}
-                                    contentEditable
-                                    data-placeholder="Enter option..."
-                                    ref={(el) => (optionRefs.current[i] = el)}
-                                />
-                                {!option.text && <Warning />}
-                            </div>
-                        );
-                    })}
+                {singleQuestion && optionsToRender()}
             </div>
         </div>
     );

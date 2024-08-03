@@ -6,23 +6,38 @@ const QuizzesMenu = ({
     handleUpdateQuiz,
     setCurrentQuestion,
     currentQuestion,
-    setAllQuestions,
+    singleQuestion,
 }) => {
     const showWarning = (index) => {
         const singleQuestion_2 = allQuestions[index];
-        let showWarning = false;
+        let showWarning;
 
-        const optionEmpty = () => {
-            let empty;
-            singleQuestion_2.options.forEach((o) => {
-                if (!o.text) {
-                    return (empty = true);
-                }
-            });
-            return empty;
-        };
-        if (singleQuestion_2.question === "" || optionEmpty()) {
-            showWarning = true;
+        const emptyOptions = singleQuestion_2.options.filter((i) => {
+            return i.text.trim(" ") === "";
+        });
+
+        //answer contain non empty space
+        const answerConNonEmpty = singleQuestion_2.answer.filter((i) => {
+            return i.trim(" ") !== "";
+        });
+
+        if (!singleQuestion_2.question.trim(" ")) {
+            showWarning = "Question field is empty";
+            return showWarning;
+        } else if (
+            //only if the question type is quiz
+            emptyOptions.length > 2 &&
+            singleQuestion_2.questionType === "quiz"
+        ) {
+            showWarning = "Fill atleast 2 option field";
+            return showWarning;
+        } else if (
+            !singleQuestion_2.answer.length ||
+            (answerConNonEmpty.length < 1 &&
+                singleQuestion_2.questionType === "typeAnswer")
+        ) {
+            showWarning = "Answer is empty";
+            return showWarning;
         }
 
         return showWarning;
@@ -31,7 +46,7 @@ const QuizzesMenu = ({
         <div
             className="fixed overflow-x-auto bottom-0 right-0 left-0 bg-mainBg gap-2 
       flex p-2 slg:pr-10 slg:right-[350px] lg:top-0 lg:flex-col lg:w-36 lg:pt-20
-      lg:overflow-y-auto items-center lg:px-5 lg:overflow-x-hidden sxl:w-44 outsetShadow"
+      lg:overflow-y-auto items-center lg:overflow-x-hidden lg:px-5  sxl:w-44 outsetShadow"
         >
             {allQuestions &&
                 allQuestions.map((q, i) => {
@@ -57,7 +72,9 @@ const QuizzesMenu = ({
                         >
                             {i + 1}
 
-                            {showWarning(i) && <Warning />}
+                            {singleQuestion && showWarning(i) && (
+                                <Warning text={showWarning(i)} />
+                            )}
                         </div>
                     );
                 })}

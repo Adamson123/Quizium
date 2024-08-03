@@ -44,9 +44,28 @@ const RightSection = ({
     };
 
     const updateQuestionType = (event) => {
+        //only update  if the question type been switched to is not the same as the old question type
+        if (event.target.value === singleQuestion.questionType) {
+            return;
+        }
+
+        const emptiedTextOption = singleQuestion.options.map((option) => {
+            return { ...option, text: "" };
+        });
+
         const updatedSingleQuestion = {
             ...singleQuestion,
             questionType: event.target.value,
+            answerOption:
+                event.target.value === "trueFalse"
+                    ? "singleAnswer"
+                    : singleQuestion.answerOption,
+            answer: [],
+            options:
+                (singleQuestion.questionType !== "quiz") &
+                (event.target.value === "quiz")
+                    ? emptiedTextOption
+                    : singleQuestion.options,
         };
 
         const updatedMultipleQuestion = allQuestions.map((q, i) => {
@@ -55,6 +74,7 @@ const RightSection = ({
 
         setAllQuestions(updatedMultipleQuestion);
     };
+
     return (
         <div
             className={`fixed right-0 top-0 bottom-0 bg-mainBg ${
@@ -103,6 +123,7 @@ const RightSection = ({
                         className="w-full bg-transparent border 
                         p-2 border-grayOne rounded outline-none mt-2"
                         value={singleQuestion.answerOption}
+                        disabled={singleQuestion.questionType !== "quiz"}
                     >
                         <option value="singleAnswer" className="bg-mainBg">
                             Single answer
@@ -121,6 +142,7 @@ const RightSection = ({
                     <textarea
                         value={explanation}
                         onMouseOut={updateExplanation}
+                        onBlur={updateExplanation}
                         onChange={(event) => {
                             setExplantion(event.target.value);
                         }}

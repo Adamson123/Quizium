@@ -14,5 +14,6 @@ export const quizExist = async (req, res, next) => {
     }
 
     req.quiz = quiz;
+
     next();
 };

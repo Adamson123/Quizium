@@ -2,17 +2,22 @@ import React, { useEffect, useState, useMemo } from "react";
 import { useParams } from "react-router";
 import { getQuizWithQuestions } from "../api/QuizApi";
 import { useMutation, useQuery } from "react-query";
-import { createQuestion, updateQuestion } from "../api/QuestionApi";
+import {
+    createQuestion,
+    deleteQuestion,
+    updateQuestion,
+} from "../api/QuestionApi";
 import QuizSettings from "../components/QuizSettings";
-import quiziumImg from "../assets/images/defaultCover/quizium-8.webp";
+
 import PageIsLoading from "../components/ui/PageIsLoading";
-import Header from "../components/CreateQuestComps/Header";
-import QuizzesMenu from "../components/CreateQuestComps/QuizzesMenu";
-import RightSection from "../components/CreateQuestComps/RightSection";
-import Question from "../components/CreateQuestComps/Question";
+import Header from "../components/QuizEditorPageComps/Header";
+import QuizzesMenu from "../components/QuizEditorPageComps/QuizzesMenu";
+import RightSection from "../components/QuizEditorPageComps/RightSection";
+import Question from "../components/QuizEditorPageComps/Question";
 import toast from "react-hot-toast";
-import RenderTest from "../utils/RenderTest";
-const CreateQuestPage = () => {
+import SaveOptions from "../components/QuizEditorPageComps/SaveOptions";
+
+const QuizEditorPage = () => {
     const { id } = useParams();
     const { data, isLoading, error, refetch } = useQuery(
         ["quiz-questions", id],
@@ -25,13 +30,15 @@ const CreateQuestPage = () => {
     const { mutateAsync: createQuestionFunc } = useMutation(createQuestion);
     const { mutateAsync: updateQuestionFunc, isLoading: updatingQuest } =
         useMutation(updateQuestion);
+    const { mutateAsync: deleteQuestionFunc, isLoading: deletingQuest } =
+        useMutation(deleteQuestion);
 
     //all quiz questions
-    const [allQuestions, setAllQuestions] = useState();
-    const [allQuestions_2, setAllQuestions_2] = useState();
+    const [allQuestions, setAllQuestions] = useState([]);
+    const [allQuestions_2, setAllQuestions_2] = useState([]);
 
     //new data to be sent
-    const [singleQuestion, setSingleQuestion] = useState();
+    const [singleQuestion, setSingleQuestion] = useState([]);
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [showQuizPanel, setShowQuizPanel] = useState(false);
 
@@ -63,42 +70,53 @@ const CreateQuestPage = () => {
     //updating single questions array if allQuestions array has been populated or if currentQuestion changes
     useEffect(() => {
         if (allQuestions) {
+            console.log(currentQuestion);
             setSingleQuestion((q) => (q = allQuestions[currentQuestion]));
         }
     }, [allQuestions, currentQuestion]);
 
-    const handleCreateQuiz = async () => {
-        const data = {
-            data: {
-                question: "",
-                answer: "",
-                explanation: "",
-                options: [
-                    {
-                        text: "",
-                        isCorrect: false,
-                    },
-                    {
-                        text: "",
-                        isCorrect: false,
-                    },
-                    {
-                        text: "",
-                        isCorrect: false,
-                    },
-                    {
-                        text: "",
-                        isCorrect: false,
-                    },
-                ],
-                questionType: "quiz",
-                answerOption: "singleAnswer",
-                answer: [],
-            },
+    const handleCreateQuiz = async (quiz, image) => {
+        const quizInfo = quiz
+            ? quiz
+            : {
+                  question: "",
+                  answer: "",
+                  explanation: "",
+                  options: [
+                      {
+                          text: "",
+                          isCorrect: false,
+                      },
+                      {
+                          text: "",
+                          isCorrect: false,
+                      },
+                      {
+                          text: "",
+                          isCorrect: false,
+                      },
+                      {
+                          text: "",
+                          isCorrect: false,
+                      },
+                  ],
+                  questionType: "quiz",
+                  answerOption: "singleAnswer",
+                  answer: [],
+              };
+        const formData = new FormData();
+
+        formData.append("question", JSON.stringify(quizInfo));
+        //
+        formData.append("file", image);
+
+        // console.log(formData.get("question"), "get");
+        const info = {
+            data: formData,
             id,
         };
 
-        const promise = createQuestionFunc(data);
+        const promise = createQuestionFunc(info);
 
         toast.promise(promise, {
             loading: "Creating Question",
@@ -121,7 +139,6 @@ const CreateQuestPage = () => {
             (allQuestions_2 !== allQuestions || imagePicked) &&
             !updatingQuest
         ) {
-            console.log("updating quiz");
             const formData = new FormData();
             formData.append("file", imagePicked);
             formData.append("question", JSON.stringify(singleQuestion));
@@ -130,9 +147,7 @@ const CreateQuestPage = () => {
                 data: formData,
                 id,
             };
-            // const res = await updateQuestionFunc(data);
 
-            //setAllQuestions(res.quiz.questionsId.questions);
             setAllQuestions_2(allQuestions);
 
             const res = await updateQuestionFunc(data);
@@ -148,6 +163,50 @@ const CreateQuestPage = () => {
 
             setShowSaveNoti(false);
             setPickedImage("");
+        }
+    };
+
+    const handleDeleteQuiz = async (questId) => {
+        if (deletingQuest) {
+            return;
+        }
+        if (allQuestions.length === 1) {
+            toast.error("Question can't be deleted");
+            return;
+        }
+        const info = {
+            id,
+            data: {
+                questId,
+                image: singleQuestion.image?._id,
+            },
+        };
+
+        const promise = deleteQuestionFunc(info);
+
+        toast.promise(promise, {
+            loading: questId ? "Deleting Question" : "Deleting Image",
+            success: questId
+                ? (data) => {
+                      return data.msg;
+                  }
+                : "Image Deleted",
+            error: questId
+                ? (data) => {
+                      return data.err;
+                  }
+                : "Error deleting image",
+        });
+
+        const res = await promise;
+
+        setAllQuestions(res.quiz.questionsId.questions);
+        setAllQuestions_2(res.quiz.questionsId.questions);
+
+        if (questId) {
+            if (currentQuestion === allQuestions.length - 1) {
+                setCurrentQuestion(currentQuestion - 1);
+            }
         }
     };
 
@@ -203,35 +262,43 @@ const CreateQuestPage = () => {
             )}
 
             {/* Question , Right Section  , Quizzes Menu*/}
+
             <div
                 className="min-h-screen pt-28 pb-32 px-7 slg:pr-[330px] 
             lg:pr-[300px] lg:pl-20 relative"
             >
+                <SaveOptions />
                 {/*  Enter Question &  options container*/}
-                <Question
-                    allQuestions={allQuestions}
-                    setAllQuestions={setAllQuestions}
-                    singleQuestion={singleQuestion}
-                    currentQuestion={currentQuestion}
-                    imagePicked={imagePicked}
-                    setPickedImage={setPickedImage}
-                    allQuestions_2={allQuestions_2}
-                />
-                {/* right section( Answer Options , Quiz type , Delete ) */}
                 {singleQuestion && (
-                    <RightSection
-                        singleQuestion={singleQuestion}
-                        setSingleQuestion={setSingleQuestion}
-                        setAllQuestions={setAllQuestions}
-                        allQuestions={allQuestions}
-                        currentQuestion={currentQuestion}
-                        handleUpdateQuiz={handleUpdateQuiz}
-                        showRightSect={showRightSect}
-                        setShowRightSect={setShowRightSect}
-                        allQuestions_2={allQuestions_2}
-                    />
+                    <>
+                        <Question
+                            allQuestions={allQuestions}
+                            setAllQuestions={setAllQuestions}
+                            singleQuestion={singleQuestion}
+                            currentQuestion={currentQuestion}
+                            imagePicked={imagePicked}
+                            setPickedImage={setPickedImage}
+                            allQuestions_2={allQuestions_2}
+                            handleDeleteQuiz={handleDeleteQuiz}
+                        />
+                        {/* right section( Answer Options , Quiz type , Delete )
+                         */}
+                        <RightSection
+                            singleQuestion={singleQuestion}
+                            setSingleQuestion={setSingleQuestion}
+                            setAllQuestions={setAllQuestions}
+                            allQuestions={allQuestions}
+                            currentQuestion={currentQuestion}
+                            handleUpdateQuiz={handleUpdateQuiz}
+                            showRightSect={showRightSect}
+                            setShowRightSect={setShowRightSect}
+                            allQuestions_2={allQuestions_2}
+                            handleDeleteQuiz={handleDeleteQuiz}
+                            handleCreateQuiz={handleCreateQuiz}
+                        />
+                    </>
                 )}
-                {/* quizzes menu  */}
+                {/* quizzes menu */}
                 <QuizzesMenu
                     allQuestions={allQuestions}
                     imagePicked={imagePicked}
@@ -247,4 +314,4 @@ const CreateQuestPage = () => {
     );
 };
 
-export default CreateQuestPage;
+export default QuizEditorPage;

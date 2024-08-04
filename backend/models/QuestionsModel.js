@@ -6,6 +6,9 @@ const QuestionsSchema = mongoose.Schema({
         ref: "questions",
         required: true,
     },
+    draft: {
+        type: Boolean,
+    },
     questions: [
         {
             question: String,

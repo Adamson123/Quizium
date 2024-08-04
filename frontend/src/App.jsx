@@ -5,7 +5,7 @@ import ProtectedRoutes from "./pages/ProtectedRoutes";
 import Layout from "./layouts/layout";
 import Explore from "./pages/Explore";
 import SettingsPage from "./pages/SettingsPage";
-import CreateQuestPage from "./pages/CreateQuestPage";
+import QuizEditorPage from "./pages/QuizEditorPage";
 
 function App() {
     return (
@@ -30,10 +30,7 @@ function App() {
                         </Layout>
                     }
                 />
-                <Route
-                    path="/create-questions/:id"
-                    element={<CreateQuestPage />}
-                />
+                <Route path="/quiz-editor/:id" element={<QuizEditorPage />} />
             </Route>
             <Route
                 path="/404"

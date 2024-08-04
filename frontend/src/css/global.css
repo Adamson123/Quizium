@@ -154,7 +154,17 @@
     background: transparent;
     color: transparent;
 }
-
+.absoluteUpQuestImg {
+    position: absolute;
+    flex-direction: column;
+    display: flex;
+    top: 50%;
+    transform: translateY(-50%);
+    justify-content: center;
+    align-items: center;
+    gap: 2;
+    color: rgb(125, 124, 124);
+}
 .dark {
     --mainBg: 10, 8, 45;
     --text-color: 255, 255, 255;

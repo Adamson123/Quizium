@@ -16,8 +16,8 @@ const QuizzesMenu = ({
             return i.text.trim(" ") === "";
         });
 
-        //answer contain non empty space
-        const answerConNonEmpty = singleQuestion_2.answer.filter((i) => {
+        //get non-empty answer field
+        const emptyAnsField = singleQuestion_2.answer.filter((i) => {
             return i.trim(" ") !== "";
         });
 
@@ -33,7 +33,7 @@ const QuizzesMenu = ({
             return showWarning;
         } else if (
             !singleQuestion_2.answer.length ||
-            (answerConNonEmpty.length < 1 &&
+            (emptyAnsField.length < 1 &&
                 singleQuestion_2.questionType === "typeAnswer")
         ) {
             showWarning = "Answer is empty";
@@ -72,7 +72,7 @@ const QuizzesMenu = ({
                         >
                             {i + 1}
 
-                            {singleQuestion && showWarning(i) && (
+                            {showWarning(i) && (
                                 <Warning text={showWarning(i)} />
                             )}
                         </div>

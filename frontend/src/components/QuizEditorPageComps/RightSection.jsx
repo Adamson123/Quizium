@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import bufferToObj from "../../utils/bufferToObj";
 
 const RightSection = ({
     singleQuestion,
@@ -8,11 +9,14 @@ const RightSection = ({
     currentQuestion,
     showRightSect,
     setShowRightSect,
+    handleDeleteQuiz,
+    handleCreateQuiz,
+    handleUpdateQuiz,
 }) => {
     const [explanation, setExplantion] = useState(singleQuestion.explanation);
 
     useEffect(() => {
-        setExplantion(allQuestions[currentQuestion].explanation);
+        setExplantion(allQuestions[currentQuestion]?.explanation);
     }, [currentQuestion]);
 
     const updateExplanation = () => {
@@ -75,6 +79,27 @@ const RightSection = ({
         setAllQuestions(updatedMultipleQuestion);
     };
 
+    const duplicateQuiz = () => {
+        const { question, explanation, questionType, answerOption, answer } =
+            singleQuestion;
+        const options = singleQuestion.options.map((op) => {
+            return { text: op.text, isCorrect: op.isCorrect };
+        });
+
+        console.log(answer);
+        const quizInfo = {
+            question,
+            explanation,
+            questionType,
+            answerOption,
+            options,
+            answer: singleQuestion.questionType === "quiz" ? [] : answer,
+        };
+        const image = bufferToObj(singleQuestion.image?.image.data.data);
+        handleCreateQuiz(quizInfo, image);
+        handleUpdateQuiz();
+    };
+
     return (
         <div
             className={`fixed right-0 top-0 bottom-0 bg-mainBg ${
@@ -94,7 +119,7 @@ const RightSection = ({
                 text-grayTwo cursor-pointer slg:hidden"
             ></span>
 
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-6">
                 {/* Question type */}
                 <div className="flex-col px-4">
                     <span className="isidoraBold">Question Type</span>
@@ -121,7 +146,7 @@ const RightSection = ({
                     <select
                         onChange={updateAnswerOption}
                         className="w-full bg-transparent border 
-                        p-2 border-grayOne rounded outline-none mt-2"
+                        p-2 border-grayOne rounded outline-none mt-2 disabled:opacity-[0.3]"
                         value={singleQuestion.answerOption}
                         disabled={singleQuestion.questionType !== "quiz"}
                     >
@@ -152,12 +177,20 @@ const RightSection = ({
                         {/* {singleQuestion.explanation} */}
                     </textarea>
                 </div>
-                <div className="flex justify-center items-center mt-4">
+                <div className="flex justify-center items-center gap-3 mt-4 px-3">
                     <button
+                        onClick={() => handleDeleteQuiz(singleQuestion._id)}
                         className="bg-red-500 clickable rounded
-                     insetShadow isidoraBold text-[13px] py-[9px] px-[57px]"
+                     insetShadow isidoraBold text-[13px] py-[9px] px-[50px]"
                     >
                         Delete
+                    </button>
+                    <button
+                        onClick={duplicateQuiz}
+                        className="bg-green-500 clickable rounded
+                     insetShadow isidoraBold text-[13px] py-[9px] px-[50px]"
+                    >
+                        Duplicate
                     </button>
                 </div>
             </div>

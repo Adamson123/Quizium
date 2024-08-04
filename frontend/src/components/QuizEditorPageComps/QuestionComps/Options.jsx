@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import Warning from "../ui/Warning";
+import Warning from "../../ui/Warning";
+import toast from "react-hot-toast";
 
 const Options = ({
     updateAnswer,
@@ -19,7 +20,7 @@ const Options = ({
     const optionRefs = useRef([]);
 
     useEffect(() => {
-        if (singleQuestion && allQuestions_2 === allQuestions) {
+        if (allQuestions_2 === allQuestions) {
             // Add text to options
             singleQuestion.options.forEach((option, i) => {
                 optionRefs.current[i].innerText = option.text;
@@ -28,15 +29,25 @@ const Options = ({
     }, [singleQuestion, currentQuestion]);
 
     const updateOptions = (event, id) => {
+        //update option
         const updatedOption = singleQuestion.options.map((option) => {
             return option._id !== id
                 ? option
                 : { ...option, text: event.target.innerText };
         });
 
+        //filter out answers that does not match the id passed down
+        const answer = singleQuestion.answer.filter((ans, i) => {
+            return ans !== id;
+        });
+
         const updatedSingleQuestion = {
             ...singleQuestion,
             options: updatedOption,
+            answer:
+                event.target.innerText.trim(" ") === ""
+                    ? answer
+                    : singleQuestion.answer,
         };
 
         const updatedMultipleQuestion = allQuestions.map((q, i) => {
@@ -46,7 +57,6 @@ const Options = ({
     };
 
     const checkEmptyOptionField = (index) => {
-        // const singleQuestion_2 = allQuestions[index];
         const emptyOptions = singleQuestion.options.filter((i) => {
             return i.text.trim(" ") === "";
         });
@@ -69,7 +79,11 @@ const Options = ({
                           flex items-center justify-center`}
                 >
                     <input
-                        onChange={updateAnswer}
+                        onChange={(event) => {
+                            option.text
+                                ? updateAnswer(event)
+                                : toast.error("Option is empty");
+                        }}
                         style={{
                             borderColor: optionsTextColor[i],
                         }}

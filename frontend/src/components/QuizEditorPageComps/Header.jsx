@@ -23,9 +23,9 @@ const Header = ({
                     navigate("/");
                 }}
                 className="font-bold
-          text-shinyPurple agbalumoFont tracking-tighter text-[20px] smd:text-2xl cursor-pointer"
+          text-shinyPurple agbalumoFont tracking-tighter text-3xl cursor-pointer"
             >
-                Quizium
+                Qz.
             </h1>
             {/* quiz settings , save button , change question type*/}
             <div className="flex items-center gap-3">
@@ -59,14 +59,15 @@ const Header = ({
                         )}
                     </button>
                     {allQuestions !== allQuestions_2 && showSaveNoti && (
+                        /* Save changes notification */
                         <>
                             <span
                                 className="w-0 h-0 border-l-[5px] border-l-transparent border-r-[5px]
-                    border-r-transparent border-b-[10px] border-mainBg shadow-md absolute bottom-[-23px] left-[19px] "
+                    border-r-transparent border-b-[10px] border-red-600 shadow-md absolute bottom-[-23px] left-[19px] "
                             ></span>
                             <span
                                 className="absolute bottom-[-45px] left-[-45px] 
-                    w-[145px] bg-mainBg py-1 px-2 text-[12px] rounded shadow-md text-center"
+                    w-[145px] bg-red-600 py-1 px-2 text-[12px] rounded shadow-md text-center"
                             >
                                 Click to save changes
                             </span>
@@ -84,7 +85,7 @@ const Header = ({
                 </button>
                 {/* save button*/}
                 <button className="p-[7px] clickable isidoraBold bg-shinyPurple insetShadow rounded">
-                    Save
+                    Done
                 </button>
             </div>
         </div>

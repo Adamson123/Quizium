@@ -1,4 +1,7 @@
 export const BufferToObjUrl = (arr) => {
+    if (!arr) {
+        return;
+    }
     const byteArray = new Uint8Array(arr);
 
     const imfg = new Blob([byteArray], { type: "image/webp" });

@@ -10,6 +10,7 @@ const Header = ({
     allQuestions_2,
     updatingQuest,
     showSaveNoti,
+    setShowSaveOption,
 }) => {
     const navigate = useNavigate();
     return (
@@ -84,7 +85,13 @@ const Header = ({
                     <span className="bi-question absolute left-[16px]"></span>
                 </button>
                 {/* save button*/}
-                <button className="p-[7px] clickable isidoraBold bg-shinyPurple insetShadow rounded">
+                <button
+                    onClick={() => {
+                        handleUpdateQuiz();
+                        setShowSaveOption(true);
+                    }}
+                    className="p-[7px] clickable isidoraBold bg-shinyPurple insetShadow rounded"
+                >
                     Done
                 </button>
             </div>

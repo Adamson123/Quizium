@@ -10,7 +10,6 @@ import { router as quizRouter } from "./routers/quiz-router.js";
 import { router as questionRouter } from "./routers/question-router.js";
 import { notFoundMiddleWare } from "./middlewares/notFoundMiddleware.js";
 import { getInfoAtStart, tableLog } from "./utils/tableLog.js";
-
 import { jwtCheckAndVerify } from "./middlewares/jwtCheckAndVerify.js";
 
 const app = express();

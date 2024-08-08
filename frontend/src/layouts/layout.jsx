@@ -7,7 +7,7 @@ import { useQuery } from "react-query";
 
 export const dataContext = createContext();
 
-const Layout = ({ children }) => {
+const Layout = ({ children, text }) => {
     const { data, refetch } = useQuery(["user"], getUser, { retry: false });
     let { profileImg, email, name, isLoading } = data;
 
@@ -28,7 +28,7 @@ const Layout = ({ children }) => {
     return (
         <div className="flex flex-col">
             <dataContext.Provider value={value}>
-                <Header />
+                <Header text={text} />
                 {children}
             </dataContext.Provider>
         </div>

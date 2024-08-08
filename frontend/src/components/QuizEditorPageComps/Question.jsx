@@ -18,7 +18,6 @@ const Question = ({
     handleDeleteQuiz,
 }) => {
     const questionRef = useRef(null);
-
     const uploadRef = useRef();
 
     // adding text to options if allQuestion array has been populated (it's latest version has been updated in the server)
@@ -38,7 +37,6 @@ const Question = ({
         const updatedMultipleQuestion = allQuestions.map((q, i) => {
             return i !== currentQuestion ? q : updatedSingleQuestion;
         });
-
         setAllQuestions(updatedMultipleQuestion);
     };
 
@@ -140,7 +138,7 @@ const Question = ({
                     data-placeholder="Enter question..."
                     ref={questionRef}
                 />
-                {!singleQuestion.question.trim(" ") && (
+                {!singleQuestion.question?.trim(" ") && (
                     <Warning text={"Field should not be empty"} />
                 )}
             </div>

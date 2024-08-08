@@ -11,6 +11,8 @@ import SubSettingsSec from "./QuizSettingsComps/SubSettingsSec";
 
 const QuizSettings = memo((props) => {
     const { mutateAsync: createQuizFunc } = useMutation(createQuiz);
+    const { mutateAsync: updateQuizSettingsFunc } =
+        useMutation(updateQuizSettings);
     const [quizSettings, setQuizSettings] = useState(
         !props.config
             ? {
@@ -63,14 +65,17 @@ const QuizSettings = memo((props) => {
     const submitSetting = async (event) => {
         event.preventDefault();
         const formData = new FormData();
-        formData.append("settings", JSON.stringify(quizSettings));
+
+        formData.append(
+            "settings",
+            JSON.stringify({ ...quizSettings, coverImg: "" })
+        );
+
         formData.append("file", pickedImage);
 
-        //  if (!props.config) {
-        console.log("sending", quizSettings);
         const promise = !props.config
             ? createQuizFunc(formData)
-            : updateQuizSettings({ formData, id: props.id });
+            : updateQuizSettingsFunc({ formData, id: props.id });
 
         toast.promise(promise, {
             loading: !props.config
@@ -89,7 +94,7 @@ const QuizSettings = memo((props) => {
 
         if (res.msg) {
             if (!props.config) {
-                navigate("/create-questions/" + res.quizId);
+                navigate("/quiz-editor/" + res.quizId);
             } else {
                 props.refetch();
             }

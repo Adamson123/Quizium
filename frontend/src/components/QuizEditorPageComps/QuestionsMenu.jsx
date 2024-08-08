@@ -1,4 +1,6 @@
 import Warning from "../ui/Warning";
+import { useEffect, useRef } from "react";
+
 const QuizzesMenu = ({
     allQuestions,
     imagePicked,
@@ -7,7 +9,10 @@ const QuizzesMenu = ({
     setCurrentQuestion,
     currentQuestion,
     singleQuestion,
+    showQuizValid,
 }) => {
+    const quizRef = useRef([]);
+
     const showWarning = (index) => {
         const singleQuestion_2 = allQuestions[index];
         let showWarning;
@@ -21,6 +26,16 @@ const QuizzesMenu = ({
             return i.trim(" ") !== "";
         });
 
+        const checkSingleAnswer =
+            (!singleQuestion_2.answer.length &&
+                singleQuestion_2.questionType === "quiz") ||
+            (!singleQuestion_2.answer.length &&
+                singleQuestion_2.questionType === "trueFalse");
+
+        const checkMultipleAnswer = emptyAnsField.length < 1;
+
+        // console.clear();
+
         if (!singleQuestion_2.question.trim(" ")) {
             showWarning = "Question field is empty";
             return showWarning;
@@ -31,17 +46,24 @@ const QuizzesMenu = ({
         ) {
             showWarning = "Fill atleast 2 option field";
             return showWarning;
-        } else if (
-            !singleQuestion_2.answer.length ||
-            (emptyAnsField.length < 1 &&
-                singleQuestion_2.questionType === "typeAnswer")
-        ) {
+        } else if (!singleQuestion_2.answer.length || checkMultipleAnswer) {
             showWarning = "Answer is empty";
             return showWarning;
         }
 
         return showWarning;
     };
+
+    useEffect(() => {
+        console.log(currentQuestion);
+        singleQuestion &&
+            quizRef.current[currentQuestion + 1] &&
+            quizRef.current[currentQuestion + 1].scrollIntoView({
+                block: "end",
+                behaviour: "smooth",
+                inline: "nearest",
+            });
+    }, [showQuizValid]);
     return (
         <div
             className="fixed overflow-x-auto bottom-0 right-0 left-0 bg-mainBg gap-2 
@@ -58,6 +80,7 @@ const QuizzesMenu = ({
                                     setCurrentQuestion(i);
                                 }
                             }}
+                            ref={(el) => (quizRef.current[i + 1] = el)}
                             key={i}
                             className={`min-h-16 min-w-24  border-2  ${
                                 currentQuestion === i

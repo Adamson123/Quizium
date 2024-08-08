@@ -96,7 +96,7 @@ const RightSection = ({
             answer: singleQuestion.questionType === "quiz" ? [] : answer,
         };
         const image = bufferToObj(singleQuestion.image?.image.data.data);
-        handleCreateQuiz(quizInfo, image);
+        handleCreateQuiz(quizInfo, image, true);
         handleUpdateQuiz();
     };
 
@@ -161,7 +161,7 @@ const RightSection = ({
                 <div className="flex-col px-4 relative">
                     {/* Description */}
                     <span className="isidoraBold relative">Explanation</span>
-                    <span className="text-[13px] absolute top-[35px] right-6">
+                    <span className="text-[13px] absolute top-[35px] right-6 text-shinyPurple">
                         {explanation ? 500 - explanation.length : 500}
                     </span>
                     <textarea
@@ -172,10 +172,8 @@ const RightSection = ({
                             setExplantion(event.target.value);
                         }}
                         maxLength={500}
-                        className="w-full h-[180px] p-5 resize-none textarea rounded-none mt-2"
-                    >
-                        {/* {singleQuestion.explanation} */}
-                    </textarea>
+                        className="w-full h-[180px] p-5 resize-none border-grayOne textarea rounded-none mt-2 bg-mainBg"
+                    ></textarea>
                 </div>
                 <div className="flex justify-center items-center gap-3 mt-4 px-3">
                     <button

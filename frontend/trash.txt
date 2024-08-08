@@ -97,3 +97,23 @@ const scrollToTimeLimit = () => {
         // const updatedOption = singleQuestion.options.map((o) => {
         //     return o._id !== id ? o : { ...o, text: event.target.innerText };
         // });
+
+
+  <button
+                    className="bg-grayTwo px-8 py-2 rounded insetShadow 
+                isidoraBold clickable bg-shinyPurple"
+                >
+                    Published &nbsp; 0
+                </button>
+                <button
+                    className="bg-grayTwo px-8 py-2 rounded insetShadow 
+                isidoraBold clickable"
+                >
+                    Drafts &nbsp; 0
+                </button>
+                <button
+                    className="bg-grayTwo px-8 py-2 rounded insetShadow 
+                isidoraBold clickable"
+                >
+                    Played &nbsp; 0
+                </button>

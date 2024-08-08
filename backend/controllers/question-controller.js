@@ -4,17 +4,19 @@ import { CustomError } from "../errors/CustomError.js";
 import { QuestionImagesModel } from "../models/QuestionImagesModel.js";
 
 export const createQuestion = async (req, res) => {
-    // const { id } = req.params;
-
     const data = JSON.parse(req.body.question);
 
     if (!Object.keys(data).length) {
         throw new CustomError("Please provide quiz question", 400);
     }
 
-    // if (!data.questionType) {
-    //     throw new CustomError("Question type is not defined", 400);
-    // }
+    if (!data.questionType) {
+        throw new CustomError("Error questionType is not defined", 400);
+    }
+    if (!data.answerOption) {
+        throw new CustomError("Error answerOption is not defined");
+    }
+
     let image;
 
     if (req.file) {

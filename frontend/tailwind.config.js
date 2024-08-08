@@ -28,6 +28,7 @@ export default {
                 grayTwo: "rgb(var(--gray-two))",
                 grayThird: "rgb(var(--gray-third))",
                 grayFourth: "rgb(var(--gray-fourth))",
+                grayFive: "rgb(var(--gray-five))",
                 placeholder: "rgba(var(--placeholder))",
             },
         },

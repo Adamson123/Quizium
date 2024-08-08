@@ -4,6 +4,7 @@ import {
     updateSingleQuizSettings,
     getMultipleQuizzes,
     getSingleQuizWithQuestions,
+    getUserQuizzes,
 } from "../controllers/quiz-controller.js";
 import multer from "multer";
 import { quizExist } from "../middlewares/quizExist.js";
@@ -14,7 +15,8 @@ export const router = express.Router();
 
 router.post("/", upload.single("file"), createQuiz);
 router.get("/", getMultipleQuizzes);
-router.get("/:id", quizExist, getSingleQuizWithQuestions);
+router.get("/single-quiz/:id", quizExist, getSingleQuizWithQuestions);
+router.get("/by-user", getUserQuizzes);
 router.patch(
     "/:id",
     quizExist,

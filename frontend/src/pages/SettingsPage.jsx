@@ -3,7 +3,7 @@ import SettingInputComp from "../components/SettingInputComp";
 import { updatePasswordFunc, updatePersonalInfoFunc } from "../api/UserApi";
 import { toast } from "react-hot-toast";
 import { useMutation } from "react-query";
-import { dataContext } from "../layouts/layout";
+import { dataContext } from "../layouts/Layout";
 import { convertToWebp } from "../utils/convertToWebp";
 import Loading from "../components/ui/Loading";
 

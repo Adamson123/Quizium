@@ -11,10 +11,11 @@ import QuizSettings from "../components/QuizSettings";
 
 import PageIsLoading from "../components/ui/PageIsLoading";
 import Header from "../components/QuizEditorPageComps/Header";
-import QuizzesMenu from "../components/QuizEditorPageComps/QuizzesMenu";
+import QuizzesMenu from "../components/QuizEditorPageComps/QuestionsMenu";
 import RightSection from "../components/QuizEditorPageComps/RightSection";
 import Question from "../components/QuizEditorPageComps/Question";
 import toast from "react-hot-toast";
+import QuizValidation from "../components/QuizEditorPageComps/QuizValidation";
 import SaveOptions from "../components/QuizEditorPageComps/SaveOptions";
 
 const QuizEditorPage = () => {
@@ -45,6 +46,8 @@ const QuizEditorPage = () => {
     const [imagePicked, setPickedImage] = useState();
     const [showRightSect, setShowRightSect] = useState(false);
     const [showSaveNoti, setShowSaveNoti] = useState(false);
+    const [showQuizValid, setShowQuizValid] = useState(false);
+    const [showSaveOption, setShowSaveOption] = useState(false);
     const config = useMemo(() => {
         if (data) {
             return {
@@ -55,6 +58,8 @@ const QuizEditorPage = () => {
                 visibility: data.visibility,
                 category: data.category,
                 coverImg: data.coverImg,
+                draft: data.draft,
+                id: data._id,
             };
         }
     }, [data]);
@@ -70,12 +75,11 @@ const QuizEditorPage = () => {
     //updating single questions array if allQuestions array has been populated or if currentQuestion changes
     useEffect(() => {
         if (allQuestions) {
-            console.log(currentQuestion);
             setSingleQuestion((q) => (q = allQuestions[currentQuestion]));
         }
     }, [allQuestions, currentQuestion]);
 
-    const handleCreateQuiz = async (quiz, image) => {
+    const handleCreateQuiz = async (quiz, image, duplicate) => {
         const quizInfo = quiz
             ? quiz
             : {
@@ -105,23 +109,19 @@ const QuizEditorPage = () => {
                   answer: [],
               };
         const formData = new FormData();
-
         formData.append("question", JSON.stringify(quizInfo));
-        //
         formData.append("file", image);
 
-        // console.log(formData.get("question"), "get");
         const info = {
             data: formData,
             id,
         };
-
         const promise = createQuestionFunc(info);
 
         toast.promise(promise, {
-            loading: "Creating Question",
+            loading: duplicate ? "Duplicating Question" : "Creating Question",
             success: (data) => {
-                return data.msg;
+                return duplicate ? "Question Duplicated" : data.msg;
             },
             error: (data) => {
                 return data.err;
@@ -129,7 +129,6 @@ const QuizEditorPage = () => {
         });
 
         const res = await promise;
-
         setAllQuestions(res.quiz.questionsId.questions);
         setAllQuestions_2(res.quiz.questionsId.questions);
     };
@@ -148,11 +147,12 @@ const QuizEditorPage = () => {
                 id,
             };
 
+            const holdAllQuestions_2 = allQuestions_2;
             setAllQuestions_2(allQuestions);
 
             const res = await updateQuestionFunc(data);
-
             if (res.err) {
+                setAllQuestions_2(holdAllQuestions_2);
                 return toast.error("Error saving previous changes");
             }
 
@@ -160,7 +160,6 @@ const QuizEditorPage = () => {
                 setAllQuestions(res.quiz.questionsId.questions);
                 setAllQuestions_2(res.quiz.questionsId.questions);
             }
-
             setShowSaveNoti(false);
             setPickedImage("");
         }
@@ -186,16 +185,12 @@ const QuizEditorPage = () => {
 
         toast.promise(promise, {
             loading: questId ? "Deleting Question" : "Deleting Image",
-            success: questId
-                ? (data) => {
-                      return data.msg;
-                  }
-                : "Image Deleted",
-            error: questId
-                ? (data) => {
-                      return data.err;
-                  }
-                : "Error deleting image",
+            success: (data) => {
+                return questId ? data.msg : "Image Deleted";
+            },
+            error: (data) => {
+                return questId ? "Error deleting image" : data.err;
+            },
         });
 
         const res = await promise;
@@ -233,12 +228,97 @@ const QuizEditorPage = () => {
 
     console.log("create question re-rendered");
 
+    const analizeQuiz = () => {
+        const errorMessage = (field, value, type) => {
+            /*checking if the quiz with question type "quiz" 
+            has more than 1 options that is not empty*/
+            if (field === "options" && type === "quiz") {
+                //filter out filled options
+                const filteredOptions = value.filter((op) => {
+                    return op.text !== "";
+                });
+                if (filteredOptions.length > 1) return "";
+            }
+
+            let filteredAnswers;
+            if (field === "answer") {
+                filteredAnswers = value.filter((op) => {
+                    return op !== "";
+                });
+            }
+
+            /*return if its options field and the type is not quiz 
+            cause we are only validating options fields in quiz with questionType "quiz"
+            or if field is question and the value is not empty or if field is answer 
+            and the answer has valid element in it*/
+
+            if (
+                (field === "options" && type !== "quiz") ||
+                (field === "question" && value) ||
+                (field === "answer" && filteredAnswers.length)
+            ) {
+                return "";
+            }
+
+            const message = {
+                question: "Question field is empty",
+                options: "An option field is empty",
+                answer: "Answer is empty",
+            };
+
+            return message[field];
+        };
+
+        let analizedQuestions = [];
+        for (let index = 0; index < allQuestions.length; index++) {
+            const question = allQuestions[index];
+            const messages = {
+                //question Error
+                questionError: errorMessage(
+                    "question",
+                    question.question,
+                    question.questionType
+                ),
+                //option Error
+                optionsError: errorMessage(
+                    "options",
+                    question.options,
+                    question.questionType
+                ),
+                //answer Error
+                answerError: errorMessage(
+                    "answer",
+                    question.answer,
+                    question.questionType
+                ),
+                index,
+            };
+            if (
+                messages.questionError ||
+                messages.optionsError ||
+                messages.answerError
+            ) {
+                analizedQuestions = [...analizedQuestions, messages];
+            }
+        }
+        if (!analizedQuestions.length) {
+            return;
+        }
+        return analizedQuestions;
+    };
+
     if (!data) {
         return <PageIsLoading message={"Setting up quiz editor..."} />;
     }
 
     return (
-        <div className="isidoraReg">
+        <div
+            className={`isidoraReg ${
+                showQuizPanel ||
+                showSaveOption ||
+                (showQuizValid && "overflow-hidden")
+            } bg-mainBg text-textColor`}
+        >
             {/* Header */}
 
             <Header
@@ -249,6 +329,7 @@ const QuizEditorPage = () => {
                 allQuestions_2={allQuestions_2}
                 updatingQuest={updatingQuest}
                 showSaveNoti={showSaveNoti}
+                setShowSaveOption={setShowSaveOption}
             />
 
             {config && (
@@ -267,7 +348,21 @@ const QuizEditorPage = () => {
                 className="min-h-screen pt-28 pb-32 px-7 slg:pr-[330px] 
             lg:pr-[300px] lg:pl-20 relative"
             >
-                <SaveOptions />
+                <SaveOptions
+                    config={config}
+                    showSaveOption={showSaveOption}
+                    setShowSaveOption={setShowSaveOption}
+                    setShowQuizValid={setShowQuizValid}
+                    analizeQuiz={analizeQuiz}
+                    refetch={refetch}
+                />
+                <QuizValidation
+                    allQuestions={allQuestions}
+                    showQuizValid={showQuizValid}
+                    setShowQuizValid={setShowQuizValid}
+                    setCurrentQuestion={setCurrentQuestion}
+                    analizeQuiz={analizeQuiz}
+                />
                 {/*  Enter Question &  options container*/}
                 {singleQuestion && (
                     <>
@@ -308,6 +403,7 @@ const QuizEditorPage = () => {
                     currentQuestion={currentQuestion}
                     setAllQuestions={setAllQuestions}
                     singleQuestion={singleQuestion}
+                    showQuizValid={showQuizValid}
                 />
             </div>
         </div>

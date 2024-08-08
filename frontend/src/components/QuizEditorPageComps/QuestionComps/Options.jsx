@@ -64,7 +64,7 @@ const Options = ({
         return emptyOptions.length;
     };
 
-    return singleQuestion.options.map((option, i) => {
+    return singleQuestion.options?.map((option, i) => {
         {
             return (
                 <div

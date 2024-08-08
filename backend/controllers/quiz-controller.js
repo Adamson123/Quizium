@@ -91,8 +91,9 @@ export const createQuiz = async (req, res) => {
 };
 
 export const updateSingleQuizSettings = async (req, res) => {
+    const settings = JSON.parse(req.body.settings);
     const { title, category, applyTime, timeLimit, description, visibility } =
-        JSON.parse(req.body.settings);
+        settings;
 
     const { id } = req.params;
 
@@ -134,19 +135,34 @@ export const updateSingleQuizSettings = async (req, res) => {
             return quiz.coverImg && quiz.coverImg;
         };
         /*return cover image id if one was created or updated above, else return 
-          the id of the old coverimg of the quiz if there is one else nothing🙄
+          the id of the old coverimg of the quiz if there is no one else🙄
         */
         return image ? image._id : hasCoverImg();
     };
 
-    console.log(updateImage(), "cover image iddddd");
-    updatedQuiz = await QuizInfosModel.findByIdAndUpdate(id, {
-        title,
+    const updateProvidedField = () => {
+        const keys = Object.keys(settings);
+
+        const update = {};
+
+        keys.forEach((k) => {
+            update[k] = settings[k];
+        });
+
+        delete update?.coverImg;
+        return update;
+    };
+
+    console.log({ ...updateProvidedField() });
+
+    /*title,
         category,
         applyTime,
         timeLimit,
         description,
-        visibility,
+        visibility*/
+    updatedQuiz = await QuizInfosModel.findByIdAndUpdate(id, {
+        ...updateProvidedField(),
         coverImg: updateImage(),
     });
 
@@ -164,8 +180,6 @@ export const updateSingleQuizSettings = async (req, res) => {
         }
     );
 
-    //  console.log(updatedQuestions);
-
     return res.status(201).json({
         msg: "Quiz settings has been updated successfully",
         id: updatedQuiz._id,
@@ -180,6 +194,15 @@ export const getMultipleQuizzes = async (req, res) => {
         .limit(Number(limit))
         .populate("coverImg")
         .populate({ path: "createdBy", populate: { path: "profileImg" } });
+
+    return res.status(200).json(quizzes);
+};
+
+export const getUserQuizzes = async (req, res) => {
+    const userId = req.userId;
+    const quizzes = await QuizInfosModel.find({ createdBy: userId }).populate(
+        "coverImg"
+    );
 
     return res.status(200).json(quizzes);
 };

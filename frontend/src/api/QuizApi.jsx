@@ -53,14 +53,26 @@ export const updateQuizSettings = async (info) => {
 
 export const getQuizWithQuestions = async (id) => {
     try {
-        const res = await fetch(`/api/quiz/${id}`, {
+        const res = await fetch(`/api/quiz/single-quiz/${id}`, {
             credentials: "include",
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.err);
         return data;
     } catch (error) {
-        console.log("error from get single quiz cover", error);
+        throw { err: error.message };
+    }
+};
+
+export const getUserQuizzes = async () => {
+    try {
+        const res = await fetch(`/api/quiz/by-user`, {
+            credentials: "include",
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.err);
+        return data;
+    } catch (error) {
         throw { err: error.message };
     }
 };

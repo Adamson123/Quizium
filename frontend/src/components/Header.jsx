@@ -1,6 +1,6 @@
 import { useState } from "react";
 import NavMenu from "./NavMenu";
-const Header = () => {
+const Header = ({ text }) => {
     const [openNavMenu, setOpenNavMenu] = useState(false);
 
     return (
@@ -25,7 +25,9 @@ const Header = () => {
                         ></span>
                         <input
                             type="search"
-                            placeholder="Search Quizuim library"
+                            placeholder={`Search ${
+                                text ? text : "Quizuim"
+                            } library`}
                             className="placeholder:text-placeholder
                box-border text-textColor
                w-[100%] rounded-[2px] px-2 pl-10 py-2 

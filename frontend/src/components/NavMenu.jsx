@@ -4,7 +4,7 @@ import { logoutUserFunc } from "../api/AuthUserApi";
 import { useMutation } from "react-query";
 import { useContext } from "react";
 
-import { dataContext } from "../layouts/layout";
+import { dataContext } from "../layouts/Layout";
 
 const NavMenu = ({ show, setShow }) => {
     const { mutateAsync: logoutUser, data: logoutRes } =
@@ -79,7 +79,6 @@ const NavMenu = ({ show, setShow }) => {
            h-48 text-textColor isidoraSemiBold mt-4"
                     >
                         <div
-                            to="/"
                             onClick={() => {
                                 setShow((s) => (s = false));
                                 navigate("/");
@@ -89,7 +88,13 @@ const NavMenu = ({ show, setShow }) => {
                             <span className="bi-compass mr-2 font-bold"></span>
                             <span>Explore</span>
                         </div>
-                        <div className="cursor-pointer hover:text-shinyPurple">
+                        <div
+                            onClick={() => {
+                                setShow((s) => (s = false));
+                                navigate("/library");
+                            }}
+                            className="cursor-pointer hover:text-shinyPurple"
+                        >
                             <span className="bi-book mr-2 font-bold"></span>
                             <span>Your Libary</span>
                         </div>

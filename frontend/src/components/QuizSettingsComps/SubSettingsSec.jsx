@@ -30,7 +30,7 @@ const SubSettingsSec = ({
                     {convertingImage && (
                         <Loading
                             cus={
-                                " loading-lg absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-shinyPurple"
+                                "loading-lg absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-shinyPurple"
                             }
                         />
                     )}
@@ -40,7 +40,7 @@ const SubSettingsSec = ({
                                 ? URL.createObjectURL(pickedImage)
                                 : fallbackToDefaultCover()
                         }
-                        className="w-full h-full object-cover rounded shadow-md"
+                        className="w-full h-full object-top rounded shadow-md"
                         alt="quiz cover image display"
                     />
                     <input

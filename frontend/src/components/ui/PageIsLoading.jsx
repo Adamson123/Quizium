@@ -5,7 +5,7 @@ const PageIsLoading = (props) => {
  right-0 left-0 bg-mainBg flex flex-col
 items-center justify-center text-shinyPurple"
         >
-            <span className="loading loading-spinner loading-lg"></span>
+            <span className="loading loading-dots loading-lg"></span>
 
             <h2 className="text-shinyPurple text-[15px] isidoraBold">
                 {props.message}

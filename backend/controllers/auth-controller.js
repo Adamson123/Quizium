@@ -23,6 +23,11 @@ export const signup = async (req, res) => {
         );
     }
 
+    const nameUsed = await UsersModel.findOne({ name });
+
+    if (nameUsed) {
+        throw new CustomError("Username has already been taken", 400);
+    }
     if (name.length < 3) {
         throw new CustomError(
             "Username must be atleast 3 characters long",

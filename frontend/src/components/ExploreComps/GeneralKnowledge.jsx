@@ -11,13 +11,6 @@ const GeneralKnowledge = () => {
         () => getQiuzzes(0, 9)
     );
 
-    //getQiuzzesFunc(0, 9);
-
-    // useEffect(() => {
-    //     console.log(data);
-    //     setQuizCover((q) => (q = data));
-    // }, [data]);
-
     console.log("general knowledge rendered");
     const quizCover = useMemo(() => {
         return data;

@@ -1,7 +1,7 @@
 import { createContext, useState } from "react";
 import Header from "../components/Header";
 import { getUser } from "../api/UserApi";
-import BufferToObjUrl from "../utils/BufferToObjUrl";
+import BufferToObjUrl from "../utils/bufferToObjUrl";
 import newUser from "../assets/images/defaultProfile/newUser.png";
 import { useQuery } from "react-query";
 
@@ -14,7 +14,7 @@ const Layout = ({ children, text }) => {
     const [profileImage, setProfileImage] = useState(
         profileImg ? BufferToObjUrl(profileImg.image.data.data) : newUser
     );
-
+    const [search, setSearch] = useState("");
     const value = {
         data,
         refetch,
@@ -23,12 +23,13 @@ const Layout = ({ children, text }) => {
         email,
         name,
         isLoading,
+        search,
     };
 
     return (
         <div className="flex flex-col">
             <dataContext.Provider value={value}>
-                <Header text={text} />
+                <Header text={text} search={search} setSearch={setSearch} />
                 {children}
             </dataContext.Provider>
         </div>

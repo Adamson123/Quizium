@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import BufferToObjUrl from "../../utils/BufferToObjUrl";
+import BufferToObjUrl from "../../utils/bufferToObjUrl";
 import Loading from "../ui/Loading";
 import quiziumImg from "../../assets/images/defaultCover/quizium-8.webp";
 const SubSettingsSec = ({

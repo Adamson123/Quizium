@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { useParams } from "react-router";
+import { Navigate, useNavigate, useParams } from "react-router";
 import { getQuizWithQuestions } from "../api/QuizApi";
 import { useMutation, useQuery } from "react-query";
 import {
@@ -10,13 +10,13 @@ import {
 import QuizSettings from "../components/QuizSettings";
 
 import PageIsLoading from "../components/ui/PageIsLoading";
-import Header from "../components/QuizEditorPageComps/Header";
-import QuizzesMenu from "../components/QuizEditorPageComps/QuestionsMenu";
-import RightSection from "../components/QuizEditorPageComps/RightSection";
-import Question from "../components/QuizEditorPageComps/Question";
+import Header from "../components/QuizEditorComps/Header";
+import QuizzesMenu from "../components/QuizEditorComps/QuestionsMenu";
+import RightSection from "../components/QuizEditorComps/RightSection";
+import Question from "../components/QuizEditorComps/Question";
 import toast from "react-hot-toast";
-import QuizValidation from "../components/QuizEditorPageComps/QuizValidation";
-import SaveOptions from "../components/QuizEditorPageComps/SaveOptions";
+import QuizValidation from "../components/QuizEditorComps/QuizValidation";
+import SaveOptions from "../components/QuizEditorComps/SaveOptions";
 
 const QuizEditorPage = () => {
     const { id } = useParams();
@@ -28,6 +28,7 @@ const QuizEditorPage = () => {
         }
     );
 
+    const navigate = useNavigate();
     const { mutateAsync: createQuestionFunc } = useMutation(createQuestion);
     const { mutateAsync: updateQuestionFunc, isLoading: updatingQuest } =
         useMutation(updateQuestion);
@@ -66,7 +67,8 @@ const QuizEditorPage = () => {
 
     //updating all questions array if questions has been fetched
     useEffect(() => {
-        if (data) {
+        console.log(data);
+        if (data?.questionsId) {
             setAllQuestions(data.questionsId.questions);
             setAllQuestions_2(data.questionsId.questions);
         }
@@ -307,8 +309,13 @@ const QuizEditorPage = () => {
         return analizedQuestions;
     };
 
-    if (!data) {
+    if (!data && isLoading) {
         return <PageIsLoading message={"Setting up quiz editor..."} />;
+    }
+
+    if (!data && !isLoading) {
+        toast.error("Invalid Quiz id");
+        return navigate("/");
     }
 
     return (
@@ -317,7 +324,7 @@ const QuizEditorPage = () => {
                 showQuizPanel ||
                 showSaveOption ||
                 (showQuizValid && "overflow-hidden")
-            } bg-mainBg text-textColor`}
+            } bg-secMainBg text-textColor`}
         >
             {/* Header */}
 

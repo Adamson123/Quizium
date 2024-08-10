@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { requestOptions } from "./utils/RequestOptions";
+import { delayTest } from "../utils/delayTest";
 
 export const getQiuzzes = async (skip, limit) => {
     try {
@@ -33,7 +34,7 @@ export const createQuiz = async (info) => {
     }
 };
 
-export const updateQuizSettings = async (info) => {
+export const updateQuiz = async (info) => {
     try {
         const res = await fetch(
             `/api/quiz/${info.id}`,
@@ -42,6 +43,22 @@ export const updateQuizSettings = async (info) => {
 
         const data = await res.json();
 
+        if (!res.ok) throw new Error(data.err);
+
+        return data;
+    } catch (error) {
+        console.log("error from  update quiz settings ", error);
+        throw { err: error.message };
+    }
+};
+
+export const deleteQuiz = async (id) => {
+    try {
+        const res = await fetch(
+            `/api/quiz/${id}`,
+            requestOptions({}, "", "DELETE")
+        );
+        const data = await res.json();
         if (!res.ok) throw new Error(data.err);
 
         return data;

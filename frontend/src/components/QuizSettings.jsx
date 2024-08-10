@@ -1,6 +1,6 @@
 import { memo, useEffect, useRef, useState } from "react";
 
-import { createQuiz, updateQuizSettings } from "../api/QuizApi";
+import { createQuiz, updateQuiz } from "../api/QuizApi";
 import { useMutation } from "react-query";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
@@ -11,8 +11,7 @@ import SubSettingsSec from "./QuizSettingsComps/SubSettingsSec";
 
 const QuizSettings = memo((props) => {
     const { mutateAsync: createQuizFunc } = useMutation(createQuiz);
-    const { mutateAsync: updateQuizSettingsFunc } =
-        useMutation(updateQuizSettings);
+    const { mutateAsync: updateQuizFunc } = useMutation(updateQuiz);
     const [quizSettings, setQuizSettings] = useState(
         !props.config
             ? {
@@ -75,7 +74,7 @@ const QuizSettings = memo((props) => {
 
         const promise = !props.config
             ? createQuizFunc(formData)
-            : updateQuizSettingsFunc({ formData, id: props.id });
+            : updateQuizFunc({ formData, id: props.id });
 
         toast.promise(promise, {
             loading: !props.config

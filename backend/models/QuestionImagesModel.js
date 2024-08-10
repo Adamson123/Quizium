@@ -6,6 +6,7 @@ const QuestionImagesSchema = new mongoose.Schema({
         contentType: String,
     },
     name: String,
+    quizId: mongoose.Schema.Types.ObjectId,
 });
 
 export const QuestionImagesModel = mongoose.model(

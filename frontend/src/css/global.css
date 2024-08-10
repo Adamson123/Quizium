@@ -52,7 +52,7 @@
     box-shadow: inset 0px -5px 0px rgba(0, 0, 0, 0.3);
 }
 .outsetShadow {
-    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.144);
 }
 .insetShadowTwo {
     box-shadow: inset 0px -3px 0px rgba(0, 0, 0, 0.3);
@@ -63,6 +63,11 @@
 .shinyShadow {
     box-shadow: inset -2px -2px 18px rgba(255, 255, 255, 0.06);
 }
+.shadowAround {
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.219),
+        -1px -1px 3px rgba(0, 0, 0, 0.219);
+}
+
 .adora {
     font-family: adora;
 }
@@ -165,8 +170,10 @@
     gap: 2;
     color: rgb(125, 124, 124);
 }
+
 .dark {
     --mainBg: 10, 8, 45;
+    --sec-mainBg: 26, 16, 61;
     --text-color: 255, 255, 255;
     --shiny-purple: 249, 0, 158;
     --blurry-purple: 249, 0, 158, 0.3;

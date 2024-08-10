@@ -3,7 +3,7 @@ import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
 import ProtectedRoutes from "./pages/ProtectedRoutes";
 import Layout from "./layouts/Layout";
-import Explore from "./pages/Explore";
+import ExplorePage from "./pages/ExplorePage";
 import SettingsPage from "./pages/SettingsPage";
 import QuizEditorPage from "./pages/QuizEditorPage";
 import LibraryPage from "./pages/LibraryPage";
@@ -17,7 +17,7 @@ function App() {
                     path="/"
                     element={
                         <Layout>
-                            <Explore />
+                            <ExplorePage />
                         </Layout>
                     }
                 />

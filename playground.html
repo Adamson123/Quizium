@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <body>
+        <div style="display: flex; gap: 20px">
+            <div>
+                <h3>Original JPEG</h3>
+                <img
+                    src="defaultCover/quizium-1.webp"
+                    class="originalImg"
+                    style="height: 200px; width: 200px; border: 2px solid red"
+                />
+            </div>
+            <div>
+                <h3>Converted WebP</h3>
+                <img
+                    src="defaultCover/quizium-4.webp"
+                    class="webpImg"
+                    style="height: 200px; width: 200px; border: 2px solid blue"
+                />
+            </div>
+        </div>
+        <script src="tes.js"></script>
+        <script>
+            const originalImg = document.querySelector(".originalImg");
+            const webpImg = document.querySelector(".webpImg");
+
+            const req = {
+                title: "stringing",
+                description: "testing",
+                subject: "maths",
+                timeLimit: 40,
+            };
+            const dat = JSON.stringify(req);
+
+            const ft = async () => {
+                try {
+                    const res = await fetch("http://localhost:3002/api/quiz/", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: dat,
+                    });
+                    const data = await res.json();
+                    console.log("Response Data:", data);
+
+                    // Ensure you have the correct path to the image data
+                    const imageData = data.q.coverImg.image.data.data;
+                    if (!imageData) {
+                        throw new Error("Image data not found in response");
+                    }
+
+                    // Convert image data to Uint8Array
+                    const byteArray = new Uint8Array(imageData);
+                    console.log("Byte Array:", byteArray);
+
+                    // Create a Blob from the image data
+                    const jpegBlob = new Blob([byteArray], {
+                        type: "image/jpeg",
+                    });
+
+                    // Display the original JPEG
+                    const originalUrl = URL.createObjectURL(jpegBlob);
+                    console.log("JPEG Blob URL:", originalUrl);
+                    originalImg.src = originalUrl;
+
+                    // Convert JPEG Blob to WebP
+                    const convertToWebP = async (jpegBlob) => {
+                        return new Promise((resolve, reject) => {
+                            const reader = new FileReader();
+                            reader.onload = () => {
+                                const img = new Image();
+                                img.onload = () => {
+                                    const canvas =
+                                        document.createElement("canvas");
+                                    canvas.width = img.width;
+                                    canvas.height = img.height;
+                                    const ctx = canvas.getContext("2d");
+                                    ctx.drawImage(img, 0, 0);
+                                    canvas.toBlob((blob) => {
+                                        resolve(blob);
+                                    }, "image/webp");
+                                };
+                                img.src = reader.result;
+                            };
+                            reader.onerror = reject;
+                            reader.readAsDataURL(jpegBlob);
+                        });
+                    };
+
+                    const webpBlob = await convertToWebP(jpegBlob);
+
+                    // Create a URL for the WebP Blob and set it as the image source
+                    const webpUrl = URL.createObjectURL(webpBlob);
+                    console.log("WebP Blob URL:", webpUrl);
+                    webpImg.src = webpUrl;
+                } catch (error) {
+                    console.error("Error fetching or displaying image:", error);
+                }
+            };
+
+            // Run the function
+            (async () => {
+                await ft();
+            })();
+        </script>
+    </body>
+</html>

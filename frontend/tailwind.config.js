@@ -20,6 +20,7 @@ export default {
         extend: {
             colors: {
                 mainBg: "rgb(var(--mainBg))",
+                secMainBg: "rgb(var(--sec-mainBg))",
                 textColor: "rgb(var(--text-color))",
                 shinyPurple: "rgb(var(--shiny-purple))",
                 blurryPurple: "rgba(var(--blurry-purple))",

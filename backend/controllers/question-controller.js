@@ -2,14 +2,14 @@ import { QuestionsModel } from "../models/QuestionsModel.js";
 import { QuizInfosModel } from "../models/QuizInfosModel.js";
 import { CustomError } from "../errors/CustomError.js";
 import { QuestionImagesModel } from "../models/QuestionImagesModel.js";
+import { populateQuizAndQuest } from "../utils/populateQuiz.js";
 
+//create new Question
 export const createQuestion = async (req, res) => {
     const data = JSON.parse(req.body.question);
-
     if (!Object.keys(data).length) {
         throw new CustomError("Please provide quiz question", 400);
     }
-
     if (!data.questionType) {
         throw new CustomError("Error questionType is not defined", 400);
     }
@@ -18,7 +18,6 @@ export const createQuestion = async (req, res) => {
     }
 
     let image;
-
     if (req.file) {
         const { buffer, mimetype } = req.file;
         image = await QuestionImagesModel.create({
@@ -30,12 +29,11 @@ export const createQuestion = async (req, res) => {
     }
 
     const quiz = req.quiz;
-
     const toAddTimeLimit = () => {
         return quiz.applyTime === "entire" ? 0 : quiz.timeLimit;
     };
 
-    await QuestionsModel.findOneAndUpdate(
+    const question = await QuestionsModel.findOneAndUpdate(
         { parentId: quiz._id },
         {
             $push: {
@@ -48,37 +46,24 @@ export const createQuestion = async (req, res) => {
         },
         { new: true, upsert: true }
     );
-
-    const updatedQuiz = await QuizInfosModel.findById(quiz._id)
-        .populate("coverImg") // populate quiz cover image
-        .populate({
-            path: "createdBy",
-            select: "-password",
-            populate: { path: "profileImg" } /*populate quiz
-        creator info and creator profile image which is been refrenced from 
-        user/creator info 
-        */,
-        })
-        .populate({
-            path: "questionsId",
-            populate: { path: "questions.image" },
-            /* populate question and question image which is been refrenced
-          in each questions
-        */
+    //if the quiz does not have a questionId before for some reasons
+    if (!quiz.questionsId) {
+        console.log("for questionsId:nope not here");
+        await QuizInfosModel.findByIdAndUpdate(quiz._id, {
+            questionsId: question._id,
         });
+    }
 
+    const updatedQuiz = await populateQuizAndQuest(quiz._id);
     return res.status(201).json({ msg: "Question created", quiz: updatedQuiz });
 };
 
+//update Question
 export const updateQuestion = async (req, res) => {
-    //const { id } = req.params;
-
     const data = JSON.parse(req.body.question);
-
     if (!Object.keys(data).length) {
         throw new CustomError("Please provide quiz question", 400);
     }
-
     if (!data.questionType) {
         throw new CustomError("Question type is not defined", 400);
     }
@@ -87,7 +72,6 @@ export const updateQuestion = async (req, res) => {
     let image;
     if (req.file) {
         const { buffer, mimetype } = req.file;
-
         image = await QuestionImagesModel.findById(data.image);
         if (!image) {
             console.log("not here");
@@ -96,6 +80,7 @@ export const updateQuestion = async (req, res) => {
                     data: buffer,
                     contentType: mimetype,
                 },
+                quizId: quiz._id,
                 // name: uuid(),
             });
         } else {
@@ -110,7 +95,7 @@ export const updateQuestion = async (req, res) => {
         }
     }
 
-    const question = await QuestionsModel.findOneAndUpdate(
+    await QuestionsModel.findOneAndUpdate(
         {
             parentId: quiz._id,
             "questions._id": data._id,
@@ -128,34 +113,15 @@ export const updateQuestion = async (req, res) => {
         }
     );
 
-    const updatedQuiz = await QuizInfosModel.findById(quiz._id)
-        .populate("coverImg") // populate quiz cover image
-        .populate({
-            path: "createdBy",
-            select: "-password",
-            populate: { path: "profileImg" } /*populate quiz
-            creator info and creator profile image which is been refrenced from 
-            user/creator info 
-            */,
-        })
-        .populate({
-            path: "questionsId",
-            populate: { path: "questions.image" },
-            /* populate question and question image which is been refrenced
-              in each questions
-            */
-        });
+    const updatedQuiz = await populateQuizAndQuest(quiz._id);
     return res.status(200).json({ msg: "Question updated", quiz: updatedQuiz });
 };
+
+//delete question
 
 export const deleteQuestion = async (req, res) => {
     const quiz = req.quiz;
     const data = req.body;
-
-    console.log(data.questId, quiz._id);
-
-    //console.log(data);
-
     if (data.questId) {
         await QuestionsModel.findOneAndUpdate(
             {
@@ -166,26 +132,7 @@ export const deleteQuestion = async (req, res) => {
             }
         );
     }
-    //console.log(question.nModified);
-
     await QuestionImagesModel.findByIdAndDelete(data.image);
-
-    const updatedQuiz = await QuizInfosModel.findById(quiz._id)
-        .populate("coverImg") // populate quiz cover image
-        .populate({
-            path: "createdBy",
-            select: "-password",
-            populate: { path: "profileImg" } /*populate quiz
-        creator info and creator profile image which is been refrenced from 
-        user/creator info 
-        */,
-        })
-        .populate({
-            path: "questionsId",
-            populate: { path: "questions.image" },
-            /* populate question and question image which is been refrenced
-          in each questions
-        */
-        });
+    const updatedQuiz = await populateQuizAndQuest(quiz._id);
     return res.status(200).json({ msg: "Question deleted", quiz: updatedQuiz });
 };

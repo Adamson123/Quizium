@@ -1,6 +1,6 @@
 import { useState } from "react";
 import NavMenu from "./NavMenu";
-const Header = ({ text }) => {
+const Header = ({ text, setSearch, search }) => {
     const [openNavMenu, setOpenNavMenu] = useState(false);
 
     return (
@@ -24,6 +24,10 @@ const Header = ({ text }) => {
           absolute top-[11px] left-[13px]"
                         ></span>
                         <input
+                            onChange={(event) => {
+                                setSearch(event.target.value);
+                            }}
+                            value={search}
                             type="search"
                             placeholder={`Search ${
                                 text ? text : "Quizuim"

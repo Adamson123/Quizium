@@ -1,5 +1,5 @@
 import { memo, useState } from "react";
-import BufferToObjUrl from "../../../utils/BufferToObjUrl";
+import BufferToObjUrl from "../../../utils/bufferToObjUrl";
 import quiziumImg from "../../../assets/images/defaultCover/quizium-8.webp";
 import newUser from "../../../assets/images/defaultProfile/newUser.png";
 

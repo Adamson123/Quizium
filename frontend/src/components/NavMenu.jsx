@@ -24,7 +24,7 @@ const NavMenu = ({ show, setShow }) => {
             <div
                 onClick={() => setShow((o) => (o = !o))}
                 className={`fixed right-0 left-0 top-0 bottom-0
-      ${show ? "visible" : "hidden"}  bg-[rgba(0,0,0,0.59)] z-4 md:hidden`}
+      ${show ? "visible" : "hidden"}  bg-[rgba(0,0,0,0.59)] z-10 md:hidden`}
             ></div>
 
             {/* NavMenu */}

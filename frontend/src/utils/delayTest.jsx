@@ -1,5 +1,5 @@
-export const delayTest = async () => {
-    await new Promise((resolve, _) => setTimeout(resolve, 3000));
+export const delayTest = async (time) => {
+    await new Promise((resolve, _) => setTimeout(resolve, time));
 
     console.log("waited");
 };

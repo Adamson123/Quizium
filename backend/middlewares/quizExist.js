@@ -10,6 +10,7 @@ export const quizExist = async (req, res, next) => {
     const quiz = await QuizInfosModel.findById(id);
 
     if (!quiz) {
+        console.log("err not found");
         throw new CustomError("404 quiz not found", 404);
     }
 

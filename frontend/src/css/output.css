@@ -1943,12 +1943,12 @@ html {
   z-index: 50;
 }
 
-.z-\[500\] {
-  z-index: 500;
-}
-
 .z-\[1\] {
   z-index: 1;
+}
+
+.z-\[500\] {
+  z-index: 500;
 }
 
 .m-auto {
@@ -2050,10 +2050,6 @@ html {
 
 .mt-\[18px\] {
   margin-top: 18px;
-}
-
-.mt-16 {
-  margin-top: 4rem;
 }
 
 .box-border {
@@ -2186,10 +2182,6 @@ html {
 
 .h-full {
   height: 100%;
-}
-
-.h-\[250px\] {
-  height: 250px;
 }
 
 .max-h-\[375px\] {
@@ -2344,24 +2336,20 @@ html {
   max-width: 400px;
 }
 
-.max-w-\[500px\] {
-  max-width: 500px;
-}
-
-.max-w-\[700px\] {
-  max-width: 700px;
-}
-
-.max-w-\[300px\] {
-  max-width: 300px;
-}
-
 .max-w-\[450px\] {
   max-width: 450px;
 }
 
+.max-w-\[500px\] {
+  max-width: 500px;
+}
+
 .max-w-\[600px\] {
   max-width: 600px;
+}
+
+.max-w-\[700px\] {
+  max-width: 700px;
 }
 
 .flex-1 {
@@ -2528,20 +2516,12 @@ html {
   border-top-left-radius: 0.25rem;
 }
 
-.rounded-tr {
-  border-top-right-radius: 0.25rem;
-}
-
-.rounded-tl-md {
-  border-top-left-radius: 0.375rem;
-}
-
-.rounded-tl-\[10px\] {
-  border-top-left-radius: 10px;
-}
-
 .rounded-tl-\[15px\] {
   border-top-left-radius: 15px;
+}
+
+.rounded-tr {
+  border-top-right-radius: 0.25rem;
 }
 
 .rounded-tr-\[15px\] {

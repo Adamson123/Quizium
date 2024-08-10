@@ -184,11 +184,12 @@ export const updateQuiz = async (req, res) => {
 export const deleteQuiz = async (req, res) => {
     const quiz = req.quiz;
 
-    await QuestionImagesModel.deleteMany({ quizId: quiz._id });
-    await QuizImagesModel.findByIdAndDelete(quiz.coverImg);
-    await QuestionsModel.findOneAndDelete({ parentId: quiz._id });
-    await QuizInfosModel.findByIdAndDelete(quiz._id);
-
+    await Promise.all([
+        QuestionImagesModel.deleteMany({ quizId: quiz._id }),
+        QuizImagesModel.findByIdAndDelete(quiz.coverImg),
+        QuestionsModel.findOneAndDelete({ parentId: quiz._id }),
+        QuizInfosModel.findByIdAndDelete(quiz._id),
+    ]);
     const userId = req.userId;
     const quizzes = await QuizInfosModel.find({ createdBy: userId }).populate(
         "coverImg"

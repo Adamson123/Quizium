@@ -26,14 +26,6 @@ const QuizzesMenu = ({
             return i.trim(" ") !== "";
         });
 
-        const checkSingleAnswer =
-            (!singleQuestion_2.answer.length &&
-                singleQuestion_2.questionType === "quiz") ||
-            (!singleQuestion_2.answer.length &&
-                singleQuestion_2.questionType === "trueFalse");
-
-        const checkMultipleAnswer = emptyAnsField.length < 1;
-
         // console.clear();
 
         if (!singleQuestion_2.question.trim(" ")) {
@@ -46,7 +38,9 @@ const QuizzesMenu = ({
         ) {
             showWarning = "Fill atleast 2 option field";
             return showWarning;
-        } else if (!singleQuestion_2.answer.length || checkMultipleAnswer) {
+        }
+        //if answer length  is less than 1 , when it's value is  trimmed or not
+        else if (!singleQuestion_2.answer.length || emptyAnsField.length < 1) {
             showWarning = "Answer is empty";
             return showWarning;
         }

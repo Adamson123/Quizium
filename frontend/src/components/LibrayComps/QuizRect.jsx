@@ -2,21 +2,24 @@ import { useNavigate } from "react-router";
 import BufferToObjUrl from "../../utils/bufferToObjUrl";
 import quizImg from "../../assets/images/defaultCover/quizium-8.webp";
 import quizImg2 from "../../assets/images/defaultCover/quizium-3.webp";
-import { deleteQuiz } from "../../api/QuizApi";
+import { deleteQuiz, updateQuiz } from "../../api/QuizApi";
 import { useMutation } from "react-query";
 import toast from "react-hot-toast";
+import { forwardRef } from "react";
 
 const QuizRect = ({
     quiz,
     index,
     quizIndex,
     setQuizIndex,
-    setQuizzes,
+    setAllQuizzes,
     setShowShare,
 }) => {
     const navigate = useNavigate();
 
     const { mutateAsync: deleteQuizFunc, isLoading } = useMutation(deleteQuiz);
+    const { mutateAsync: updateQuizFunc, isLoading: isUpdating } =
+        useMutation(updateQuiz);
     const createdDate = (date) => {
         /* default format is example: 2024-08-01T22:26:36.575Z*/
         const [year, month, day] = date.split("-");
@@ -48,25 +51,52 @@ const QuizRect = ({
         navigate(quizPath);
     };
 
-    const deleteFunc = async (id) => {
+    const handleDeleteQuiz = async (id) => {
         setQuizIndex(-1);
-        if (!isLoading) {
-            const promise = deleteQuizFunc(id);
-            toast.promise(promise, {
-                loading: "Deleting quiz",
-                success: (data) => {
-                    return data.msg;
-                },
-                error: (data) => {
-                    return data.err;
-                },
-            });
-
-            const res = await promise;
-
-            setQuizzes(res.quiz);
+        if (isLoading) {
+            return;
         }
+
+        const promise = deleteQuizFunc(id);
+        toast.promise(promise, {
+            loading: "Deleting quiz",
+            success: (data) => {
+                return data.msg;
+            },
+            error: (data) => {
+                return data.err;
+            },
+        });
+
+        const res = await promise;
+
+        setAllQuizzes(res.quizzes);
     };
+
+    const addToFavorite = async (id, value) => {
+        if (isLoading) {
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("settings", JSON.stringify({ favorite: !value }));
+        formData.append("file", {});
+
+        const promise = updateQuizFunc({ id, formData });
+        toast.promise(promise, {
+            loading: !value ? "Adding to favorite" : "Removing from favorite",
+            success: !value ? "Added to favorite" : "Removed from favorite",
+            error: !value
+                ? "Error Adding to favorite"
+                : "Error Removing from favorite",
+        });
+
+        const res = await promise;
+
+        setAllQuizzes(res.quizzes);
+    };
+
+    // console.log(quizRef, "ref");
 
     return (
         <div
@@ -95,15 +125,17 @@ const QuizRect = ({
                     <span className="text-[13px] text-grayFive isidoraSemiBold">
                         <span className="bi-tag"></span> {quiz.category} &nbsp;
                         {quiz.draft ? (
-                            <span className="text-[10px] bg-green-600 p-1 rounded text-green-300">
-                                Draft
-                            </span>
-                        ) : (
                             <span
                                 className="text-[10px] bg-[#ff000081] p-1 
                             rounded text-red-500"
                             >
-                                Published
+                                <span className="bi-file-earmark-text-fill"></span>
+                                &nbsp; Draft
+                            </span>
+                        ) : (
+                            <span className="text-[10px] bg-green-600 p-1 rounded text-green-300">
+                                <span className="bi-check-circle-fill"></span>
+                                &nbsp; Published
                             </span>
                         )}
                     </span>
@@ -137,8 +169,8 @@ const QuizRect = ({
                         // setQuizIndex(index);
                     }}
                     className="absolute right-0
-    top-4 shadow-md p-4 isidoraSemiBold
-    flex flex-col gap-4 bg-mainBg z-10 shadowAround"
+                    top-4 shadow-md p-4 isidoraSemiBold
+                    flex flex-col gap-5 bg-mainBg z-10 shadowAround"
                 >
                     <p
                         onClick={() => editFunc(quiz._id)}
@@ -147,37 +179,49 @@ const QuizRect = ({
                         <span className="bi-pencil-fill"></span>
                         <span className="text-[14px]">Edit</span>
                     </p>
-                    <p className="flex items-center gap-4 hover:text-shinyPurple">
-                        <span className="bi-star-fill"></span>
-                        <span className="text-[14px]">Add to favorite</span>
+                    <p
+                        onClick={() => {
+                            addToFavorite(quiz._id, quiz.favorite);
+                        }}
+                        className="flex items-center gap-4 hover:text-shinyPurple"
+                    >
+                        <span
+                            className={`bi-star-fill ${
+                                quiz.favorite && "text-orange-500"
+                            }`}
+                        ></span>
+                        <span className="text-[14px]">
+                            {quiz.favorite ? "Remove from" : "Add to"} favorite
+                        </span>
                     </p>
 
                     <p
-                        onClick={() => deleteFunc(quiz._id)}
+                        onClick={() => handleDeleteQuiz(quiz._id)}
                         className="flex items-center gap-4 hover:text-shinyPurple"
                     >
                         <span className="bi-trash-fill"></span>
                         <span className="text-[14px]">Delete</span>
                     </p>
-                    <p
-                        onClick={() =>
-                            setShowShare(
-                                (s) =>
-                                    (s = {
-                                        open: true,
-                                        url: `${window.location.origin}/quiz-editor/${quiz._id}`,
-                                    })
-                            )
-                        }
-                        className="flex items-center gap-4 hover:text-shinyPurple"
-                    >
-                        <span className="bi-share-fill"></span>
-                        <span className="text-[14px]">Share</span>
-                    </p>
+                    {!quiz.draft && (
+                        <p
+                            onClick={() =>
+                                setShowShare(
+                                    (s) =>
+                                        (s = {
+                                            open: true,
+                                            url: `${window.location.origin}/quiz-editor/${quiz._id}`,
+                                        })
+                                )
+                            }
+                            className="flex items-center gap-4 hover:text-shinyPurple"
+                        >
+                            <span className="bi-share-fill"></span>
+                            <span className="text-[14px]">Share</span>
+                        </p>
+                    )}
                 </div>
             )}
         </div>
     );
 };
-
 export default QuizRect;

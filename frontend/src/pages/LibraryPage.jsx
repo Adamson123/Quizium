@@ -1,25 +1,28 @@
 import { useQuery } from "react-query";
 import { getUserQuizzes } from "../api/QuizApi";
 import LoadingQuizzes from "../components/LibrayComps/LoadingQuizzes";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { dataContext } from "../layouts/Layout";
 import QuizRect from "../components/LibrayComps/QuizRect";
 import Loading from "../components/ui/Loading";
 import Share from "../components/LibrayComps/Share";
+import box from "../assets/svg/empty-box2.svg";
+import searchSvg from "../assets/svg/search.svg";
 
 const LibraryPage = () => {
     const { data, isLoading, error, refetch } = useQuery(
-        ["user-quizzes"],
+        ["user-allQuizzes"],
         getUserQuizzes,
         {
             retry: false,
         }
     );
-    const [quizzes, setQuizzes] = useState([]);
+    const [allQuizzes, setAllQuizzes] = useState([]);
     const [filterBy, setFilterBy] = useState("published");
     const [filteredQuizzes, setFilteredQuizzes] = useState([]);
     const [quizIndex, setQuizIndex] = useState(-1);
 
+    const quizRef = useRef([]);
     const [byTime, setByTime] = useState("recent");
     const [showShare, setShowShare] = useState({ open: false, url: "" });
 
@@ -27,11 +30,16 @@ const LibraryPage = () => {
     const { search } = value;
 
     const filterQuizzesFunc = (fby) => {
-        return quizzes.filter((quiz, index) => {
-            //if filterBy is drafts we will filter by quizzes that are drafted, esle will filter by the once that not drafted
+        if (fby === "played") {
+            return [];
+        }
+        return allQuizzes.filter((quiz, index) => {
+            //if filterBy is drafts we will filter by allQuizzes that are drafted, esle will filter by the once that not drafted
             if (fby === "drafts") {
                 return quiz.draft && quiz;
-            } else {
+            } else if (fby === "favorites") {
+                return quiz.favorite && quiz;
+            } else if (fby === "published") {
                 return !quiz.draft && quiz;
             }
         });
@@ -39,22 +47,55 @@ const LibraryPage = () => {
 
     useEffect(() => {
         if (data) {
-            setQuizzes(data);
+            setAllQuizzes(data);
         }
     }, [data]);
 
     useEffect(() => {
-        if (quizzes) {
-            if (filterBy === "published" || filterBy === "drafts") {
-                const filteredQuiz =
-                    byTime === "recent"
-                        ? filterQuizzesFunc(filterBy).reverse()
-                        : filterQuizzesFunc(filterBy);
+        if (allQuizzes) {
+            let filteredQuiz =
+                byTime === "recent"
+                    ? filterQuizzesFunc(filterBy).sort(
+                          (a, b) =>
+                              new Date(b.createdAt) - new Date(a.createdAt)
+                      )
+                    : filterQuizzesFunc(filterBy).sort(
+                          (a, b) =>
+                              new Date(a.createdAt) - new Date(b.createdAt)
+                      );
 
-                setFilteredQuizzes(filteredQuiz);
+            if (search.trim(" ")) {
+                filteredQuiz = filteredQuiz.filter((quiz) => {
+                    return quiz.title
+                        .toLowerCase()
+                        .includes(search.trim(" ").toLowerCase());
+                });
             }
+
+            console.log(byTime);
+
+            setFilteredQuizzes(filteredQuiz);
         }
-    }, [quizzes, filterBy, byTime]);
+    }, [allQuizzes, filterBy, byTime, search]);
+
+    const [quizzesNav, setQuizzesNav] = useState([
+        {
+            text: "published",
+            icon: "bi-check-circle-",
+        },
+        {
+            text: "drafts",
+            icon: "bi-file-earmark-text-",
+        },
+        {
+            text: "played",
+            icon: "bi-play-",
+        },
+        {
+            text: "favorites",
+            icon: "bi-star-",
+        },
+    ]);
 
     return (
         <div
@@ -65,40 +106,33 @@ const LibraryPage = () => {
             <h1 className="text-2xl isidoraBold">Your Library</h1>
 
             <div
-                className="flex justify-start gap-5 mt-6 text-[13px] 
-            pt-5 border-b-[2px] border-mainBg  md:gap-8"
+                className="flex mt-6 text-[13px] 
+                pt-5 border-b-[2px] border-mainBg 
+                h-[70px]"
             >
-                <span
-                    onClick={() => setFilterBy("published")}
-                    className={`cursor-pointer px-5 py-3 text-[14px] isidoraBold 
-               ${
-                   filterBy === "published" && "border-b-[3px]"
-               } rounded-[1px] border-shinyPurple mb-[-3px]`}
+                <div
+                    className="flex justify-start gap-5 md:gap-8
+                    text-[13px] mb-[-3px] overflow-x-auto scrollbar"
                 >
-                    Published{" "}
-                    {filteredQuizzes.length &&
-                        filterQuizzesFunc("published").length}
-                </span>
-                <span
-                    onClick={() => setFilterBy("drafts")}
-                    className={`cursor-pointer px-5 py-3 text-[14px] isidoraBold 
-                        ${
-                            filterBy === "drafts" && "border-b-[3px]"
-                        } rounded-[1px] border-shinyPurple mb-[-3px]`}
-                >
-                    Drafts{" "}
-                    {filteredQuizzes.length &&
-                        filterQuizzesFunc("drafts").length}
-                </span>
-                <span
-                    onClick={() => setFilterBy("played")}
-                    className={`cursor-pointer px-5 py-3 text-[14px] isidoraBold 
-                        ${
-                            filterBy === "played" && "border-b-[3px]"
-                        } rounded-[1px] border-shinyPurple mb-[-3px]`}
-                >
-                    Played 0
-                </span>
+                    {quizzesNav.map((nav, index) => {
+                        return (
+                            <span
+                                key={index}
+                                onClick={() => setFilterBy(nav.text)}
+                                className={`cursor-pointer px-3 py-3 text-[14px] isidoraBold 
+                            ${filterBy === nav.text && "border-b-[3px]"}
+                        rounded-[1px] border-shinyPurple mb[-5px] shrink-0`}
+                            >
+                                <span className={nav.icon}></span>{" "}
+                                {nav.text[0].toUpperCase() +
+                                    nav.text.substring(1, nav.text.length)}{" "}
+                                &nbsp;
+                                {allQuizzes.length &&
+                                    filterQuizzesFunc(nav.text).length}
+                            </span>
+                        );
+                    })}
+                </div>
             </div>
 
             {/* Recent , Oldest */}
@@ -121,7 +155,13 @@ const LibraryPage = () => {
             </div>
 
             {/* Quizzes */}
-            <div className="p-3 bg-mainBg mt-7 flex flex-col gap-5 rounded relative">
+            <div className="p-3 bg-mainBg mt-10 flex flex-col gap-5 rounded relative">
+                {search && (
+                    <p className="isidoraSemiBold absolute top-[-23px] left-0 text-[13px]">
+                        {filteredQuizzes.length} results was found for "{search}
+                        "
+                    </p>
+                )}
                 {isLoading && (
                     <Loading
                         cus={`absolute z-[1] left-[50%] text-shinyPurple`}
@@ -131,23 +171,32 @@ const LibraryPage = () => {
                     filteredQuizzes.map((quiz, index) => {
                         /* Quiz */
                         return (
-                            quiz.title
-                                .toLowerCase()
-                                .includes(search.trim(" ").toLowerCase()) && (
-                                <QuizRect
-                                    quiz={quiz}
-                                    index={index}
-                                    quizIndex={quizIndex}
-                                    setQuizIndex={setQuizIndex}
-                                    key={index}
-                                    setQuizzes={setQuizzes}
-                                    setShowShare={setShowShare}
-                                />
-                            )
+                            <QuizRect
+                                quiz={quiz}
+                                index={index}
+                                quizIndex={quizIndex}
+                                setQuizIndex={setQuizIndex}
+                                key={index}
+                                setAllQuizzes={setAllQuizzes}
+                                setShowShare={setShowShare}
+                            />
                         );
                     })
                 ) : (
                     <LoadingQuizzes />
+                )}
+
+                {!isLoading && !filteredQuizzes?.length && (
+                    <div
+                        className="w-full h-64 flex justify-center
+                     items-center m-auto relative"
+                    >
+                        <img
+                            src={search ? searchSvg : box}
+                            alt="empty box signifies no quiz was found"
+                            className="h-40 w-40"
+                        />
+                    </div>
                 )}
             </div>
             {filteredQuizzes && (

@@ -11,6 +11,7 @@ const Header = ({
     updatingQuest,
     showSaveNoti,
     setShowSaveOption,
+    config,
 }) => {
     const navigate = useNavigate();
     return (
@@ -19,15 +20,36 @@ const Header = ({
          top-0 z-20 topNavShadow items-center
          "
         >
-            <h1
-                onClick={() => {
-                    navigate("/");
-                }}
-                className="font-bold
-          text-shinyPurple agbalumoFont tracking-tighter text-3xl cursor-pointer"
-            >
-                Qz.
-            </h1>
+            <div className="flex items-center gap-1 md:gap-2">
+                <h1
+                    onClick={() => {
+                        navigate("/");
+                    }}
+                    className="font-bold
+          text-shinyPurple agbalumoFont tracking-tighter 
+          text-[25px] md:text-3xl cursor-pointer"
+                >
+                    Qz
+                </h1>
+                {config.draft ? (
+                    <span
+                        className="text-[10px] bg-[#ff000081] py-[1.5px] px-1  md:p-1 
+                    rounded-full text-red-500 mt-2 md:mt-2 isidoraBold flex gap-1 md:rounded md:px-2"
+                    >
+                        <span className="bi-file-earmark-text-fill"></span>
+                        <span className="hidden md:block">Draft</span>
+                    </span>
+                ) : (
+                    <span
+                        className="text-[10px] bg-green-600 py-[1.5px] px-1  md:p-1 
+                    rounded-full text-green-300 mt-2 md:mt-2 isidoraBold flex gap-1 md:rounded md:px-2"
+                    >
+                        <span className="bi-check-circle-fill"></span>
+                        <span className="hidden md:block">Published</span>
+                    </span>
+                )}
+            </div>
+
             {/* quiz settings , save button , change question type*/}
             <div className="flex items-center gap-3">
                 {/* quiz settings*/}

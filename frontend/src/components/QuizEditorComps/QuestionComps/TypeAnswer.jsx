@@ -25,7 +25,7 @@ const TypeAnswer = ({
     }, [singleQuestion, currentQuestion]);
 
     const updateAnswerForTypeAnswer = (event, index) => {
-        //update answer that mathes the passed down index
+        //update answer with the index that mathes the passed down index
         const updateAnswer = singleQuestion.answer.map((ans, i) => {
             return i === index ? event.target.innerText : ans;
         });
@@ -33,7 +33,7 @@ const TypeAnswer = ({
         const updatedSingleQuestion = {
             ...singleQuestion,
             answer:
-                //only and new data if  answer.length is less than index passed down else update the answer
+                //only add new data if  answer.length is less than index passed down else update the answer
                 singleQuestion.answer.length - 1 < index
                     ? [...singleQuestion.answer, event.target.innerText]
                     : updateAnswer,

@@ -117,3 +117,22 @@ const scrollToTimeLimit = () => {
                 >
                     Played &nbsp; 0
                 </button>
+
+
+                <button
+                            onClick={async () => {
+                                await navigator.share({
+                                    title: "Quizium",
+                                    text: "Quizium is a free & fun quiz website",
+                                    url: showShare.url,
+                                });
+                            }}
+                            className="py-2 px-3 text-[13px] isidoraBold 
+                    insetShadow bg-grayOne rounded clickable"
+                        >
+                            <span className="bi-share"></span>
+                        </button>
+
+                //nav\\ className="flex justify-start gap-5 mt-6 text-[13px] 
+            pt-5 border-b-[2px] border-mainBg 
+            h-[70px] md:gap-8"

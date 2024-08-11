@@ -82,6 +82,7 @@
 .scrollbar {
     scrollbar-width: none;
 }
+
 [contenteditable="true"]:empty:not(:focus)::before {
     content: attr(data-placeholder);
     pointer-events: none;

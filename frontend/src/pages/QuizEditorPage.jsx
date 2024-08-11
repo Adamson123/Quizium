@@ -337,6 +337,7 @@ const QuizEditorPage = () => {
                 updatingQuest={updatingQuest}
                 showSaveNoti={showSaveNoti}
                 setShowSaveOption={setShowSaveOption}
+                config={config}
             />
 
             {config && (

@@ -96,9 +96,9 @@ export const updateQuiz = async (req, res) => {
     const settings = JSON.parse(req.body.settings);
     const { title, category, applyTime, timeLimit, description, visibility } =
         settings;
-    if (!title || !category || !timeLimit) {
-        throw new CustomError("Please fill all required fields", 400);
-    }
+    // if (!title || !category || !timeLimit) {
+    //     throw new CustomError("Please fill all required fields", 400);
+    // }
 
     const quiz = req.quiz;
 
@@ -175,9 +175,15 @@ export const updateQuiz = async (req, res) => {
         }
     );
 
+    const userId = req.userId;
+    const quizzes = await QuizInfosModel.find({ createdBy: userId }).populate(
+        "coverImg"
+    );
+
     return res.status(201).json({
         msg: "Quiz settings has been updated successfully",
         id: updatedQuiz._id,
+        quizzes,
     });
 };
 
@@ -196,7 +202,7 @@ export const deleteQuiz = async (req, res) => {
     );
 
     console.log("quiz deleted");
-    return res.status(200).json({ quiz: quizzes, msg: "Quiz deleted" });
+    return res.status(200).json({ quizzes, msg: "Quiz deleted" });
 };
 
 export const getMultipleQuizzes = async (req, res) => {

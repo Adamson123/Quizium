@@ -42,8 +42,9 @@ const Question = ({
 
     //for updating answer , specifically for "quiz" and "trueFalse" type quizzes
     const updateAnswer = (event) => {
+        //
         const modifyAnswerArray = () => {
-            //remove the value if it is already part of the answer array
+            //remove the value (question id or true & false) if it is already part of the answer array
             if (singleQuestion.answer.includes(event.target.value)) {
                 return singleQuestion.answer.filter((a) => {
                     return a !== event.target.value;

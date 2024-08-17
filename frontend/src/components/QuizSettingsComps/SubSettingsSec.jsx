@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import BufferToObjUrl from "../../utils/bufferToObjUrl";
+import bufferToObjUrl from "../../utils/bufferToObjUrl";
 import Loading from "../ui/Loading";
 import quiziumImg from "../../assets/images/defaultCover/quizium-8.webp";
 const SubSettingsSec = ({
@@ -12,7 +12,7 @@ const SubSettingsSec = ({
     const uploadBtnRef = useRef();
     const fallbackToDefaultCover = () => {
         return quizSettings.coverImg
-            ? BufferToObjUrl(quizSettings.coverImg.image.data.data)
+            ? bufferToObjUrl(quizSettings.coverImg.image.data.data)
             : quiziumImg;
     };
     return (
@@ -29,9 +29,8 @@ const SubSettingsSec = ({
                 <div className="min-w-full rounded relative min-h-full">
                     {convertingImage && (
                         <Loading
-                            cus={
-                                "loading-lg absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-shinyPurple"
-                            }
+                            cus={`loading-lg absolute top-[50%] left-[50%] 
+                                translate-x-[-50%] translate-y-[-50%] bg-shinyPurple`}
                         />
                     )}
                     <img
@@ -40,7 +39,7 @@ const SubSettingsSec = ({
                                 ? URL.createObjectURL(pickedImage)
                                 : fallbackToDefaultCover()
                         }
-                        className="w-full h-full object-top rounded shadow-md"
+                        className="w-full h-full object-cover rounded shadow-md"
                         alt="quiz cover image display"
                     />
                     <input

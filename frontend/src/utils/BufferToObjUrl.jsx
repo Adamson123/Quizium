@@ -1,4 +1,4 @@
-export const BufferToObjUrl = (arr) => {
+export const bufferToObjUrl = (arr) => {
     if (!arr) {
         return;
     }
@@ -11,4 +11,4 @@ export const BufferToObjUrl = (arr) => {
     return url;
 };
 
-export default BufferToObjUrl;
+export default bufferToObjUrl;

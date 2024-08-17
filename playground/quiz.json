@@ -1,0 +1,26 @@
+{
+    "quiz info": {
+        "id": "",
+        "title": "string",
+        "decription": "string",
+        "subject": "string",
+        "timeLimit": "integer",
+        "questionsId": "string"
+    },
+
+    "quiz": {
+        "id": "",
+        "type": "string",
+        "question": "string",
+        "image": "",
+        "options": [
+            {
+                "text": "string",
+                "isCorrect": "string"
+            }
+        ]
+    },
+    "answer": "string",
+    "explanation": "string",
+    "timeLimit": "string"
+}

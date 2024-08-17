@@ -14,33 +14,33 @@ const QuizzesMenu = ({
     const quizRef = useRef([]);
 
     const showWarning = (index) => {
-        const singleQuestion_2 = allQuestions[index];
+        const quizQuestions = allQuestions[index];
         let showWarning;
 
-        const emptyOptions = singleQuestion_2.options.filter((i) => {
+        const emptyOptions = quizQuestions.options.filter((i) => {
             return i.text.trim(" ") === "";
         });
 
         //get non-empty answer field
-        const emptyAnsField = singleQuestion_2.answer.filter((i) => {
+        const emptyAnsField = quizQuestions.answer.filter((i) => {
             return i.trim(" ") !== "";
         });
 
         // console.clear();
 
-        if (!singleQuestion_2.question.trim(" ")) {
+        if (!quizQuestions.question.trim(" ")) {
             showWarning = "Question field is empty";
             return showWarning;
         } else if (
             //only if the question type is quiz
             emptyOptions.length > 2 &&
-            singleQuestion_2.questionType === "quiz"
+            quizQuestions.questionType === "quiz"
         ) {
             showWarning = "Fill atleast 2 option field";
             return showWarning;
         }
         //if answer length  is less than 1 , when it's value is  trimmed or not
-        else if (!singleQuestion_2.answer.length || emptyAnsField.length < 1) {
+        else if (!quizQuestions.answer.length || emptyAnsField.length < 1) {
             showWarning = "Answer is empty";
             return showWarning;
         }

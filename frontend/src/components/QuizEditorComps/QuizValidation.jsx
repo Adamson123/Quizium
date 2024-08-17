@@ -1,13 +1,17 @@
+import { memo } from "react";
 import Warning from "../ui/Warning";
+import analizeQuiz from "./analizeQuiz";
 
-const QuizValidation = ({
-    allQuestions,
-    showQuizValid,
-    setShowQuizValid,
-    setCurrentQuestion,
-    analizeQuiz,
-}) => {
-    // analizeQuiz();
+const QuizValidation = memo(({ saveOptionConfig }) => {
+    const {
+        allQuestions,
+        showQuizValid,
+        setShowQuizValid,
+        setCurrentQuestion,
+    } = saveOptionConfig;
+
+    console.log("quiz validation rendered");
+
     return (
         <div
             style={{
@@ -40,8 +44,8 @@ const QuizValidation = ({
                 >
                     {/* message */}
 
-                    {analizeQuiz() &&
-                        analizeQuiz().map((question, index) => {
+                    {analizeQuiz(allQuestions) &&
+                        analizeQuiz(allQuestions).map((question, index) => {
                             return (
                                 <div
                                     onClick={() => {
@@ -107,6 +111,6 @@ const QuizValidation = ({
             </div>
         </div>
     );
-};
+});
 
 export default QuizValidation;

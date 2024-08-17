@@ -16,6 +16,10 @@ const GeneralKnowledge = () => {
         return data;
     }, [data]);
 
+    if (data) {
+        console.log("data has landed data has landed data has landed ");
+    }
+
     return (
         <div>
             <h3 className="text-[16px] mb-3 font-semibold">

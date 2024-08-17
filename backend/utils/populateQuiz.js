@@ -1,6 +1,7 @@
 import { QuizInfosModel } from "../models/QuizInfosModel.js";
+import { UsersModel } from "../models/UsersModel.js";
 
-export const populateQuizAndQuest = async (id) => {
+export const populateQuizAndQuest = async (id, userId) => {
     const quiz = await QuizInfosModel.findById(id)
         .populate("coverImg") // populate quiz cover image
         .populate({
@@ -19,5 +20,32 @@ export const populateQuizAndQuest = async (id) => {
             */
         });
 
-    return quiz;
+    let favoriteQuizzes;
+    if (userId) {
+        favoriteQuizzes = await UsersModel.findById(userId);
+    }
+
+    return {
+        quiz,
+        viewerFavorites: favoriteQuizzes?.favorites,
+    };
+};
+
+export const findAndPopulateUserQuizzes = async (userId) => {
+    const findCreatedQuizzes = QuizInfosModel.find({
+        createdBy: userId,
+    }).populate("coverImg");
+    const findFavoriteQuizzes = UsersModel.findById(userId)
+        .populate({
+            path: "favorites",
+            populate: { path: "coverImg" },
+        })
+        .select("-password");
+
+    const [createdQuizzes, favoriteQuizzes] = await Promise.all([
+        findCreatedQuizzes,
+        findFavoriteQuizzes,
+    ]);
+
+    return { createdQuizzes, favoriteQuizzes };
 };

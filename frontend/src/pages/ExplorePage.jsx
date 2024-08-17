@@ -18,7 +18,10 @@ const ExplorePage = () => {
                 >
                     <div className="">
                         <h1 className="text-4xl isidoraSemiBold">Join Quiz</h1>
-                        <h3 className="text-xs mt-2 tracking-wider text-grayFive">
+                        <h3
+                            className="text-xs mt-2 tracking-wider text-grayFive 
+                        "
+                        >
                             Join an Ongoing Quiz or Dive into a World of
                             Questions
                         </h3>
@@ -26,14 +29,14 @@ const ExplorePage = () => {
 
                     <button
                         className="clickable bg-shinyPurple mt-3 rounded insetShadow 
-          text-xs px-3 py-2 isidoraBold"
+                        text-xs px-3 py-2 isidoraBold"
                     >
                         Join Quiz
                     </button>
                 </div>
                 <div
                     className="bg-blurryPurple p-5 rounded  w-full
-        flex flex-col justify-between h-auto items-start"
+                    flex flex-col justify-between h-auto items-start"
                 >
                     <div>
                         <h1 className="text-4xl isidoraSemiBold">

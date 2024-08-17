@@ -1,6 +1,4 @@
-import { useMemo } from "react";
 import { requestOptions } from "./utils/RequestOptions";
-import { delayTest } from "../utils/delayTest";
 
 export const getQiuzzes = async (skip, limit) => {
     try {
@@ -68,11 +66,15 @@ export const deleteQuiz = async (id) => {
     }
 };
 
-export const getQuizWithQuestions = async (id) => {
+export const getQuizWithQuestions = async (config) => {
+    const { id, checkOwner } = config;
     try {
-        const res = await fetch(`/api/quiz/single-quiz/${id}`, {
-            credentials: "include",
-        });
+        const res = await fetch(
+            `/api/quiz/single-quiz/${id}?checkOwner=${checkOwner}`,
+            {
+                credentials: "include",
+            }
+        );
         const data = await res.json();
         if (!res.ok) throw new Error(data.err);
         return data;

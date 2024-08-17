@@ -2,6 +2,11 @@ import { UsersModel } from "../models/UsersModel.js";
 import { CustomError } from "../errors/CustomError.js";
 import { hashPassword } from "../utils/hashPassword.js";
 import { ProfImagesModel } from "../models/ProfImagesModel.js";
+import {
+    findAndPopulateUserQuizzes,
+    populateQuizAndQuest,
+} from "../utils/populateQuiz.js";
+import { QuizInfosModel } from "../models/QuizInfosModel.js";
 
 //get user info function
 export const getUser = async (req, res) => {
@@ -12,7 +17,7 @@ export const getUser = async (req, res) => {
 
     if (!userInfo) throw new CustomError("404 user not", 404);
 
-    res.status(200).json(userInfo);
+    return res.status(200).json(userInfo);
 };
 
 //update personal info function
@@ -81,7 +86,7 @@ export const updatePersonalInfo = async (req, res) => {
 
     await UsersModel.findByIdAndUpdate({ _id: userId }, { name });
 
-    res.status(200).json({ msg: "Name updated" });
+    return res.status(200).json({ msg: "Name updated" });
 };
 
 //update password function
@@ -110,8 +115,6 @@ export const updatePassword = async (req, res) => {
 
     const user = req.user;
 
-    if (!user) throw new CustomError("User not found", 404);
-
     const isMatch = await user.verifyPassword(currentPassword);
 
     if (!isMatch)
@@ -127,5 +130,52 @@ export const updatePassword = async (req, res) => {
         { password: hashedPassword }
     );
 
-    res.status(200).json({ msg: "Password Updated" });
+    return res.status(200).json({ msg: "Password Updated" });
+};
+
+export const addToFavorites = async (req, res) => {
+    const { id, returnSingleQuiz } = req.body;
+
+    const { userId } = req;
+
+    const alreadyFave = await UsersModel.findById({ _id: userId });
+
+    let addedToFavorites = true;
+
+    if (alreadyFave.favorites.includes(id)) {
+        console.log("here already");
+
+        await UsersModel.findByIdAndUpdate(
+            { _id: userId },
+            { $pull: { favorites: id } }
+        );
+
+        addedToFavorites = false;
+    } else {
+        await UsersModel.findByIdAndUpdate(
+            { _id: userId },
+            { $push: { favorites: id } }
+        );
+
+        // addedToFavorites = true;
+    }
+
+    const msg = addedToFavorites
+        ? "Added to favorites"
+        : "Removed from favorites";
+
+    if (returnSingleQuiz) {
+        const { viewerFavorites, quiz } = await populateQuizAndQuest(
+            id,
+            userId
+        );
+        // const favoriteQuizzes = await UsersModel.findById(userId);
+
+        return res.status(201).json({ quiz, viewerFavorites, msg });
+    } else {
+        const { createdQuizzes, favoriteQuizzes } =
+            await findAndPopulateUserQuizzes(userId);
+
+        return res.status(201).json({ createdQuizzes, favoriteQuizzes, msg });
+    }
 };

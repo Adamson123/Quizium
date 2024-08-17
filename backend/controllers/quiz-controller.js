@@ -2,7 +2,10 @@ import { CustomError } from "../errors/CustomError.js";
 import { QuizInfosModel } from "../models/QuizInfosModel.js";
 import { QuizImagesModel } from "../models/QuizImagesModel.js";
 import { QuestionsModel } from "../models/QuestionsModel.js";
-import { populateQuizAndQuest } from "../utils/populateQuiz.js";
+import {
+    findAndPopulateUserQuizzes,
+    populateQuizAndQuest,
+} from "../utils/populateQuiz.js";
 import { QuestionImagesModel } from "../models/QuestionImagesModel.js";
 
 export const createQuiz = async (req, res) => {
@@ -180,7 +183,7 @@ export const updateQuiz = async (req, res) => {
         "coverImg"
     );
 
-    return res.status(201).json({
+    return res.status(200).json({
         msg: "Quiz settings has been updated successfully",
         id: updatedQuiz._id,
         quizzes,
@@ -202,13 +205,13 @@ export const deleteQuiz = async (req, res) => {
     );
 
     console.log("quiz deleted");
-    return res.status(200).json({ quizzes, msg: "Quiz deleted" });
+    return res.status(204).json({ quizzes, msg: "Quiz deleted" });
 };
 
 export const getMultipleQuizzes = async (req, res) => {
     const { skip, limit } = req.query;
     console.log("get multiple quiz:", "skip", skip, "limit", limit);
-    const quizzes = await QuizInfosModel.find()
+    const quizzes = await QuizInfosModel.find({ draft: false })
         .skip(Number(skip))
         .limit(Number(limit))
         .populate("coverImg")
@@ -219,16 +222,20 @@ export const getMultipleQuizzes = async (req, res) => {
 
 export const getUserQuizzes = async (req, res) => {
     const userId = req.userId;
-    const quizzes = await QuizInfosModel.find({ createdBy: userId }).populate(
-        "coverImg"
-    );
 
-    return res.status(200).json(quizzes);
+    const { createdQuizzes, favoriteQuizzes } =
+        await findAndPopulateUserQuizzes(userId);
+
+    return res.status(200).json({ createdQuizzes, favoriteQuizzes });
 };
 
 export const getSingleQuizWithQuestions = async (req, res) => {
     const { id } = req.params;
-    const quiz = await populateQuizAndQuest(id);
 
-    return res.status(200).json(quiz);
+    const { quiz, viewerFavorites } = await populateQuizAndQuest(
+        id,
+        req.userId
+    );
+
+    return res.status(200).json({ quiz, viewerFavorites });
 };

@@ -1,19 +1,24 @@
-import React, { useState } from "react";
+import React, { memo, useState } from "react";
 import { useMutation } from "react-query";
 import { updateQuiz } from "../../api/QuizApi";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
+import analizeQuiz from "./analizeQuiz";
 
-const SaveOptions = ({
-    config,
-    showSaveOption,
-    setShowSaveOption,
-    setShowQuizValid,
-    analizeQuiz,
-    refetch,
-}) => {
+const SaveOptions = memo(({ saveOptionConfig }) => {
+    const {
+        config,
+        showSaveOption,
+        setShowSaveOption,
+        setShowQuizValid,
+        refetch,
+        allQuestions,
+    } = saveOptionConfig;
+    console.log("save option rendered");
+
     const navigate = useNavigate();
-    const { mutateAsync: updateQuizSettingsFunc } = useMutation(updateQuiz);
+    const { mutateAsync: updateQuizSettingsFunc, isLoading } =
+        useMutation(updateQuiz);
     const [settings, setSettings] = useState(config);
 
     const setDraft = (value) => {
@@ -23,8 +28,13 @@ const SaveOptions = ({
     };
 
     const submitSetting = async () => {
+        if (isLoading) return;
         // draft is false, analizeQuiz returns something positive and the uppermost draft value is true
-        if (!settings.draft && analizeQuiz() && config.draft) {
+
+        if (settings.draft && config.draft) {
+            setShowSaveOption(false);
+        }
+        if (!settings.draft && analizeQuiz(allQuestions) && config.draft) {
             setShowSaveOption(false);
             return setShowQuizValid(true);
         }
@@ -33,7 +43,7 @@ const SaveOptions = ({
             "settings",
             JSON.stringify({
                 ...settings,
-                draft: analizeQuiz() ? true : settings.draft,
+                draft: analizeQuiz(allQuestions) ? true : settings.draft,
             })
         );
         formData.append("file", {});
@@ -54,12 +64,12 @@ const SaveOptions = ({
         setShowSaveOption(false);
 
         //if analizeQuiz and user is try to publish quiz
-        if (analizeQuiz() && !settings.draft) {
+        if (analizeQuiz(allQuestions) && !settings.draft) {
             setShowQuizValid(true);
         }
 
-        if (!settings.draft && !analizeQuiz()) {
-            navigate("/library");
+        if (!settings.draft && !analizeQuiz(allQuestions)) {
+            // navigate("/library");
         }
     };
     return (
@@ -72,11 +82,14 @@ const SaveOptions = ({
              showSaveOption ? "scale-1" : "scale-0"
          }`}
         >
-            <div className="px-8 pt-5 pb-8 bg-mainBg w-full max-w-[500px] flex flex-col items-center">
+            <div
+                className="px-8 pt-5 pb-8 bg-mainBg w-full max-w-[500px]
+             flex flex-col items-center"
+            >
                 <h2 className="text-center isidoraBold mt-2 text-[23px]">
                     Save Options
                 </h2>
-                <div className="w-full mt-8 flex flex-col gap-7">
+                <div className="w-full mt-8 flex flex-col gap-3">
                     {/* Publish */}
 
                     <label
@@ -134,7 +147,14 @@ const SaveOptions = ({
                     </label>
                 </div>
 
-                <div className="flex justify-center mt-10">
+                <div className="flex justify-center gap-3 mt-10">
+                    <button
+                        onClick={() => setShowSaveOption(false)}
+                        className="px-3 py-2 bg-grayTwo rounded
+                     insetShadow isidoraBold clickable"
+                    >
+                        Go back
+                    </button>
                     <button
                         onClick={submitSetting}
                         className="px-3 py-2 bg-shinyPurple rounded
@@ -146,6 +166,6 @@ const SaveOptions = ({
             </div>
         </div>
     );
-};
+});
 
 export default SaveOptions;

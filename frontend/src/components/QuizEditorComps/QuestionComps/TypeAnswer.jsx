@@ -26,8 +26,12 @@ const TypeAnswer = ({
 
     const updateAnswerForTypeAnswer = (event, index) => {
         //update answer with the index that mathes the passed down index
-        const updateAnswer = singleQuestion.answer.map((ans, i) => {
+        let updateAnswer = singleQuestion.answer.map((ans, i) => {
             return i === index ? event.target.innerText : ans;
+        });
+
+        updateAnswer = updateAnswer.filter((ans) => {
+            return ans.trim(" ") !== "";
         });
 
         const updatedSingleQuestion = {

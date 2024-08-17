@@ -27,13 +27,12 @@ export const createQuestion = async (req, res) => {
             },
         });
     }
-
     const quiz = req.quiz;
     const toAddTimeLimit = () => {
         return quiz.applyTime === "entire" ? 0 : quiz.timeLimit;
     };
 
-    const question = await QuestionsModel.findOneAndUpdate(
+    let question = await QuestionsModel.findOneAndUpdate(
         { parentId: quiz._id },
         {
             $push: {
@@ -46,6 +45,45 @@ export const createQuestion = async (req, res) => {
         },
         { new: true, upsert: true }
     );
+
+    // //updating answer array with isCorrect:true options Id
+    // let answer = [];
+    // let questId;
+    // question.questions.forEach((quest, index) => {
+    //     // console.log(quest);
+
+    //     console.log(question.questions.length, index, "length");
+
+    //     if (question.questions.length - 1 === index) {
+    //         console.log(quest, "quest");
+    //         console.log(question.questions[index - 1], quest, "quest");
+
+    //         quest.options.forEach((opt) => {
+    //             //console.log(opt);
+    //             if (opt.isCorrect) {
+    //                 answer.push(opt._id);
+    //             }
+    //             questId = quest._id;
+    //         });
+    //     }
+    // });
+
+    // /*updating answer array with isCorrect:true if answer is filled,
+    //  doing this for concise duplication of questions with question answers*/
+    // if (answer.length) {
+    //     question = await QuestionsModel.findOneAndUpdate(
+    //         {
+    //             parentId: quiz._id,
+    //             "questions._id": questId,
+    //         },
+    //         {
+    //             $set: {
+    //                 "questions.$.answer": answer,
+    //             },
+    //         }
+    //     );
+    // }
+
     //if the quiz does not have a questionId before for some reasons
     if (!quiz.questionsId) {
         console.log("for questionsId:nope not here");
@@ -54,7 +92,8 @@ export const createQuestion = async (req, res) => {
         });
     }
 
-    const updatedQuiz = await populateQuizAndQuest(quiz._id);
+    const { quiz: updatedQuiz } = await populateQuizAndQuest(quiz._id);
+    console.log(quiz, "create quest");
     return res.status(201).json({ msg: "Question created", quiz: updatedQuiz });
 };
 
@@ -113,7 +152,9 @@ export const updateQuestion = async (req, res) => {
         }
     );
 
-    const updatedQuiz = await populateQuizAndQuest(quiz._id);
+    const { quiz: updatedQuiz } = await populateQuizAndQuest(quiz._id);
+    console.log(quiz);
+
     return res.status(200).json({ msg: "Question updated", quiz: updatedQuiz });
 };
 
@@ -133,6 +174,8 @@ export const deleteQuestion = async (req, res) => {
         );
     }
     await QuestionImagesModel.findByIdAndDelete(data.image);
-    const updatedQuiz = await populateQuizAndQuest(quiz._id);
-    return res.status(200).json({ msg: "Question deleted", quiz: updatedQuiz });
+    const { quiz: updatedQuiz } = await populateQuizAndQuest(quiz._id);
+    //console.log(updatedQuiz);
+
+    return res.status(204).json({ msg: "Question deleted", quiz: updatedQuiz });
 };

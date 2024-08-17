@@ -113,7 +113,7 @@ const Personal = ({
                                         }
                                         alt="your profile image"
                                         className="w-full h-full rounded-full
-                                border object-cover"
+                                        border object-cover"
                                     />
                                 </div>
                             )}
@@ -145,7 +145,7 @@ const Personal = ({
                             setInput={setPersonalInput}
                             type="text"
                             name="name"
-                            maxLength={17}
+                            maxLength={35}
                             minLength={2}
                         />
                     </div>

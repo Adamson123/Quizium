@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { Navigate, useNavigate, useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { getQuizWithQuestions } from "../api/QuizApi";
 import { useMutation, useQuery } from "react-query";
 import {
@@ -17,12 +17,13 @@ import Question from "../components/QuizEditorComps/Question";
 import toast from "react-hot-toast";
 import QuizValidation from "../components/QuizEditorComps/QuizValidation";
 import SaveOptions from "../components/QuizEditorComps/SaveOptions";
+//import analizeQuiz from "../components/QuizEditorComps/analizeQuiz";
 
 const QuizEditorPage = () => {
     const { id } = useParams();
     const { data, isLoading, error, refetch } = useQuery(
         ["quiz-questions", id],
-        () => getQuizWithQuestions(id),
+        () => getQuizWithQuestions({ id, checkOwner: true }),
         {
             retry: false,
         }
@@ -44,33 +45,50 @@ const QuizEditorPage = () => {
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [showQuizPanel, setShowQuizPanel] = useState(false);
 
-    const [imagePicked, setPickedImage] = useState();
+    const [imagePicked, setPickedImage] = useState("");
     const [showRightSect, setShowRightSect] = useState(false);
     const [showSaveNoti, setShowSaveNoti] = useState(false);
     const [showQuizValid, setShowQuizValid] = useState(false);
     const [showSaveOption, setShowSaveOption] = useState(false);
     const config = useMemo(() => {
         if (data) {
+            const { quiz } = data;
             return {
-                title: data.title,
-                description: data.description,
-                timeLimit: data.timeLimit,
-                applyTime: data.applyTime,
-                visibility: data.visibility,
-                category: data.category,
-                coverImg: data.coverImg,
-                draft: data.draft,
-                id: data._id,
+                title: quiz.title,
+                description: quiz.description,
+                timeLimit: quiz.timeLimit,
+                applyTime: quiz.applyTime,
+                visibility: quiz.visibility,
+                category: quiz.category,
+                coverImg: quiz.coverImg,
+                draft: quiz.draft,
+                id: quiz._id,
             };
         }
     }, [data]);
 
+    const saveOptionConfig = useMemo(() => {
+        return {
+            config,
+            showSaveOption,
+            setShowSaveOption,
+            setShowQuizValid,
+            allQuestions,
+            refetch,
+            setCurrentQuestion,
+            showQuizValid,
+        };
+    }, [allQuestions_2, config, showSaveOption, showQuizValid]);
     //updating all questions array if questions has been fetched
     useEffect(() => {
-        console.log(data);
-        if (data?.questionsId) {
-            setAllQuestions(data.questionsId.questions);
-            setAllQuestions_2(data.questionsId.questions);
+        if (data) {
+            console.log(data);
+
+            const { quiz } = data;
+            if (quiz?.questionsId) {
+                setAllQuestions(quiz.questionsId.questions);
+                setAllQuestions_2(quiz.questionsId.questions);
+            }
         }
     }, [data]);
 
@@ -131,6 +149,9 @@ const QuizEditorPage = () => {
         });
 
         const res = await promise;
+        if (res.err) {
+            return;
+        }
         setAllQuestions(res.quiz.questionsId.questions);
         setAllQuestions_2(res.quiz.questionsId.questions);
     };
@@ -155,10 +176,13 @@ const QuizEditorPage = () => {
             const res = await updateQuestionFunc(data);
             if (res.err) {
                 setAllQuestions_2(holdAllQuestions_2);
+                console.log("res err caused it");
+
                 return toast.error("Error saving previous changes");
             }
 
             if (imagePicked) {
+                console.log("image picked caused it");
                 setAllQuestions(res.quiz.questionsId.questions);
                 setAllQuestions_2(res.quiz.questionsId.questions);
             }
@@ -183,6 +207,8 @@ const QuizEditorPage = () => {
             },
         };
 
+        console.log(info);
+
         const promise = deleteQuestionFunc(info);
 
         toast.promise(promise, {
@@ -191,19 +217,23 @@ const QuizEditorPage = () => {
                 return questId ? data.msg : "Image Deleted";
             },
             error: (data) => {
-                return questId ? "Error deleting image" : data.err;
+                return questId ? data.err : "Error deleting image";
             },
         });
 
         const res = await promise;
+        console.log(res);
+        if (res.err) {
+            return;
+        }
 
         setAllQuestions(res.quiz.questionsId.questions);
         setAllQuestions_2(res.quiz.questionsId.questions);
 
-        if (questId) {
-            if (currentQuestion === allQuestions.length - 1) {
-                setCurrentQuestion(currentQuestion - 1);
-            }
+        if (questId && currentQuestion === allQuestions.length - 1) {
+            //  if () {
+            setCurrentQuestion(currentQuestion - 1);
+            // }
         }
     };
 
@@ -228,99 +258,39 @@ const QuizEditorPage = () => {
         };
     });
 
-    console.log("create question re-rendered");
-
-    const analizeQuiz = () => {
-        const errorMessage = (field, value, type) => {
-            /*checking if the quiz with question type "quiz" 
-            has more than 1 options that is not empty*/
-            if (field === "options" && type === "quiz") {
-                //filter out filled options
-                const filteredOptions = value.filter((op) => {
-                    return op.text !== "";
-                });
-                if (filteredOptions.length > 1) return "";
-            }
-
-            let filteredAnswers;
-            if (field === "answer") {
-                filteredAnswers = value.filter((op) => {
-                    return op !== "";
-                });
-            }
-
-            /*return if its options field and the type is not quiz 
-            cause we are only validating options fields in quiz with questionType "quiz"
-            or if field is question and the value is not empty or if field is answer 
-            and the answer has valid element in it*/
-
-            if (
-                (field === "options" && type !== "quiz") ||
-                (field === "question" && value) ||
-                (field === "answer" && filteredAnswers.length)
-            ) {
-                return "";
-            }
-
-            const message = {
-                question: "Question field is empty",
-                options: "An option field is empty",
-                answer: "Answer is empty",
-            };
-
-            return message[field];
+    const questionConfig = useMemo(() => {
+        return {
+            allQuestions,
+            setAllQuestions,
+            singleQuestion: allQuestions[currentQuestion],
+            currentQuestion,
+            imagePicked,
+            setPickedImage,
+            allQuestions_2,
+            handleDeleteQuiz,
         };
+    }, [
+        allQuestions_2,
+        currentQuestion,
+        imagePicked,
+        singleQuestion?.answer,
+        allQuestions,
+    ]);
 
-        let analizedQuestions = [];
-        for (let index = 0; index < allQuestions.length; index++) {
-            const question = allQuestions[index];
-            const messages = {
-                //question Error
-                questionError: errorMessage(
-                    "question",
-                    question.question,
-                    question.questionType
-                ),
-                //option Error
-                optionsError: errorMessage(
-                    "options",
-                    question.options,
-                    question.questionType
-                ),
-                //answer Error
-                answerError: errorMessage(
-                    "answer",
-                    question.answer,
-                    question.questionType
-                ),
-                index,
-            };
-            if (
-                messages.questionError ||
-                messages.optionsError ||
-                messages.answerError
-            ) {
-                analizedQuestions = [...analizedQuestions, messages];
-            }
-        }
-        if (!analizedQuestions.length) {
-            return;
-        }
-        return analizedQuestions;
-    };
+    console.log("create question re-rendered");
 
     if (!data && isLoading) {
         return <PageIsLoading message={"Setting up quiz editor..."} />;
     }
 
     if (!data && !isLoading) {
-        toast.error("Invalid Quiz id");
+        toast.error(error.err);
         return navigate("/");
     }
 
     return (
         <div
-            className={`isidoraReg ${
+            className={`${
                 showQuizPanel ||
                 showSaveOption ||
                 (showQuizValid && "overflow-hidden")
@@ -356,34 +326,14 @@ const QuizEditorPage = () => {
                 className="min-h-screen pt-28 pb-32 px-7 slg:pr-[330px] 
             lg:pr-[300px] lg:pl-20 relative"
             >
-                <SaveOptions
-                    config={config}
-                    showSaveOption={showSaveOption}
-                    setShowSaveOption={setShowSaveOption}
-                    setShowQuizValid={setShowQuizValid}
-                    analizeQuiz={analizeQuiz}
-                    refetch={refetch}
-                />
-                <QuizValidation
-                    allQuestions={allQuestions}
-                    showQuizValid={showQuizValid}
-                    setShowQuizValid={setShowQuizValid}
-                    setCurrentQuestion={setCurrentQuestion}
-                    analizeQuiz={analizeQuiz}
-                />
+                <SaveOptions saveOptionConfig={saveOptionConfig} />
+                <QuizValidation saveOptionConfig={saveOptionConfig} />
                 {/*  Enter Question &  options container*/}
                 {singleQuestion && (
                     <>
-                        <Question
-                            allQuestions={allQuestions}
-                            setAllQuestions={setAllQuestions}
-                            singleQuestion={singleQuestion}
-                            currentQuestion={currentQuestion}
-                            imagePicked={imagePicked}
-                            setPickedImage={setPickedImage}
-                            allQuestions_2={allQuestions_2}
-                            handleDeleteQuiz={handleDeleteQuiz}
-                        />
+                        {questionConfig.singleQuestion && (
+                            <Question questionConfig={questionConfig} />
+                        )}
                         {/* right section( Answer Options , Quiz type , Delete )
                          */}
                         <RightSection

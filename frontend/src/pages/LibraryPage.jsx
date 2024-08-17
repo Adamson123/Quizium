@@ -1,49 +1,50 @@
 import { useQuery } from "react-query";
 import { getUserQuizzes } from "../api/QuizApi";
 import LoadingQuizzes from "../components/LibrayComps/LoadingQuizzes";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { dataContext } from "../layouts/Layout";
 import QuizRect from "../components/LibrayComps/QuizRect";
 import Loading from "../components/ui/Loading";
-import Share from "../components/LibrayComps/Share";
+import Share from "../components/Share";
 import box from "../assets/svg/empty-box2.svg";
 import searchSvg from "../assets/svg/search.svg";
 
 const LibraryPage = () => {
-    const { data, isLoading, error, refetch } = useQuery(
-        ["user-allQuizzes"],
-        getUserQuizzes,
-        {
-            retry: false,
-        }
-    );
+    const { data, isLoading } = useQuery(["user-allQuizzes"], getUserQuizzes, {
+        retry: false,
+    });
     const [allQuizzes, setAllQuizzes] = useState([]);
     const [filterBy, setFilterBy] = useState("published");
     const [filteredQuizzes, setFilteredQuizzes] = useState([]);
     const [quizIndex, setQuizIndex] = useState(-1);
 
-    const quizRef = useRef([]);
     const [byTime, setByTime] = useState("recent");
     const [showShare, setShowShare] = useState({ open: false, url: "" });
 
     const value = useContext(dataContext);
-    const { search } = value;
+    const { search, userId } = value;
 
     const filterQuizzesFunc = (fby) => {
         if (fby === "played") {
             return [];
         }
-        return allQuizzes.filter((quiz, index) => {
+        if (fby === "favorites") {
+            return allQuizzes.favoriteQuizzes?.favorites;
+        }
+
+        console.log("populated");
+
+        return allQuizzes.createdQuizzes.filter((quiz) => {
             //if filterBy is drafts we will filter by allQuizzes that are drafted, esle will filter by the once that not drafted
             if (fby === "drafts") {
                 return quiz.draft && quiz;
-            } else if (fby === "favorites") {
-                return quiz.favorite && quiz;
             } else if (fby === "published") {
                 return !quiz.draft && quiz;
             }
         });
     };
+
+    console.log(data);
 
     useEffect(() => {
         if (data) {
@@ -52,7 +53,7 @@ const LibraryPage = () => {
     }, [data]);
 
     useEffect(() => {
-        if (allQuizzes) {
+        if (allQuizzes.createdQuizzes) {
             let filteredQuiz =
                 byTime === "recent"
                     ? filterQuizzesFunc(filterBy).sort(
@@ -127,7 +128,7 @@ const LibraryPage = () => {
                                 {nav.text[0].toUpperCase() +
                                     nav.text.substring(1, nav.text.length)}{" "}
                                 &nbsp;
-                                {allQuizzes.length &&
+                                {allQuizzes.createdQuizzes &&
                                     filterQuizzesFunc(nav.text).length}
                             </span>
                         );
@@ -179,6 +180,8 @@ const LibraryPage = () => {
                                 key={index}
                                 setAllQuizzes={setAllQuizzes}
                                 setShowShare={setShowShare}
+                                allQuizzes={allQuizzes}
+                                userId={userId}
                             />
                         );
                     })

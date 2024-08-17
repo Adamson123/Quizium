@@ -7,6 +7,8 @@ import ExplorePage from "./pages/ExplorePage";
 import SettingsPage from "./pages/SettingsPage";
 import QuizEditorPage from "./pages/QuizEditorPage";
 import LibraryPage from "./pages/LibraryPage";
+import DetailsPage from "./pages/DetailsPage";
+import PlayQuizPage from "./pages/PlayQuizPage";
 
 function App() {
     return (
@@ -41,6 +43,15 @@ function App() {
                     }
                 />
                 <Route path="/quiz-editor/:id" element={<QuizEditorPage />} />
+                <Route path="/play/:id" element={<PlayQuizPage />} />
+                <Route
+                    path="/details/:id"
+                    element={
+                        <Layout>
+                            <DetailsPage />
+                        </Layout>
+                    }
+                />
             </Route>
             <Route
                 path="/404"

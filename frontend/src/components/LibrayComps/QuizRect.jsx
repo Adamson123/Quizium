@@ -1,11 +1,13 @@
 import { useNavigate } from "react-router";
-import BufferToObjUrl from "../../utils/bufferToObjUrl";
+import bufferToObjUrl from "../../utils/bufferToObjUrl";
 import quizImg from "../../assets/images/defaultCover/quizium-8.webp";
-import quizImg2 from "../../assets/images/defaultCover/quizium-3.webp";
-import { deleteQuiz, updateQuiz } from "../../api/QuizApi";
+
+import { deleteQuiz } from "../../api/QuizApi";
 import { useMutation } from "react-query";
 import toast from "react-hot-toast";
-import { forwardRef } from "react";
+import convtToSimpleDate from "../../utils/convtToSimpleDate";
+import { addToFavorites } from "../../api/UserApi";
+import shortenText from "../../utils/shortenText";
 
 const QuizRect = ({
     quiz,
@@ -14,37 +16,14 @@ const QuizRect = ({
     setQuizIndex,
     setAllQuizzes,
     setShowShare,
+    allQuizzes,
+    userId,
 }) => {
     const navigate = useNavigate();
 
     const { mutateAsync: deleteQuizFunc, isLoading } = useMutation(deleteQuiz);
-    const { mutateAsync: updateQuizFunc, isLoading: isUpdating } =
-        useMutation(updateQuiz);
-    const createdDate = (date) => {
-        /* default format is example: 2024-08-01T22:26:36.575Z*/
-        const [year, month, day] = date.split("-");
-
-        const months = [
-            "Jan",
-            "Feb",
-            "Mar",
-            "Apr",
-            "May",
-            "Jun",
-            "Jul",
-            "Aug",
-            "Sep",
-            "Oct",
-            "Nov",
-            "Dec",
-        ];
-
-        const formatedDate = `${day.substring(0, day.indexOf("T"))} ${
-            months[Number(month) - 1]
-        } ${year}`;
-
-        return formatedDate;
-    };
+    const { mutateAsync: addToFavoriteFunc, isLoading: isUpdating } =
+        useMutation(addToFavorites);
 
     const editFunc = (id) => {
         const quizPath = `/quiz-editor/${id}`;
@@ -82,24 +61,44 @@ const QuizRect = ({
         formData.append("settings", JSON.stringify({ favorite: !value }));
         formData.append("file", {});
 
-        const promise = updateQuizFunc({ id, formData });
+        const promise = addToFavoriteFunc({ id });
         toast.promise(promise, {
-            loading: !value ? "Adding to favorite" : "Removing from favorite",
-            success: !value ? "Added to favorite" : "Removed from favorite",
+            loading: !value ? "Adding to favorites" : "Removing from favorites",
+            success: (data) => {
+                return data.msg;
+            },
             error: !value
-                ? "Error Adding to favorite"
-                : "Error Removing from favorite",
+                ? "Error Adding to favorites"
+                : "Error Removing from favorites",
         });
 
         const res = await promise;
+        if (res.err) {
+            return;
+        }
 
-        setAllQuizzes(res.quizzes);
+        setAllQuizzes(res);
+        setQuizIndex(-1);
     };
 
-    // console.log(quizRef, "ref");
+    const inFavorites = (id) => {
+        let match = false;
+
+        allQuizzes.favoriteQuizzes?.favorites.forEach((fav) => {
+            if (fav._id === id) {
+                match = true;
+            }
+        });
+        return match;
+    };
 
     return (
         <div
+            onClick={() =>
+                quiz.draft
+                    ? navigate(`/quiz-editor/${quiz._id}`)
+                    : navigate(`/details/${quiz._id}`)
+            }
             key={index}
             className="flex items-center border-b pb-5 
     border-grayOne cursor-pointer gap-3 relative"
@@ -109,7 +108,7 @@ const QuizRect = ({
                 <img
                     src={
                         quiz.coverImg
-                            ? BufferToObjUrl(quiz.coverImg.image.data.data)
+                            ? bufferToObjUrl(quiz.coverImg.image.data.data)
                             : quizImg
                     }
                     alt="quiz image"
@@ -121,7 +120,20 @@ const QuizRect = ({
             <div className="flex justify-between w-full">
                 {/* Info */}
                 <div className="flex flex-col">
-                    <h3 className="isidoraBold">{quiz.title}</h3>
+                    <h3 className="isidoraBold">
+                        {
+                            /* Title for small screen */
+                            <span className="slg:hidden">
+                                {shortenText(quiz.title, 35)}
+                            </span>
+                        }
+                        {
+                            /* Title for big screen */
+                            <span className="hidden slg:block">
+                                {quiz.title}
+                            </span>
+                        }
+                    </h3>
                     <span className="text-[13px] text-grayFive isidoraSemiBold">
                         <span className="bi-tag"></span> {quiz.category} &nbsp;
                         {quiz.draft ? (
@@ -145,20 +157,26 @@ const QuizRect = ({
                         {
                             /*25 Feb 2006*/
                             quiz?.createdAt
-                                ? createdDate(quiz.createdAt)
+                                ? convtToSimpleDate(quiz.createdAt)
                                 : "25 Feb 2006"
                         }
                     </span>
                 </div>
-                {/* menu */}
+                {/* open quiz menu */}
                 <div>
                     <span
                         onClick={(event) => {
                             event.stopPropagation();
-                            setQuizIndex(index);
+                            setQuizIndex(quizIndex !== index ? index : -1);
                         }}
-                        className="bi-three-dots-vertical"
-                    ></span>
+                        style={{
+                            transition: "background 0.4s ease-in-out",
+                        }}
+                        className="py-2 px-3 hover:bg-[rgba(0,0,0,0.3)] 
+                        rounded-full cursor-pointer text-right absolute right-0"
+                    >
+                        <span className="bi-three-dots-vertical text-[15px]"></span>
+                    </span>
                 </div>
             </div>
             {/* Menu */}
@@ -169,50 +187,53 @@ const QuizRect = ({
                         // setQuizIndex(index);
                     }}
                     className="absolute right-0
-                    top-4 shadow-md p-4 isidoraSemiBold
+                    top-10 shadow-md p-4 isidoraSemiBold
                     flex flex-col gap-5 bg-mainBg z-10 shadowAround"
                 >
-                    <p
-                        onClick={() => editFunc(quiz._id)}
-                        className="flex items-center gap-4 hover:text-shinyPurple"
-                    >
-                        <span className="bi-pencil-fill"></span>
-                        <span className="text-[14px]">Edit</span>
-                    </p>
+                    {userId === quiz.createdBy && (
+                        <p
+                            onClick={() => editFunc(quiz._id)}
+                            className="flex items-center gap-4 hover:text-shinyPurple"
+                        >
+                            <span className="bi-pencil-fill"></span>
+                            <span className="text-[14px]">Edit</span>
+                        </p>
+                    )}
                     <p
                         onClick={() => {
-                            addToFavorite(quiz._id, quiz.favorite);
+                            addToFavorite(quiz._id, inFavorites(quiz._id));
                         }}
                         className="flex items-center gap-4 hover:text-shinyPurple"
                     >
                         <span
                             className={`bi-star-fill ${
-                                quiz.favorite && "text-orange-500"
+                                inFavorites(quiz._id) && "text-orange-500"
                             }`}
                         ></span>
                         <span className="text-[14px]">
-                            {quiz.favorite ? "Remove from" : "Add to"} favorite
+                            {inFavorites(quiz._id) ? "Remove from" : "Add to"}{" "}
+                            favorites
                         </span>
                     </p>
 
-                    <p
-                        onClick={() => handleDeleteQuiz(quiz._id)}
-                        className="flex items-center gap-4 hover:text-shinyPurple"
-                    >
-                        <span className="bi-trash-fill"></span>
-                        <span className="text-[14px]">Delete</span>
-                    </p>
+                    {userId === quiz.createdBy && (
+                        <p
+                            onClick={() => handleDeleteQuiz(quiz._id)}
+                            className="flex items-center gap-4 hover:text-shinyPurple"
+                        >
+                            <span className="bi-trash-fill"></span>
+                            <span className="text-[14px]">Delete</span>
+                        </p>
+                    )}
                     {!quiz.draft && (
                         <p
-                            onClick={() =>
-                                setShowShare(
-                                    (s) =>
-                                        (s = {
-                                            open: true,
-                                            url: `${window.location.origin}/quiz-editor/${quiz._id}`,
-                                        })
-                                )
-                            }
+                            onClick={() => {
+                                setQuizIndex(-1);
+                                setShowShare({
+                                    open: true,
+                                    url: `${window.location.origin}/details/${quiz._id}`,
+                                });
+                            }}
                             className="flex items-center gap-4 hover:text-shinyPurple"
                         >
                             <span className="bi-share-fill"></span>

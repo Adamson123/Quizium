@@ -24,7 +24,6 @@ export const signup = async (req, res) => {
     }
 
     const nameUsed = await UsersModel.findOne({ name });
-
     if (nameUsed) {
         throw new CustomError("Username has already been taken", 400);
     }
@@ -38,7 +37,6 @@ export const signup = async (req, res) => {
     }
 
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
     if (!regex.test(email)) {
         throw new CustomError("Please provide a valid email address", 400);
     }
@@ -46,7 +44,6 @@ export const signup = async (req, res) => {
     const hashedPassword = await hashPassword(password);
 
     let user;
-
     if (req.file) {
         const { buffer, mimetype } = req.file;
 

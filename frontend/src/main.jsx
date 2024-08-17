@@ -22,7 +22,13 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Router>
             <QueryClientProvider client={queryClient}>
                 <App />
-                <Toaster position="top-center" />
+                <Toaster
+                    position="top-center"
+                    containerStyle={{
+                        textAlign: "center",
+                        fontFamily: "isidoraSemiBold",
+                    }}
+                />
             </QueryClientProvider>
         </Router>
     </React.StrictMode>

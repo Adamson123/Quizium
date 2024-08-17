@@ -1,7 +1,7 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import Header from "../components/Header";
 import { getUser } from "../api/UserApi";
-import BufferToObjUrl from "../utils/bufferToObjUrl";
+import bufferToObjUrl from "../utils/bufferToObjUrl";
 import newUser from "../assets/images/defaultProfile/newUser.png";
 import { useQuery } from "react-query";
 
@@ -9,11 +9,12 @@ export const dataContext = createContext();
 
 const Layout = ({ children, text }) => {
     const { data, refetch } = useQuery(["user"], getUser, { retry: false });
-    let { profileImg, email, name, isLoading } = data;
+    let { profileImg, email, name, isLoading, _id } = data;
 
     const [profileImage, setProfileImage] = useState(
-        profileImg ? BufferToObjUrl(profileImg.image.data.data) : newUser
+        profileImg ? bufferToObjUrl(profileImg.image.data.data) : newUser
     );
+
     const [search, setSearch] = useState("");
     const value = {
         data,
@@ -24,6 +25,7 @@ const Layout = ({ children, text }) => {
         name,
         isLoading,
         search,
+        userId: _id,
     };
 
     return (

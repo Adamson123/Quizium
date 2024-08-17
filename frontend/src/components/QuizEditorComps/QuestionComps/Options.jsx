@@ -18,6 +18,10 @@ const Options = ({
     ]);
 
     const optionRefs = useRef([]);
+    //just to emulate empty options in the main empty option
+    const [emptyOptions, setEmptyOption] = useState(singleQuestion.options);
+    // const [allQuestionsClone, setAllQuestionsClone] =
+    //     useState(allQuestionsClone);
 
     useEffect(() => {
         if (allQuestions_2 === allQuestions) {
@@ -25,18 +29,26 @@ const Options = ({
             singleQuestion.options.forEach((option, i) => {
                 optionRefs.current[i].innerText = option.text;
             });
+            setEmptyOption(singleQuestion.options);
         }
-    }, [singleQuestion, currentQuestion]);
+    }, [currentQuestion]);
 
     const updateOptions = (event, id) => {
-        //update option
-        const updatedOption = singleQuestion.options.map((option) => {
+        //update ONLY option THAT Mathes the passed down id
+        /*NOTE this will simulate singleQuestion.option because
+         the main singleOption been updated is not reflecting here directly as we don't
+         want to re-render this comps or question comp when we are typing... Adam you gerrit? */
+        const updatedOption = emptyOptions.map((option) => {
             return option._id !== id
                 ? option
                 : { ...option, text: event.target.innerText };
         });
 
-        //filter out answers that does not match the id passed down
+        setEmptyOption(updatedOption);
+
+        /*filtery out answers that does not match the id passed down,
+         trying to get answer from only options that are not empty,by filtering
+         out the id of this option if it's possibly emptied when typing */
         const answer = singleQuestion.answer.filter((ans, i) => {
             return ans !== id;
         });
@@ -50,18 +62,29 @@ const Options = ({
                     : singleQuestion.answer,
         };
 
+        console.log(
+            updatedSingleQuestion,
+            singleQuestion,
+            "singleQuestion",
+            "updatedSingleQuestion",
+            currentQuestion
+        );
+
         const updatedMultipleQuestion = allQuestions.map((q, i) => {
             return i !== currentQuestion ? q : updatedSingleQuestion;
         });
-        setAllQuestions((a) => (a = updatedMultipleQuestion));
+
+        setAllQuestions(updatedMultipleQuestion);
     };
 
     const checkEmptyOptionField = (index) => {
-        const emptyOptions = singleQuestion.options.filter((i) => {
+        const updateEmptyOptions = emptyOptions.filter((i) => {
             return i.text.trim(" ") === "";
         });
 
-        return emptyOptions.length;
+        /// console.log(updateEmptyOptions, "updateEmptyOptions");
+
+        return updateEmptyOptions.length;
     };
 
     return singleQuestion.options?.map((option, i) => {
@@ -69,18 +92,18 @@ const Options = ({
             return (
                 <div
                     style={{
-                        borderColor: optionsTextColor[i],
-                        color: optionsTextColor[i],
+                        background: optionsTextColor[i],
                     }}
                     key={i}
-                    className={`relative bg-mainBg border-2
-                          rounded text-center
-                          text-[15px] p-2 px-10 w-full min-h-16 text-wrap break-words
-                          flex items-center justify-center`}
+                    className={`relative bg-mainBg
+                        rounded text-center
+                        text-[15px] p-2 px-10 w-full min-h-12 text-wrap break-words
+                        flex items-center justify-center isidoraBold 
+                        insetShadow text-secMainBg`}
                 >
                     <input
                         onChange={(event) => {
-                            option.text
+                            optionRefs.current[i]?.innerText.trim(" ")
                                 ? updateAnswer(event)
                                 : toast.error("Option is empty");
                         }}
@@ -94,7 +117,7 @@ const Options = ({
                                 ? "radio"
                                 : "checkbox"
                         }
-                        className={`absolute left-3 ${
+                        className={`absolute left-3 bg-secMainBg ${
                             singleQuestion.answerOption === "singleAnswer"
                                 ? `radio optionChecked${i}`
                                 : `checkbox optionChecked${i} tickColor`
@@ -105,7 +128,7 @@ const Options = ({
                     <div
                         onInput={(event) => updateOptions(event, option._id)}
                         className={`w-full outline-none overflow-y-auto 
-                      max-h-full`}
+                         max-h-full`}
                         contentEditable
                         data-placeholder="Enter option..."
                         ref={(el) => (optionRefs.current[i] = el)}
@@ -115,7 +138,8 @@ const Options = ({
                         // and the particular option too is empty
 
                         checkEmptyOptionField(i) > 2 &&
-                            !option.text.trim(" ") && (
+                            // !option.text.trim(" ")
+                            !optionRefs.current[i]?.innerText.trim(" ") && (
                                 <Warning
                                     text={"Fill atleast two option field"}
                                 />

@@ -5,6 +5,7 @@ import { useMutation } from "react-query";
 import { useContext } from "react";
 
 import { dataContext } from "../layouts/Layout";
+import shortenText from "../utils/shortenText";
 
 const NavMenu = ({ show, setShow }) => {
     const { mutateAsync: logoutUser, data: logoutRes } =
@@ -16,6 +17,10 @@ const NavMenu = ({ show, setShow }) => {
     const handleLogoutUser = async () => {
         await logoutUser();
         window.location.reload();
+    };
+
+    const returnPathname = () => {
+        return window.location.pathname;
     };
 
     return (
@@ -67,8 +72,11 @@ const NavMenu = ({ show, setShow }) => {
                                     className="w-full h-full object-cover"
                                 />
                             </span>
-                            <span className="circularSpo text-[15px] tracking-tighter text-textColor">
-                                {name}
+                            <span
+                                className="circularSpo text-[15px] tracking-tighter
+                             text-textColor"
+                            >
+                                {shortenText(name, 15)}
                             </span>
                         </div>
                     </div>
@@ -83,7 +91,9 @@ const NavMenu = ({ show, setShow }) => {
                                 setShow((s) => (s = false));
                                 navigate("/");
                             }}
-                            className="cursor-pointer hover:text-shinyPurple"
+                            className={`cursor-pointer hover:text-shinyPurple ${
+                                returnPathname() === "/" && "text-shinyPurple"
+                            }`}
                         >
                             <span className="bi-compass mr-2 font-bold"></span>
                             <span>Explore</span>
@@ -93,7 +103,10 @@ const NavMenu = ({ show, setShow }) => {
                                 setShow((s) => (s = false));
                                 navigate("/library");
                             }}
-                            className="cursor-pointer hover:text-shinyPurple"
+                            className={`cursor-pointer hover:text-shinyPurple ${
+                                returnPathname() === "/library" &&
+                                "text-shinyPurple"
+                            }`}
                         >
                             <span className="bi-book mr-2 font-bold"></span>
                             <span>Your Libary</span>
@@ -104,7 +117,10 @@ const NavMenu = ({ show, setShow }) => {
                                 setShow((s) => (s = false));
                                 navigate("/settings");
                             }}
-                            className="cursor-pointer hover:text-shinyPurple"
+                            className={`cursor-pointer hover:text-shinyPurple ${
+                                returnPathname() === "/settings" &&
+                                "text-shinyPurple"
+                            }`}
                         >
                             <span className="bi-gear mr-2 font-bold"></span>
                             <span>Settings</span>

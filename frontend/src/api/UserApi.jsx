@@ -14,7 +14,6 @@ export const getUser = async () => {
     return data;
 };
 
-
 export const getProfilePicFunc = (info) => {
     const getProfilePic = async () => {
         try {
@@ -75,6 +74,30 @@ export const updatePasswordFunc = async (info) => {
     try {
         const res = await fetch(
             `/api/user/password`,
+            requestOptions(info, "application/json", "PATCH")
+        );
+        //const res = await axios.post(`http://localhost:3002/api/auth/signup`, info);
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            throw new Error(data.err);
+        }
+
+        return data;
+    } catch (error) {
+        console.log("error fr crt", error);
+        if (error.message === "Failed to fetch") {
+            throw { err: "Please check your connection" };
+        }
+        throw { err: error.message };
+    }
+};
+
+export const addToFavorites = async (info) => {
+    try {
+        const res = await fetch(
+            `/api/user/favorite/`,
             requestOptions(info, "application/json", "PATCH")
         );
         //const res = await axios.post(`http://localhost:3002/api/auth/signup`, info);

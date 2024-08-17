@@ -80,11 +80,18 @@ const RightSection = ({
     };
 
     const duplicateQuiz = () => {
-        const { question, explanation, questionType, answerOption, answer } =
-            singleQuestion;
-        const options = singleQuestion.options.map((op) => {
-            return { text: op.text, isCorrect: op.isCorrect };
-        });
+        const {
+            question,
+            explanation,
+            questionType,
+            answerOption,
+            answer,
+            options,
+        } = singleQuestion;
+
+        // const options = singleQuestion.options.map((op) => {
+        //     return { text: op.text, isCorrect: op.isCorrect };
+        // });
 
         console.log(answer);
         const quizInfo = {
@@ -93,7 +100,9 @@ const RightSection = ({
             questionType,
             answerOption,
             options,
-            answer: singleQuestion.questionType === "quiz" ? [] : answer,
+            questionId: singleQuestion._id,
+            answer,
+            // answer: singleQuestion.questionType === "quiz" ? [] : answer,
         };
         const image = bufferToObj(singleQuestion.image?.image.data.data);
         handleCreateQuiz(quizInfo, image, true);

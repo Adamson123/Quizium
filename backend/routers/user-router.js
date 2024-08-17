@@ -1,5 +1,6 @@
 import express from "express";
 import {
+    addToFavorites,
     //getProfileImg,
     getUser,
     updatePassword,
@@ -17,3 +18,4 @@ router.get("/", getUser);
 router.patch("/personal", upload.single("file"), updatePersonalInfo);
 
 router.patch("/password", updatePassword);
+router.patch("/favorite", addToFavorites);

@@ -15,10 +15,7 @@
     font-family: isidoraReg;
     src: url(../assets/fonts/IsidoraSansAltRegular.otf);
 }
-@font-face {
-    font-family: robotoc;
-    src: url("../assets/fonts/RobotoCondensed-Regular.ttf");
-}
+
 @font-face {
     font-family: isidoraLight;
     src: url(../assets/fonts/IsidoraSansAltLight.otf);
@@ -27,6 +24,10 @@
 @font-face {
     font-family: circularSpo;
     src: url(../assets/fonts/CircularSpotifyTxT-Light.ttf);
+}
+
+.robotFont {
+    font-family: robotFont;
 }
 .robotoc {
     font-family: robotoc;
@@ -68,6 +69,10 @@
         -1px -1px 3px rgba(0, 0, 0, 0.219);
 }
 
+.shadowAround2 {
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.103),
+        -1px -1px 3px rgba(0, 0, 0, 0.103);
+}
 .adora {
     font-family: adora;
 }
@@ -94,7 +99,7 @@
     transform: scale(0.9);
 }
 .clickable {
-    transition: transform 0.2s;
+    transition: transform 0.1s;
 }
 .optionChecked0,
 .optionChecked1,
@@ -118,7 +123,7 @@
 }
 .optionsChecked {
     border-color: rgb(249, 0, 158);
-    border-width: 2px;
+    border-width: 1px;
 }
 .optionsChecked:checked {
     background: rgb(249, 0, 158);
@@ -170,6 +175,22 @@
     align-items: center;
     gap: 2;
     color: rgb(125, 124, 124);
+}
+.progressBar[value]::-webkit-progress-value {
+    background: rgb(249, 0, 158);
+}
+
+.optionAppear {
+    animation: optionAppear 0.3s ease forwards;
+}
+
+@keyframes optionAppear {
+    from {
+        scale: 0;
+    }
+    to {
+        scale: 1;
+    }
 }
 
 .dark {

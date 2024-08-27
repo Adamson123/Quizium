@@ -9,6 +9,7 @@ import QuizEditorPage from "./pages/QuizEditorPage";
 import LibraryPage from "./pages/LibraryPage";
 import DetailsPage from "./pages/DetailsPage";
 import PlayQuizPage from "./pages/PlayQuizPage";
+import ResultPage from "./pages/ResultPage";
 
 function App() {
     return (
@@ -37,13 +38,20 @@ function App() {
                 <Route
                     path="/library"
                     element={
-                        <Layout text={"Your"}>
+                        <Layout text={"Your library"}>
                             <LibraryPage />
                         </Layout>
                     }
                 />
                 <Route path="/quiz-editor/:id" element={<QuizEditorPage />} />
-                <Route path="/play/:id" element={<PlayQuizPage />} />
+                <Route
+                    path="/play/:id"
+                    element={
+                        <Layout showHeader={false}>
+                            <PlayQuizPage />
+                        </Layout>
+                    }
+                />
                 <Route
                     path="/details/:id"
                     element={
@@ -52,7 +60,17 @@ function App() {
                         </Layout>
                     }
                 />
+                <Route
+                    path="/result/:id"
+                    element={
+                        <Layout>
+                            <ResultPage />
+                        </Layout>
+                    }
+                />
             </Route>
+
+            {/* Non protected routes */}
             <Route
                 path="/404"
                 element={

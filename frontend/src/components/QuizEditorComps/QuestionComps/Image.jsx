@@ -1,13 +1,13 @@
-import { useRef } from "react";
+import { memo, useMemo, useRef } from "react";
 import bufferToObjUrl from "../../../utils/bufferToObjUrl";
 import Loading from "../../ui/Loading";
-const Image = ({
-    singleQuestion,
-    handleDeleteQuiz,
-    imagePicked,
-    setPickedImage,
-}) => {
+import { convertToWebp } from "../../../utils/convertToWebp";
+const Image = memo(({ imageProps }) => {
+    const { singleQuestion, handleDeleteQuiz, imagePicked, setPickedImage } =
+        imageProps;
     const uploadRef = useRef();
+
+    console.log("Image rendered");
 
     //for updating  image
 
@@ -34,8 +34,8 @@ const Image = ({
             {singleQuestion.image && (
                 <div
                     className="bg-red-600 w-full px-1 pt-1 pb-2
-     rounded insetShadow
-     flex justify-between"
+                    rounded insetShadow
+                    flex justify-between"
                 >
                     <button
                         onClick={() => handleDeleteQuiz("")}
@@ -106,13 +106,13 @@ const Image = ({
                                       singleQuestion.image.image.data.data
                                   )
                         }
-                        className="h-full w-full object-top"
+                        className="h-full w-full object-contain"
                         alt="question based on quiz question"
                     />
                 )}
             </div>
         </div>
     );
-};
+});
 
 export default Image;

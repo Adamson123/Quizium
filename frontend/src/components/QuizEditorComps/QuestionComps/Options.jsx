@@ -10,7 +10,7 @@ const Options = ({
     allQuestions,
     allQuestions_2,
 }) => {
-    const [optionsTextColor, setOptionsTextColor] = useState([
+    const [optionsTextColor] = useState([
         "#e779c1",
         "#408fb9",
         "#e8bf05",
@@ -18,33 +18,24 @@ const Options = ({
     ]);
 
     const optionRefs = useRef([]);
-    //just to emulate empty options in the main empty option
-    const [emptyOptions, setEmptyOption] = useState(singleQuestion.options);
-    // const [allQuestionsClone, setAllQuestionsClone] =
-    //     useState(allQuestionsClone);
 
     useEffect(() => {
         if (allQuestions_2 === allQuestions) {
             // Add text to options
-            singleQuestion.options.forEach((option, i) => {
+            allQuestions[currentQuestion]?.options.forEach((option, i) => {
                 optionRefs.current[i].innerText = option.text;
             });
-            setEmptyOption(singleQuestion.options);
         }
-    }, [currentQuestion]);
+    }, [currentQuestion, allQuestions_2]);
 
     const updateOptions = (event, id) => {
         //update ONLY option THAT Mathes the passed down id
-        /*NOTE this will simulate singleQuestion.option because
-         the main singleOption been updated is not reflecting here directly as we don't
-         want to re-render this comps or question comp when we are typing... Adam you gerrit? */
-        const updatedOption = emptyOptions.map((option) => {
+
+        const updatedOption = singleQuestion.options.map((option) => {
             return option._id !== id
                 ? option
                 : { ...option, text: event.target.innerText };
         });
-
-        setEmptyOption(updatedOption);
 
         /*filtery out answers that does not match the id passed down,
          trying to get answer from only options that are not empty,by filtering
@@ -62,14 +53,6 @@ const Options = ({
                     : singleQuestion.answer,
         };
 
-        console.log(
-            updatedSingleQuestion,
-            singleQuestion,
-            "singleQuestion",
-            "updatedSingleQuestion",
-            currentQuestion
-        );
-
         const updatedMultipleQuestion = allQuestions.map((q, i) => {
             return i !== currentQuestion ? q : updatedSingleQuestion;
         });
@@ -77,12 +60,10 @@ const Options = ({
         setAllQuestions(updatedMultipleQuestion);
     };
 
-    const checkEmptyOptionField = (index) => {
-        const updateEmptyOptions = emptyOptions.filter((i) => {
+    const checkEmptyOptionField = () => {
+        const updateEmptyOptions = singleQuestion.options.filter((i) => {
             return i.text.trim(" ") === "";
         });
-
-        /// console.log(updateEmptyOptions, "updateEmptyOptions");
 
         return updateEmptyOptions.length;
     };
@@ -92,14 +73,15 @@ const Options = ({
             return (
                 <div
                     style={{
-                        background: optionsTextColor[i],
+                        color: optionsTextColor[i],
                     }}
                     key={i}
                     className={`relative bg-mainBg
-                        rounded text-center
-                        text-[15px] p-2 px-10 w-full min-h-12 text-wrap break-words
-                        flex items-center justify-center isidoraBold 
-                        insetShadow text-secMainBg`}
+                        rounded text-center text-white
+                        text-[15px] p-2 px-10 w-full min-h-12 text-wrap
+                        break-words
+                        flex items-center justify-center isidoraBold
+                        shadowAround`}
                 >
                     <input
                         onChange={(event) => {
@@ -137,9 +119,9 @@ const Options = ({
                         // show warning only if all the option fields is empty
                         // and the particular option too is empty
 
-                        checkEmptyOptionField(i) > 2 &&
+                        checkEmptyOptionField() > 2 &&
                             // !option.text.trim(" ")
-                            !optionRefs.current[i]?.innerText.trim(" ") && (
+                            !option.text.trim(" ") && (
                                 <Warning
                                     text={"Fill atleast two option field"}
                                 />

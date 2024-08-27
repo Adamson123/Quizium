@@ -8,7 +8,7 @@ const GeneralKnowledge = () => {
 
     const { data, isLoading, error, isSuccess, refetch } = useQuery(
         ["quiz-cover"],
-        () => getQiuzzes(0, 9)
+        () => getQiuzzes(0, 7)
     );
 
     console.log("general knowledge rendered");

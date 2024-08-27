@@ -33,6 +33,10 @@ const RightSection = ({
         }
     };
 
+    useEffect(() => {
+        updateExplanation();
+    }, [explanation]);
+
     const updateAnswerOption = (event) => {
         const updatedSingleQuestion = {
             ...singleQuestion,
@@ -175,8 +179,6 @@ const RightSection = ({
                     </span>
                     <textarea
                         value={explanation}
-                        onMouseOut={updateExplanation}
-                        onBlur={updateExplanation}
                         onChange={(event) => {
                             setExplantion(event.target.value);
                         }}

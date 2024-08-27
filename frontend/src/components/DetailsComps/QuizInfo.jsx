@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { useMutation } from "react-query";
 import { addToFavorites } from "../../api/UserApi";
 import Share from "../Share";
+import { useNavigate, useParams } from "react-router";
 const QuizInfo = ({
     quizInfo,
     isLoading,
@@ -14,6 +15,8 @@ const QuizInfo = ({
     openQuizMenu,
     setOpenQuizMenu,
 }) => {
+    const navigate = useNavigate();
+    const { id } = useParams();
     const { mutateAsync: addToFavoriteFunc, isLoading: isUpdating } =
         useMutation(addToFavorites);
 
@@ -185,6 +188,7 @@ const QuizInfo = ({
                 {/* Play  , host live */}
                 <div className="flex gap-2">
                     <button
+                        onClick={() => navigate(`/play/${id}`)}
                         className="bg-shinyPurple px-5 py-2 pb-3 rounded 
             insetShadow isidoraBold text-[14px] clickable"
                     >

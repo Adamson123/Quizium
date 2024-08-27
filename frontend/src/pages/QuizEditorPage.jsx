@@ -21,7 +21,7 @@ import SaveOptions from "../components/QuizEditorComps/SaveOptions";
 
 const QuizEditorPage = () => {
     const { id } = useParams();
-    const { data, isLoading, error, refetch } = useQuery(
+    const { data, isLoading, error, refetch, status } = useQuery(
         ["quiz-questions", id],
         () => getQuizWithQuestions({ id, checkOwner: true }),
         {
@@ -82,7 +82,7 @@ const QuizEditorPage = () => {
     //updating all questions array if questions has been fetched
     useEffect(() => {
         if (data) {
-            console.log(data);
+            //console.log(data);
 
             const { quiz } = data;
             if (quiz?.questionsId) {
@@ -95,7 +95,7 @@ const QuizEditorPage = () => {
     //updating single questions array if allQuestions array has been populated or if currentQuestion changes
     useEffect(() => {
         if (allQuestions) {
-            setSingleQuestion((q) => (q = allQuestions[currentQuestion]));
+            setSingleQuestion(allQuestions[currentQuestion]);
         }
     }, [allQuestions, currentQuestion]);
 
@@ -152,8 +152,10 @@ const QuizEditorPage = () => {
         if (res.err) {
             return;
         }
+
         setAllQuestions(res.quiz.questionsId.questions);
         setAllQuestions_2(res.quiz.questionsId.questions);
+        setCurrentQuestion(res.quiz.questionsId.questions.length - 1);
     };
 
     const handleUpdateQuiz = async () => {
@@ -176,13 +178,11 @@ const QuizEditorPage = () => {
             const res = await updateQuestionFunc(data);
             if (res.err) {
                 setAllQuestions_2(holdAllQuestions_2);
-                console.log("res err caused it");
 
                 return toast.error("Error saving previous changes");
             }
 
             if (imagePicked) {
-                console.log("image picked caused it");
                 setAllQuestions(res.quiz.questionsId.questions);
                 setAllQuestions_2(res.quiz.questionsId.questions);
             }
@@ -222,7 +222,7 @@ const QuizEditorPage = () => {
         });
 
         const res = await promise;
-        console.log(res);
+
         if (res.err) {
             return;
         }
@@ -231,9 +231,7 @@ const QuizEditorPage = () => {
         setAllQuestions_2(res.quiz.questionsId.questions);
 
         if (questId && currentQuestion === allQuestions.length - 1) {
-            //  if () {
             setCurrentQuestion(currentQuestion - 1);
-            // }
         }
     };
 
@@ -258,34 +256,30 @@ const QuizEditorPage = () => {
         };
     });
 
-    const questionConfig = useMemo(() => {
-        return {
-            allQuestions,
-            setAllQuestions,
-            singleQuestion: allQuestions[currentQuestion],
-            currentQuestion,
-            imagePicked,
-            setPickedImage,
-            allQuestions_2,
-            handleDeleteQuiz,
-        };
-    }, [
-        allQuestions_2,
-        currentQuestion,
-        imagePicked,
-        singleQuestion?.answer,
-        allQuestions,
-    ]);
-
     console.log("create question re-rendered");
 
     if (!data && isLoading) {
         return <PageIsLoading message={"Setting up quiz editor..."} />;
     }
 
-    if (!data && !isLoading) {
-        toast.error(error.err);
-        return navigate("/");
+    if (error) {
+        toast.error(`  ${error.err}`, {
+            icon: (
+                <span
+                    className="bi-ban absolute w-5 h-5 bg-yellow-500 
+                    rounded-full font-bold text-white flex justify-center
+                    items-center"
+                ></span>
+            ),
+        });
+        console.log(status, "status");
+
+        if (error.err === "404 quiz not found") {
+            history.replaceState(null, "", "/");
+            return navigate("/404");
+        } else {
+            return navigate("/");
+        }
     }
 
     return (
@@ -331,9 +325,18 @@ const QuizEditorPage = () => {
                 {/*  Enter Question &  options container*/}
                 {singleQuestion && (
                     <>
-                        {questionConfig.singleQuestion && (
-                            <Question questionConfig={questionConfig} />
-                        )}
+                        {
+                            <Question
+                                allQuestions={allQuestions}
+                                allQuestions_2={allQuestions_2}
+                                currentQuestion={currentQuestion}
+                                handleDeleteQuiz={handleDeleteQuiz}
+                                imagePicked={imagePicked}
+                                setAllQuestions={setAllQuestions}
+                                setPickedImage={setPickedImage}
+                                singleQuestion={singleQuestion}
+                            />
+                        }
                         {/* right section( Answer Options , Quiz type , Delete )
                          */}
                         <RightSection

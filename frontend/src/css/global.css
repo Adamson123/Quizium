@@ -179,11 +179,16 @@
 .progressBar[value]::-webkit-progress-value {
     background: rgb(249, 0, 158);
 }
+.progressBarRed[value]::-webkit-progress-value {
+    background: rgb(239 68 68);
+}
 
 .optionAppear {
     animation: optionAppear 0.3s ease forwards;
 }
-
+.scaleUp {
+    transition: 0.2s transform ease;
+}
 @keyframes optionAppear {
     from {
         scale: 0;
@@ -191,6 +196,29 @@
     to {
         scale: 1;
     }
+}
+
+@keyframes countAnim {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(12);
+        opacity: 0;
+    }
+}
+
+.count {
+    animation: countAnim 1s ease-in-out 6;
+    opacity: 0;
+}
+.popBlock {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
 }
 
 .dark {
@@ -205,6 +233,7 @@
     --gray-third: 156, 163, 175;
     --gray-fourth: 60, 64, 65;
     --gray-five: 107 114 128;
+    --transparent-black: 0, 0, 0, 0.59;
     --placeholder: 255, 255, 255, 0.45;
 }
 

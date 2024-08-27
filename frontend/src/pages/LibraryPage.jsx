@@ -1,5 +1,5 @@
-import { useQuery } from "react-query";
-import { getUserQuizzes } from "../api/QuizApi";
+import { useMutation, useQuery } from "react-query";
+import { deleteQuiz, getUserQuizzes } from "../api/QuizApi";
 import LoadingQuizzes from "../components/LibrayComps/LoadingQuizzes";
 import { useContext, useEffect, useState } from "react";
 import { dataContext } from "../layouts/Layout";
@@ -8,26 +8,30 @@ import Loading from "../components/ui/Loading";
 import Share from "../components/Share";
 import box from "../assets/svg/empty-box2.svg";
 import searchSvg from "../assets/svg/search.svg";
+import ConfirmAction from "../components/ConfirmAction";
+import toast from "react-hot-toast";
 
 const LibraryPage = () => {
     const { data, isLoading } = useQuery(["user-allQuizzes"], getUserQuizzes, {
         retry: false,
     });
+    const { mutateAsync: deleteQuizFunc, isLoading: deletingQuiz } =
+        useMutation(deleteQuiz);
     const [allQuizzes, setAllQuizzes] = useState([]);
     const [filterBy, setFilterBy] = useState("published");
     const [filteredQuizzes, setFilteredQuizzes] = useState([]);
     const [quizIndex, setQuizIndex] = useState(-1);
-
     const [byTime, setByTime] = useState("recent");
     const [showShare, setShowShare] = useState({ open: false, url: "" });
+    const [showConfirm, setShowConfirm] = useState(false);
+    const [quizId, setQuizId] = useState("");
 
     const value = useContext(dataContext);
-    const { search, userId } = value;
 
     const filterQuizzesFunc = (fby) => {
-        if (fby === "played") {
-            return [];
-        }
+        // if (fby === "played") {
+        //     return [];
+        // }
         if (fby === "favorites") {
             return allQuizzes.favoriteQuizzes?.favorites;
         }
@@ -65,11 +69,11 @@ const LibraryPage = () => {
                               new Date(a.createdAt) - new Date(b.createdAt)
                       );
 
-            if (search.trim(" ")) {
+            if (value?.search.trim(" ")) {
                 filteredQuiz = filteredQuiz.filter((quiz) => {
                     return quiz.title
                         .toLowerCase()
-                        .includes(search.trim(" ").toLowerCase());
+                        .includes(value?.search.trim(" ").toLowerCase());
                 });
             }
 
@@ -77,9 +81,11 @@ const LibraryPage = () => {
 
             setFilteredQuizzes(filteredQuiz);
         }
-    }, [allQuizzes, filterBy, byTime, search]);
 
-    const [quizzesNav, setQuizzesNav] = useState([
+        console.log("all quizzes changed", allQuizzes);
+    }, [allQuizzes, filterBy, byTime, value?.search]);
+
+    const [quizzesNav] = useState([
         {
             text: "published",
             icon: "bi-check-circle-",
@@ -88,15 +94,44 @@ const LibraryPage = () => {
             text: "drafts",
             icon: "bi-file-earmark-text-",
         },
-        {
-            text: "played",
-            icon: "bi-play-",
-        },
+        // {
+        //     text: "played",
+        //     icon: "bi-play-",
+        // },
         {
             text: "favorites",
             icon: "bi-star-",
         },
     ]);
+
+    const handleDeleteQuiz = async (id) => {
+        setQuizIndex(-1);
+        //console.log(id);
+
+        if (deletingQuiz) {
+            return;
+        }
+
+        const promise = deleteQuizFunc(id);
+        toast.promise(promise, {
+            loading: "Deleting quiz",
+            success: (data) => {
+                return data.msg;
+            },
+            error: (data) => {
+                return data.err;
+            },
+        });
+
+        const res = await promise;
+
+        if (!res.quizzes) {
+            return;
+        }
+        console.log(res.quizzes, "new quizzes");
+
+        setAllQuizzes((a) => (a = { ...a, createdQuizzes: res.quizzes }));
+    };
 
     return (
         <div
@@ -157,17 +192,17 @@ const LibraryPage = () => {
 
             {/* Quizzes */}
             <div className="p-3 bg-mainBg mt-10 flex flex-col gap-5 rounded relative">
-                {search && (
+                {value?.search && (
                     <p className="isidoraSemiBold absolute top-[-23px] left-0 text-[13px]">
-                        {filteredQuizzes.length} results was found for "{search}
-                        "
+                        {filteredQuizzes.length} results was found for "
+                        {value?.search}"
                     </p>
                 )}
-                {isLoading && (
+                {/* {isLoading && (
                     <Loading
                         cus={`absolute z-[1] left-[50%] text-shinyPurple`}
                     />
-                )}
+                )} */}
                 {!isLoading ? (
                     filteredQuizzes.map((quiz, index) => {
                         /* Quiz */
@@ -181,7 +216,9 @@ const LibraryPage = () => {
                                 setAllQuizzes={setAllQuizzes}
                                 setShowShare={setShowShare}
                                 allQuizzes={allQuizzes}
-                                userId={userId}
+                                userId={value?.userId}
+                                setShowConfirm={setShowConfirm}
+                                setQuizId={setQuizId}
                             />
                         );
                     })
@@ -195,7 +232,7 @@ const LibraryPage = () => {
                      items-center m-auto relative"
                     >
                         <img
-                            src={search ? searchSvg : box}
+                            src={value?.search ? searchSvg : box}
                             alt="empty box signifies no quiz was found"
                             className="h-40 w-40"
                         />
@@ -205,6 +242,12 @@ const LibraryPage = () => {
             {filteredQuizzes && (
                 <Share showShare={showShare} setShowShare={setShowShare} />
             )}
+            <ConfirmAction
+                text="Are you sure you want to delete this quiz"
+                setShowConfirm={setShowConfirm}
+                showConfirm={showConfirm}
+                executeAction={() => handleDeleteQuiz(quizId)}
+            />
         </div>
     );
 };

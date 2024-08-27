@@ -1,101 +1,137 @@
 import { useEffect, useRef, useState } from "react";
-import { toast } from "react-hot-toast";
+import toast from "react-hot-toast";
+
 const Options = ({
     options,
-    allQuizResults,
-    setAllQuizResults,
+    allQuestionsResults,
+    setAllQuestionsResults,
     singleQuestion,
     currentQuestion,
+    findQuestionResult,
+    selectAnswer,
+    timeSpent,
 }) => {
     const [optionsBg] = useState(["#e779c1", "#408fb9", "#e8bf05", "#e48775"]);
+    const [multiSelectAns, setMultiSelectAns] = useState(
+        findQuestionResult()?.userAnswer || []
+    );
 
-    const selectedAnAnswer = useRef(false);
+    useEffect(() => {
+        setMultiSelectAns(findQuestionResult()?.userAnswer || []);
+    }, [currentQuestion, singleQuestion]);
 
-    const selectSingleAnswer = (id) => {
-        if (!findQuestionResult()) {
-            const { question, answer, questionType, answerType, options, _id } =
-                singleQuestion;
+    //  console.log(allQuizResults, "allQ");
 
-            setAllQuizResults([
-                ...allQuizResults,
-                {
-                    question,
-                    answer,
-                    questionType,
-                    answerType,
-                    options,
-                    userAnswer: [id],
-                    correct: id === answer[0],
-                    _id,
-                },
-            ]);
+    const handleMultiSelectAns = (id) => {
+        if (findQuestionResult()) {
+            return;
         }
-        selectedAnAnswer.current = true;
-        console.log(allQuizResults);
-    };
 
-    const findQuestionResult = () => {
-        const questId = singleQuestion._id;
-
-        const questionResult = allQuizResults.find(
-            (quest) => quest._id === questId
-        );
-        return questionResult;
+        const exist = multiSelectAns.find((ans) => ans === id);
+        const filterAns = multiSelectAns.filter((ans) => {
+            return ans !== id;
+        });
+        setMultiSelectAns(!exist ? [...multiSelectAns, id] : filterAns);
     };
 
     const changeOptionColor = (id) => {
         //will change all wrong to red
         const allToWrongToRed = () => {
             return findQuestionResult().answer.includes(id)
-                ? "#27ae60"
-                : "#c0392b";
+                ? "rgb(74,222,128)"
+                : "";
         };
-        //will change choosen option to orange , else lives it as it's coming from color
-        const changeSelectdToOrg = () => {
-            return !findQuestionResult().correct &&
-                findQuestionResult().userAnswer.includes(id)
-                ? "#e67e22"
+
+        //will change choosen option to orange or correct but not choosen to orange , else lives it as it's coming from color
+        // const changeSelectdToOrg = () => {
+        //     return !findQuestionResult().correct &&
+        //         findQuestionResult().userAnswer.includes(id) &&
+        //         (!findQuestionResult().answer.includes(id) ||
+        //             findQuestionResult().answer.includes(id))
+        //         ? "#e67e22"
+        //         : color;
+        // };
+
+        const changeSelected = () => {
+            //if option picked by user and is wrong
+            return findQuestionResult().userAnswer.includes(id) &&
+                // !findQuestionResult().correct &&
+                !findQuestionResult().answer.includes(id)
+                ? "rgb(255,45,45)"
                 : color;
         };
 
         let color = findQuestionResult() ? allToWrongToRed() : "";
-        color = findQuestionResult() ? changeSelectdToOrg() : color;
+        color = findQuestionResult() ? changeSelected() : color;
         return color;
     };
 
-    useEffect(() => {
-        if (findQuestionResult() && selectedAnAnswer.current) {
-            findQuestionResult().correct
-                ? toast.success("Correct!!!🎉✔")
-                : toast.error("Incorrect😢❌");
-            selectedAnAnswer.current = false;
-        }
-    }, [allQuizResults]);
-
     return (
-        <div className="flex flex-col gap-3 w-full">
+        <div className="flex flex-col items-center gap-3 w-full">
             {options?.map((opt, index) => {
                 return (
                     opt.text.trim(" ") && (
                         <div
-                            onClick={() => selectSingleAnswer(opt._id)}
+                            onClick={() => {
+                                singleQuestion.answerOption === "singleAnswer"
+                                    ? selectAnswer([opt._id])
+                                    : handleMultiSelectAns(opt._id);
+                            }}
                             key={index}
                             style={{
                                 background: changeOptionColor(opt._id)
                                     ? changeOptionColor(opt._id)
-                                    : optionsBg[index],
+                                    : "rgb( 10, 8, 45)",
                                 transition: "transform 0.3s ease-in-out",
+                                color: findQuestionResult()
+                                    ? "white"
+                                    : optionsBg[index],
+                                opacity:
+                                    findQuestionResult() &&
+                                    !findQuestionResult()?.answer.includes(
+                                        opt._id
+                                    ) &&
+                                    "0.5",
+                                wordBreak: "break-word",
                             }}
-                            className={`relative bg-mainBg
-                            rounded text-center text-secMainBg
-                            text-[15px] p-2 px-10 w-full min-h-12 text-wrap
-                            break-words
+                            className={`relative ${""}
+                            rounded text-center
+                            text-[15px] p-2 px-10 w-full  min-h-12
                             flex items-center justify-center isidoraBold
                             insetShadow 
-                            clickable cursor-pointer
-                          
+                            cursor-pointer
+                            shadowAround box-border
                             `}
                         >
+                            {
+                                /* check option */
+                                singleQuestion.answerOption === "multiSelect" &&
+                                    !findQuestionResult() && (
+                                        <input
+                                            style={{
+                                                borderColor: optionsBg[index],
+                                            }}
+                                            value={opt._id}
+                                            readOnly
+                                            checked={multiSelectAns.includes(
+                                                opt._id
+                                            )}
+                                            type={"checkbox"}
+                                            className={`absolute left-3 bg-secMainBg
+                                            checkbox optionChecked${index} tickColor
+                                            w-5 h-5 ${index} `}
+                                        />
+                                    )
+                            }
+                            {/* highlights answer picked by user */}
+                            {findQuestionResult() &&
+                                findQuestionResult()?.userAnswer.includes(
+                                    opt._id
+                                ) && (
+                                    <span className="bi-hand-index-fill absolute left-3"></span>
+                                )}
+
+                            {/* option text */}
                             {opt.text}
                             {findQuestionResult() && (
                                 <span
@@ -105,13 +141,30 @@ const Options = ({
                                         )
                                             ? "bi-check"
                                             : "bi-x"
-                                    } absolute left-3 text-[25px] font-bold`}
+                                    } absolute right-3 text-[25px] font-bold`}
                                 ></span>
                             )}
                         </div>
                     )
                 );
             })}
+            {/* submit answer */}
+            {singleQuestion.answerOption === "multiSelect" &&
+                !findQuestionResult() && (
+                    <button
+                        onClick={() => {
+                            if (!multiSelectAns.length) {
+                                toast.error("Select atleast one option");
+                                return;
+                            }
+                            selectAnswer(multiSelectAns);
+                        }}
+                        className="bg-shinyPurple w-[110px] py-2 rounded 
+                        clickable insetShadow text-[14px] isidoraSemiBold"
+                    >
+                        Submit Answer
+                    </button>
+                )}
         </div>
     );
 };

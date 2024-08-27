@@ -37,9 +37,12 @@ border-gray-600 rounded h-[220px] min-w-[200px] cursor-pointer overflow-hidden"
                 />
             </div>
             {/* Quiz info */}
-            <div className="p-3 h-[120px] flex flex-col">
+            <div className="p-3 h-[120px] flex flex-col border-t border-grayOne">
                 <div className="flex items-center -mt-5">
-                    <span className="h-[35px] w-[35px] border rounded-full bg-black mr-1 overflow-hidden">
+                    <span
+                        className="h-[35px] w-[35px] border rounded-full
+                         bg-black mr-1 overflow-hidden border-grayOne"
+                    >
                         <img
                             src={profImg}
                             alt="quiz creator profile image"

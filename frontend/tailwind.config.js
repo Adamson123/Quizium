@@ -30,6 +30,7 @@ export default {
                 grayThird: "rgb(var(--gray-third))",
                 grayFourth: "rgb(var(--gray-fourth))",
                 grayFive: "rgb(var(--gray-five))",
+                transparentBlack: "rgb(var(--transparent-black))",
                 placeholder: "rgba(var(--placeholder))",
             },
         },

@@ -43,18 +43,15 @@ export const deleteQuestion = async (info) => {
             requestOptions(info.data, "application/json", "DELETE")
         );
 
-        console.log(res, "respond");
-
-        const data = await res.json();
-
-        //console.log(data);
-
         if (!res.ok) {
             throw new Error(data.err);
         }
+        const data = await res.json();
 
         return data;
     } catch (error) {
+        console.log(error, "error");
+
         throw { err: error.message };
     }
 };

@@ -98,7 +98,12 @@ const DetailsPage = () => {
             {!isLoading ? (
                 <Questions questions={questions} />
             ) : (
-                <div className="flex flex-col px-2 w-full md:max-w-[50%] gap-2">
+                <div className="flex flex-col px-3 w-full md:max-w-[50%] gap-2 md:mt-2">
+                    <div className="flex justify-between mb-5 px-2">
+                        <div className="w-32 h-10 skeleton rounded-none"></div>
+
+                        <div className="w-32 h-10 skeleton rounded-none"></div>
+                    </div>
                     <div className="skeleton min-h-[90px] w-full rounded-none"></div>
                     <div className="skeleton min-h-[90px] w-full rounded-none"></div>
                     <div className="skeleton min-h-[90px] w-full rounded-none"></div>

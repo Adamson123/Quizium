@@ -63,9 +63,23 @@ const SaveOptions = memo(({ saveOptionConfig }) => {
         refetch();
         setShowSaveOption(false);
 
-        //if analizeQuiz and user is try to publish quiz
+        //if analizeQuiz returns a positive value and user is try to publish quiz
         if (analizeQuiz(allQuestions) && !settings.draft) {
             setShowQuizValid(true);
+            toast.error(
+                "Quiz has been reset to draft because it didn't pass the quiz validation test",
+                {
+                    icon: (
+                        <span
+                            className="absolute w-5 h-5 bg-yellow-500 
+                        rounded-full font-bold text-white flex justify-center
+                         items-center"
+                        >
+                            !
+                        </span>
+                    ),
+                }
+            );
         }
 
         if (!settings.draft && !analizeQuiz(allQuestions)) {
@@ -74,17 +88,13 @@ const SaveOptions = memo(({ saveOptionConfig }) => {
     };
     return (
         <div
-            style={{
-                transition: "transform 0.2s",
-            }}
-            className={`fixed top-0 right-0 bottom-0 left-0
-         bg-[rgba(0,0,0,0.7)] z-50 px-4 flex justify-center items-center ${
-             showSaveOption ? "scale-1" : "scale-0"
-         }`}
+            className={` popBlock
+         bg-transparentBlack z-50 px-4 flex justify-center 
+         items-center scaleUp ${showSaveOption ? "scale-1" : "scale-0"}`}
         >
             <div
                 className="px-8 pt-5 pb-8 bg-mainBg w-full max-w-[500px]
-             flex flex-col items-center"
+             flex flex-col items-center rounded"
             >
                 <h2 className="text-center isidoraBold mt-2 text-[23px]">
                     Save Options

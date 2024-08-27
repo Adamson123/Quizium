@@ -48,6 +48,10 @@ const QuizInfosSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "questions",
         },
+        questionsLength: {
+            type: Number,
+            default: 1, //cause we are automatically creating one question as we creating this quiz
+        },
         coverImg: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "quiz-images",

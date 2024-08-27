@@ -84,7 +84,8 @@ export const createQuestion = async (req, res) => {
     //     );
     // }
 
-    //if the quiz does not have a questionId before for some reasons
+    /*if the quiz does not have a questionId before for some 
+    reasons(maybe as we are creating the quiz)(might be removed in the future)*/
     if (!quiz.questionsId) {
         console.log("for questionsId:nope not here");
         await QuizInfosModel.findByIdAndUpdate(quiz._id, {
@@ -92,8 +93,12 @@ export const createQuestion = async (req, res) => {
         });
     }
 
+    await QuizInfosModel.findByIdAndUpdate(quiz._id, {
+        questionsLength: question.questions.length,
+    });
+
     const { quiz: updatedQuiz } = await populateQuizAndQuest(quiz._id);
-    console.log(quiz, "create quest");
+    // console.log(quiz, "create quest");
     return res.status(201).json({ msg: "Question created", quiz: updatedQuiz });
 };
 
@@ -152,8 +157,16 @@ export const updateQuestion = async (req, res) => {
         }
     );
 
+    /*updating questionsLength in quiz, cause i didn't start adding questionsLength 
+    to quiz at the beginning of this project (might be removed in the future) */
+    if (!quiz.questionsLength) {
+        await QuizInfosModel.findByIdAndUpdate(quiz._id, {
+            questionsLength: question.questions.length,
+        });
+    }
+
     const { quiz: updatedQuiz } = await populateQuizAndQuest(quiz._id);
-    console.log(quiz);
+    // console.log(quiz);
 
     return res.status(200).json({ msg: "Question updated", quiz: updatedQuiz });
 };
@@ -163,8 +176,11 @@ export const updateQuestion = async (req, res) => {
 export const deleteQuestion = async (req, res) => {
     const quiz = req.quiz;
     const data = req.body;
+
+    console.log(data);
+
     if (data.questId) {
-        await QuestionsModel.findOneAndUpdate(
+        const question = await QuestionsModel.findOneAndUpdate(
             {
                 parentId: quiz._id,
             },
@@ -172,10 +188,14 @@ export const deleteQuestion = async (req, res) => {
                 $pull: { questions: { _id: data.questId } },
             }
         );
-    }
-    await QuestionImagesModel.findByIdAndDelete(data.image);
-    const { quiz: updatedQuiz } = await populateQuizAndQuest(quiz._id);
-    //console.log(updatedQuiz);
 
-    return res.status(204).json({ msg: "Question deleted", quiz: updatedQuiz });
+        await QuizInfosModel.findByIdAndUpdate(quiz._id, {
+            questionsLength: question.questions.length,
+        });
+    }
+
+    data.image && (await QuestionImagesModel.findByIdAndDelete(data.image));
+    const { quiz: updatedQuiz } = await populateQuizAndQuest(quiz._id);
+
+    return res.status(200).json({ msg: "Question deleted", quiz: updatedQuiz });
 };

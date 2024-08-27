@@ -136,3 +136,110 @@ const scrollToTimeLimit = () => {
                 //nav\\ className="flex justify-start gap-5 mt-6 text-[13px] 
             pt-5 border-b-[2px] border-mainBg 
             h-[70px] md:gap-8"
+
+
+
+
+
+
+
+ //updating isCorrect only if updateIsCorrect.current is true
+        useEffect(() => {
+            if (updateIsCorrect.current) {
+                const updatedOption = singleQuestion.options.map((opt) => {
+                    return singleQuestion.answer.includes(opt._id)
+                        ? { ...opt, isCorrect: true }
+                        : { ...opt, isCorrect: false };
+                });
+
+                const updatedSingleQuestion = {
+                    ...singleQuestion,
+                    options: updatedOption,
+                };
+
+                const updatedMultipleQuestion = allQuestions.map((q, i) => {
+                    return i !== currentQuestion ? q : updatedSingleQuestion;
+                });
+
+                setAllQuestions(updatedMultipleQuestion);
+                updateIsCorrect.current = false;
+            }
+        }, [singleQuestion.answer]);
+
+
+   const questionConfig = useMemo(() => {
+        return {
+            allQuestions,
+            setAllQuestions,
+            singleQuestion: allQuestions[currentQuestion],
+            currentQuestion,
+            imagePicked,
+            setPickedImage,
+            allQuestions_2,
+            handleDeleteQuiz,
+        };
+    }, [
+        allQuestions_2,
+        currentQuestion,
+        imagePicked,
+        singleQuestion?.answer,
+        allQuestions,
+    ]);
+
+
+
+
+
+
+
+
+
+      <div>
+            {/* Result */}
+
+            <div
+                className="flex py-5 items-center gap-7
+                    justify-center rounded border 
+                    border-grayOne w-full min-w-[450px]"
+            >
+                {/* Radial Score */}
+                <div>
+                    <div
+                        className="radial-progress relative z-20 
+                                rounded-none text-[rgb(90,255,96)] isidoraBold"
+                        role="progressbar"
+                        style={{
+                            "--value": 70,
+                            "--thickness": "30px",
+                            "--size": "7rem",
+                        }}
+                    >
+                        70%
+                        <div
+                            className="border-[30px] absolute h-full w-full
+                                 rounded-full -z-10 border-[rgba(0,0,0,0.3)]"
+                        ></div>
+                    </div>
+                </div>
+                {/* Text Score */}
+                <div>
+                    <h3
+                        className="text-4xl isidoraBold 
+                            text-[rgb(90,255,96)]"
+                    >
+                        7/10
+                    </h3>
+                    <p className="text-[10.5px] text-grayFive w-40 isidoraBold">
+                        Good effort! A bit more practice will make you even
+                        better.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+
+        // const StartQuizCount = ({ startQuiz, setStartQuiz }) => {
+
+
+
+result url test: http://localhost:5173/result/66ccbb5b0f04803679fd59c4

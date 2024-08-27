@@ -205,7 +205,7 @@ export const deleteQuiz = async (req, res) => {
     );
 
     console.log("quiz deleted");
-    return res.status(204).json({ quizzes, msg: "Quiz deleted" });
+    return res.status(201).json({ quizzes, msg: "Quiz deleted" });
 };
 
 export const getMultipleQuizzes = async (req, res) => {

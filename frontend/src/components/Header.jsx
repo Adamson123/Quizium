@@ -30,8 +30,8 @@ const Header = ({ text, setSearch, search }) => {
                             value={search}
                             type="search"
                             placeholder={`Search ${
-                                text ? text : "Quizuim"
-                            } library`}
+                                text ? text : "Quizuim library"
+                            }`}
                             className="placeholder:text-placeholder
                box-border text-textColor
                w-[100%] rounded-[2px] px-2 pl-10 py-2 

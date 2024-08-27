@@ -67,7 +67,11 @@ const QuizSettings = memo((props) => {
 
         formData.append(
             "settings",
-            JSON.stringify({ ...quizSettings, coverImg: "" })
+            JSON.stringify({
+                ...quizSettings,
+                timeLimit: toSeconds(),
+                coverImg: "",
+            })
         );
 
         formData.append("file", pickedImage);
@@ -102,11 +106,8 @@ const QuizSettings = memo((props) => {
 
     return (
         <div
-            style={{
-                transition: "0.2s transform ease",
-            }}
             className={`fixed top-0 right-0 bottom-0 left-0
-         bg-[rgba(0,0,0,0.6)] z-[500] p-3  ${
+         bg-transparentBlack z-[500] p-3 scaleUp popBlock ${
              props.show ? "scale-1" : "scale-0"
          }`}
         >

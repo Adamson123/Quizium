@@ -13,7 +13,7 @@ const Share = ({ showShare, setShowShare }) => {
             <div
                 onClick={() => setShowShare({ ...showShare, open: false })}
                 className="absolute top-0 bottom-0 right-0 left-0
-             bg-[rgba(0,0,0,0.59)]"
+             bg-transparentBlack"
             ></div>
             <div
                 className={`absolute bottom-0 bg-mainBg right-0 left-0

@@ -1,8 +1,6 @@
 import { useNavigate } from "react-router";
 import bufferToObjUrl from "../../utils/bufferToObjUrl";
 import quizImg from "../../assets/images/defaultCover/quizium-8.webp";
-
-import { deleteQuiz } from "../../api/QuizApi";
 import { useMutation } from "react-query";
 import toast from "react-hot-toast";
 import convtToSimpleDate from "../../utils/convtToSimpleDate";
@@ -18,38 +16,17 @@ const QuizRect = ({
     setShowShare,
     allQuizzes,
     userId,
+    setShowConfirm,
+    setQuizId,
 }) => {
     const navigate = useNavigate();
 
-    const { mutateAsync: deleteQuizFunc, isLoading } = useMutation(deleteQuiz);
-    const { mutateAsync: addToFavoriteFunc, isLoading: isUpdating } =
+    const { mutateAsync: addToFavoriteFunc, isLoading } =
         useMutation(addToFavorites);
 
     const editFunc = (id) => {
         const quizPath = `/quiz-editor/${id}`;
         navigate(quizPath);
-    };
-
-    const handleDeleteQuiz = async (id) => {
-        setQuizIndex(-1);
-        if (isLoading) {
-            return;
-        }
-
-        const promise = deleteQuizFunc(id);
-        toast.promise(promise, {
-            loading: "Deleting quiz",
-            success: (data) => {
-                return data.msg;
-            },
-            error: (data) => {
-                return data.err;
-            },
-        });
-
-        const res = await promise;
-
-        setAllQuizzes(res.quizzes);
     };
 
     const addToFavorite = async (id, value) => {
@@ -218,7 +195,11 @@ const QuizRect = ({
 
                     {userId === quiz.createdBy && (
                         <p
-                            onClick={() => handleDeleteQuiz(quiz._id)}
+                            onClick={() => {
+                                //handleDeleteQuiz(quiz._id);
+                                setShowConfirm(true);
+                                setQuizId(quiz._id);
+                            }}
                             className="flex items-center gap-4 hover:text-shinyPurple"
                         >
                             <span className="bi-trash-fill"></span>

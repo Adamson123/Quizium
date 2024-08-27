@@ -44,12 +44,12 @@ const Password = () => {
     };
 
     return (
-        <div className=" isidoraReg w-full mt-7">
+        <div className=" isidoraReg w-full">
             <h2 className="isidoraSemiBold">Password</h2>
             {/* Password info form*/}
 
             <form onSubmit={handlePasswordSubmit} className="mt-3 text-[13px]">
-                <div className="border-[2px] border-mainBg rounded">
+                <div className="border-[2px] border-mainBg rounded  h-[332px]">
                     <div className="flex flex-col  p-3 pb-5 border-grayTwo">
                         {/* Current Password input */}
 

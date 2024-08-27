@@ -2098,6 +2098,10 @@ html {
   top: 13px;
 }
 
+.top-\[26px\] {
+  top: 26px;
+}
+
 .top-\[35px\] {
   top: 35px;
 }
@@ -2112,22 +2116,6 @@ html {
 
 .top-\[8px\] {
   top: 8px;
-}
-
-.top-5 {
-  top: 1.25rem;
-}
-
-.top-6 {
-  top: 1.5rem;
-}
-
-.top-7 {
-  top: 1.75rem;
-}
-
-.top-\[26px\] {
-  top: 26px;
 }
 
 .-z-10 {

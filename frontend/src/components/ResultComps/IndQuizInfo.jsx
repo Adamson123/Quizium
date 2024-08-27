@@ -1,6 +1,27 @@
 import shortenText from "../../utils/shortenText";
 
 const IndQuizInfo = ({ data }) => {
+    const avgTimgSpent = () => {
+        const time = data?.entireTimeSpent;
+        let minutes = Math.round(time / 60);
+        let seconds = time % 60;
+        let hour = Math.round(minutes / 60);
+        let minute = minutes % 60;
+        return {
+            minutes,
+            seconds,
+            hour: time < 3600 ? 0 : hour,
+            minute: time < 60 ? 0 : minute,
+            time,
+        };
+        /*so besically if you are converting a time measurement to another measurement
+         eg:second to minute and you still want to get the left out remainder
+          to yourself,just do you yourself modulo 60 i mean if its 62 seconds to minute 
+          and you still want to get the remainder,  just do 62 / 60 for minutes
+          and 62 % 60 for the remainder,result will be 1 min 2 sec */
+    };
+
+    console.log(avgTimgSpent());
     return (
         <div
             className="flex 
@@ -29,7 +50,23 @@ const IndQuizInfo = ({ data }) => {
                     <span>Avg. Time</span>
                     <span className="flex min-w-[70px] gap-2 text-left">
                         <span className="bi-clock-fill text-blue-500"></span>
-                        <span className="">15 min</span>
+                        <span className="">
+                            {avgTimgSpent().hour ? (
+                                <span>{avgTimgSpent().hour} hour </span>
+                            ) : (
+                                ""
+                            )}
+                            {avgTimgSpent().minute ? (
+                                <span>{avgTimgSpent().minute} min </span>
+                            ) : (
+                                ""
+                            )}
+                            {avgTimgSpent().seconds ? (
+                                <span>{avgTimgSpent().seconds} sec </span>
+                            ) : (
+                                ""
+                            )}
+                        </span>
                     </span>
                 </div>
                 <div className="flex justify-between">

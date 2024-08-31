@@ -220,6 +220,12 @@
     bottom: 0;
     left: 0;
 }
+.choiceAlert:hover {
+    opacity: 0;
+}
+.choiceAlert {
+    background: blue;
+}
 
 .dark {
     --mainBg: 10, 8, 45;

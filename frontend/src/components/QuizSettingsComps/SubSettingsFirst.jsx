@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import HoverForInfo from "../HoverForInfo";
 
 const SubSettingsFirst = ({ quizSettings, handleQuizSettings }) => {
     const timeLimitRef = useRef();
@@ -28,8 +29,8 @@ const SubSettingsFirst = ({ quizSettings, handleQuizSettings }) => {
                             type="text"
                             name="title"
                             className="pl-3 pr-6 py-2 w-full text-textColor border-[1px]
-            border-grayTwo bg-transparent outline-none rounded
-        focus:border-shinyPurple text-[13px]"
+                            border-grayTwo bg-transparent outline-none rounded
+                        focus:border-shinyPurple text-[13px]"
                             placeholder="Enter quiz title..."
                         />
                     </div>
@@ -57,9 +58,10 @@ const SubSettingsFirst = ({ quizSettings, handleQuizSettings }) => {
                             type="text"
                             name="description"
                             className="resize-none px-3 py-2 w-full
-             text-textColor border-[1px]
-    border-grayTwo h-36 bg-transparent outline-none
-     rounded focus:border-shinyPurple relative md:h-full textarea text-[13px]"
+                            text-textColor border-[1px]
+                            border-grayTwo h-36 bg-transparent outline-none
+                            rounded focus:border-shinyPurple
+                            relative md:h-full textarea text-[13px]"
                         ></textarea>
                     </div>
                 </div>
@@ -108,8 +110,9 @@ const SubSettingsFirst = ({ quizSettings, handleQuizSettings }) => {
                                         : 250
                                 }
                                 className="py-2 pl-3 pr-16 bg-transparent
-        border-grayTwo border rounded focus:border-shinyPurple
-         outline-none text-[13px] w-full"
+                                    border-grayTwo border rounded
+                                    focus:border-shinyPurple
+                                    outline-none text-[13px] w-full"
                                 placeholder="Enter time limit..."
                             />
                         }
@@ -127,12 +130,37 @@ const SubSettingsFirst = ({ quizSettings, handleQuizSettings }) => {
                                 className="cursor-pointer radio optionsChecked
                     h-4 w-4 mt-1 mr-1 bg-transparent"
                             />
-                            <label
-                                htmlFor="entire"
-                                className="mr-2 cursor-pointer"
-                            >
-                                For entire quiz
-                            </label>
+                            <span className="mr-2 cursor-pointer flex gap-2 items-center">
+                                <label
+                                    htmlFor="entire"
+                                    className="cursor-pointer"
+                                >
+                                    For entire quiz
+                                </label>{" "}
+                                <HoverForInfo
+                                    edit={"left-[-100px] md:left-0"}
+                                    text={
+                                        <>
+                                            <h2 className="text-[15px] isidoraBold mb-1">
+                                                Exam-Style Scoring
+                                            </h2>
+                                            <p>
+                                                This type of quiz is designed
+                                                for completeness and accuracy.
+                                                The participant has one single
+                                                time limit for the entire quiz,
+                                                and he/she gets point only by
+                                                the accuracy of the answer.
+                                                There are no extra points for
+                                                early completion, and the format
+                                                is ideal for formal assessments
+                                                and exam-like quizzes where much
+                                                careful consideration is needed.
+                                            </p>
+                                        </>
+                                    }
+                                />
+                            </span>
 
                             <input
                                 onChange={handleQuizSettings}
@@ -141,12 +169,41 @@ const SubSettingsFirst = ({ quizSettings, handleQuizSettings }) => {
                                 value="each"
                                 id="each"
                                 checked={quizSettings.applyTime === "each"}
-                                className="cursor-pointer radio optionsChecked h-4 w-4 
-                    mt-1 mr-1"
+                                className="cursor-pointer radio optionsChecked 
+                                h-4 w-4 
+                              mt-1 mr-1"
                             />
-                            <label htmlFor="each" className="cursor-pointer">
-                                For each questions
-                            </label>
+                            <span className="cursor-pointer flex gap-2 items-center">
+                                <label
+                                    htmlFor="each"
+                                    className="cursor-pointer"
+                                >
+                                    For each questions{" "}
+                                </label>
+                                <HoverForInfo
+                                    edit={"left-[-100px] md:left-0"}
+                                    text={
+                                        <>
+                                            <h2 className="text-[15px] isidoraBold mb-1">
+                                                Speed-Based Scoring
+                                            </h2>
+                                            <p>
+                                                This style of quiz rewards quick
+                                                thinking and fast responses.
+                                                Each question has an allotted
+                                                time in itself. and points are
+                                                given not only for the correct
+                                                answer but for how quick you can
+                                                answer, The quicker you are, the
+                                                more points added! ideal for
+                                                competitive quizzes, games, and
+                                                events where speed is as
+                                                important as the right answer.
+                                            </p>
+                                        </>
+                                    }
+                                />
+                            </span>
                         </div>
                     </div>
                 </div>

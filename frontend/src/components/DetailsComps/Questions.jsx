@@ -38,15 +38,15 @@ const Questions = memo(({ questions }) => {
 
             {/* Questions */}
             <div
-                className="flex flex-col gap-4 py-3 px-3 h-full 
-        md:max-h-screen md:overflow-y-auto overflow-x-hidden"
+                className="flex flex-col gap-4 py-3 px-3
+        md:max-h-screen md:overflow-y-auto overflow-x-hidden h-full"
             >
                 {questions?.map((quest, index) => {
                     return (
                         <div className="flex flex-col gap-2" key={index}>
                             <div
                                 className="w-full min-h-[90px] max-h-[90px] shadowAround2 rounde
-             overflow-hidden flex pl-3"
+                              overflow-hidden flex pl-3"
                             >
                                 <div className="h-full w-full pr-2 max-w-[65%]">
                                     <span className="text-[15px] isidoraBold text-grayFive">
@@ -77,7 +77,7 @@ const Questions = memo(({ questions }) => {
                             {showAnswer && (
                                 <div
                                     className="flex flex-col gap-2 text-[13px]
-                     border-b border-grayFive pb-2 isidoraSemiBold"
+                                 border-b border-grayFive pb-2 isidoraSemiBold"
                                 >
                                     {
                                         <QuestionAnswers

@@ -69,7 +69,7 @@ const StartQuizCount = ({ startQuiz, setStartQuiz, setShowStartCount }) => {
         bg-transparentBlack z-20"
         >
             <span
-                className={`text-7xl isidoraBold count absolute
+                className={`text-7xl isidoraBold ${count && "count"} absolute
                      left-[50%] top-[50%] translate-y-[-50%]
                      translate-x-[-50%]`}
             >

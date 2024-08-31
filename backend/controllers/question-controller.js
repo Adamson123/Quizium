@@ -6,6 +6,14 @@ import { populateQuizAndQuest } from "../utils/populateQuiz.js";
 
 //create new Question
 export const createQuestion = async (req, res) => {
+    const quiz = req.quiz;
+    if (quiz.questionsLength >= 25) {
+        throw CustomError(
+            "You have reached your limit, Questions can't be added anymore",
+            400
+        );
+    }
+
     const data = JSON.parse(req.body.question);
     if (!Object.keys(data).length) {
         throw new CustomError("Please provide quiz question", 400);
@@ -27,7 +35,6 @@ export const createQuestion = async (req, res) => {
             },
         });
     }
-    const quiz = req.quiz;
     const toAddTimeLimit = () => {
         return quiz.applyTime === "entire" ? 0 : quiz.timeLimit;
     };

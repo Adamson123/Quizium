@@ -58,15 +58,13 @@ const Share = ({ showShare, setShowShare }) => {
                         </button>
                     </div>
 
-                    <div className="gap-4 mt-5 flex items-center">
+                    <div className="gap-4 mt-5 flex items-end">
                         <a
                             href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
                                 showShare.url
                             )}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            // className="bg-white h-[25px] w-[25px]
-                            // rounded-full relative flex justify-center items-center"
                         >
                             <span
                                 className="bi-facebook
@@ -79,8 +77,6 @@ const Share = ({ showShare, setShowShare }) => {
                             )}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            // className="bg-green-500 h-[24px] w-[24px] flex
-                            //  justify-center items-center rounded-full"
                         >
                             <span className="bi-whatsapp text-green-500 text-[35px]"></span>
                         </a>

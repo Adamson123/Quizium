@@ -12,10 +12,10 @@ const ResultsSchema = new mongoose.Schema(
                 correct: Boolean,
                 questionId: String,
                 // image: {
-                //     contentType: String,
-                //     data: Buffer,
+                //     type: mongoose.Schema.Types.ObjectId,
+                //     ref: "question-images",
                 // },
-                timeSpent: Number,
+                timeRemaining: Number,
                 answerType: String,
             },
         ],
@@ -40,6 +40,7 @@ const ResultsSchema = new mongoose.Schema(
             required: true,
             enum: ["entire", "each"],
         },
+        points: Number,
         entireTimeSpent: Number,
         quizType: {
             type: String,

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
 
 const EachTime = ({
     singleQuestion,
@@ -10,10 +11,16 @@ const EachTime = ({
     getTwentyPercentage,
 }) => {
     const [countTime, setCountTime] = useState(100);
+    const [runInterval, setRunInterVal] = useState(true);
 
     useEffect(() => {
         //setting time spent from here because countTime is being updated only here
-        if (!startQuiz || !singleQuestion.timeLimit || findQuestionResult()) {
+        if (
+            !startQuiz ||
+            !singleQuestion.timeLimit ||
+            findQuestionResult() ||
+            !runInterval
+        ) {
             return;
         }
 
@@ -25,9 +32,11 @@ const EachTime = ({
                 setCountTime(countingTime);
             }
 
-            if (countTime === 0) {
+            if (countTime <= 0) {
                 //we will automatically submit question answer(empty) here if time is up
-                selectAnswer([]);
+                //selectAnswer([]);
+                toast.error("Time up!");
+                setRunInterVal(false);
             }
         }, 1000);
 
@@ -35,25 +44,32 @@ const EachTime = ({
         return () => {
             clearInterval(intervalId);
         };
-    }, [countTime, startQuiz, singleQuestion, allQuestionsResults]);
+    }, [
+        countTime,
+        startQuiz,
+        singleQuestion,
+        allQuestionsResults,
+        runInterval,
+    ]);
 
     useEffect(() => {
         if (!findQuestionResult()) {
             setCountTime(100);
+            setRunInterVal(true);
         } else {
             console.log(
-                findQuestionResult().timeSpent,
+                findQuestionResult().timeRemaining,
                 "spent",
                 findQuestionResult()
             );
 
-            const timeSpent_2 =
-                findQuestionResult().timeSpent *
+            const timeRemaining =
+                findQuestionResult().timeRemaining *
                 /*will return the number gotten if 100 is divided by the limit
                 example: will return 20 if question timeLimit is 5 */
                 Math.round(100 / singleQuestion.timeLimit);
 
-            setCountTime(timeSpent_2);
+            setCountTime(timeRemaining);
         }
     }, [singleQuestion]);
 

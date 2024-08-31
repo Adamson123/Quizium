@@ -8,6 +8,7 @@ import { useMutation } from "react-query";
 import { addToFavorites } from "../../api/UserApi";
 import Share from "../Share";
 import { useNavigate, useParams } from "react-router";
+import { createHost } from "../../api/HostApi";
 const QuizInfo = ({
     quizInfo,
     isLoading,
@@ -19,6 +20,9 @@ const QuizInfo = ({
     const { id } = useParams();
     const { mutateAsync: addToFavoriteFunc, isLoading: isUpdating } =
         useMutation(addToFavorites);
+
+    const { mutateAsync: createHostFunc, isLoading: isHosting } =
+        useMutation(createHost);
 
     const inFavorites = (id) => {
         console.log(quizInfo.viewerFavorites, id);
@@ -61,6 +65,14 @@ const QuizInfo = ({
         setAllQuizDetails({ quiz, viewerFavorites });
     };
 
+    const hostLive = async () => {
+        if (isHosting) {
+            return;
+        }
+        const res = await createHostFunc({ id });
+        console.log(res);
+        navigate("/host-live/" + res.id);
+    };
     return (
         <div
             className="md:max-w-[50%] w-full mb-6 scrollbar 
@@ -195,8 +207,9 @@ const QuizInfo = ({
                         Play
                     </button>
                     <button
+                        onClick={() => hostLive()}
                         className="bg-grayTwo px-5 py-2 pb-3 rounded
-             insetShadow isidoraBold text-[14px] clickable"
+                        insetShadow isidoraBold text-[14px] clickable"
                     >
                         Host live
                     </button>

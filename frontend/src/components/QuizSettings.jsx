@@ -22,7 +22,13 @@ const QuizSettings = memo((props) => {
                   visibility: "public",
                   category: "General Knowledge",
               }
-            : props.config
+            : {
+                  ...props.config,
+                  timeLimit:
+                      props.config.applyTime === "entire"
+                          ? props.config.timeLimit / 60
+                          : props.config.timeLimit,
+              }
     );
 
     console.log("quiz settings rendered");
@@ -114,12 +120,16 @@ const QuizSettings = memo((props) => {
             <form
                 onSubmit={submitSetting}
                 className="scrollbar w-full max-w-[700px] bg-mainBg p-5 
-            px-6 pb-10 m-auto rounded overflow-y-auto h-full shadow"
+                    px-6 pb-10 m-auto rounded overflow-y-auto 
+                    overflow-x-hidden h-full shadow"
             >
                 <h2 className="text-[20px] font-bold isidoraBold">
                     Quiz Settings
                 </h2>
-                <div className="mt-5 flex flex-col md:flex-row md:items-start gap-4 md:gap-8 md:justify-between">
+                <div
+                    className="mt-5 flex flex-col smd:flex-row
+                 smd:items-start gap-4 smd:gap-8 smd:justify-between"
+                >
                     {/* Title , description , time limit and visibity container */}
                     <SubSettingsFirst
                         quizSettings={quizSettings}

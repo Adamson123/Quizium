@@ -3,7 +3,7 @@ import Header from "../components/PlayQuizComps/Header";
 import Question from "../components/PlayQuizComps/Question";
 import { useMutation, useQuery } from "react-query";
 import { getQuizWithQuestions } from "../api/QuizApi";
-import { useContext, useEffect, useReducer, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import NavLeftRight from "../components/PlayQuizComps/NavLeftRight";
 import StartQuizCount from "../components/PlayQuizComps/StartQuizCount";
 import { createResult } from "../api/ResultApi";
@@ -13,6 +13,13 @@ import ConfirmAction from "../components/ConfirmAction";
 import toast from "react-hot-toast";
 import TimeUp from "../components/PlayQuizComps/TimeUp";
 import PageIsLoading from "../components/ui/PageIsLoading";
+
+/* applyTime = "each" is when all questions has thier own time
+ (Which means if time is up question is automatically failed or you lose points ) */
+
+/* applyTime = "entire" is when a general time is set for all questions
+(Which means you can answer each questions at your own pace, but there is still a limit but
+for set for all at once) */
 
 const PlayQuizPage = () => {
     const { id } = useParams();
@@ -38,11 +45,21 @@ const PlayQuizPage = () => {
     const [timeUp, setTimeUp] = useState(false);
     const resultId = useRef();
 
+    const randomizeQuestions = (arr) => {
+        const randomizedQuestions = [];
+        while (arr.length) {
+            const randomIndex = Math.floor(Math.random() * arr.length);
+            randomizedQuestions.push(arr[randomIndex]);
+            arr.splice(randomIndex, 1);
+        }
+
+        return randomizedQuestions;
+    };
+
     useEffect(() => {
         if (data) {
-            setAllQuestions(data.quiz.questionsId?.questions || []);
-            setSingleQuestion(
-                data.quiz.questionsId?.questions[currentQuestion] || []
+            setAllQuestions(
+                randomizeQuestions(data.quiz.questionsId?.questions) || []
             );
         }
     }, [data]);
@@ -51,7 +68,7 @@ const PlayQuizPage = () => {
         if (allQuestions.length) {
             setSingleQuestion(allQuestions[currentQuestion]);
         }
-    }, [currentQuestion]);
+    }, [allQuestions, currentQuestion]);
 
     const findQuestionResult = (questId = singleQuestion._id) => {
         const questionResult = allQuestionsResults.find(
@@ -71,10 +88,32 @@ const PlayQuizPage = () => {
 
         let allTime = 0;
         allQuestionsResults.forEach((res) => {
-            allTime += res.timeSpent;
+            allTime += res.timeRemaining;
         });
 
-        return defaultAllTime - allTime;
+        return { defaultAllTime, allTimeSpent: defaultAllTime - allTime };
+    };
+
+    const getPoints = () => {
+        //gets points from only questions that are answered correctly
+        const questionPoints =
+            allQuestionsResults.filter((res) => {
+                return res.correct === true;
+            }).length * 10;
+
+        //gets points or timeRemaining from only questions that are answered correctly
+        let pointsForEach = 0;
+        allQuestionsResults.forEach((res) => {
+            if (res.correct) {
+                pointsForEach += res.timeRemaining;
+            }
+        });
+
+        //applying points base on applyTime value
+        const timePoints = data.quiz.applyTime === "entire" ? 0 : pointsForEach;
+        const points = questionPoints + timePoints;
+
+        return points;
     };
 
     const submitQuiz = async (navi) => {
@@ -90,15 +129,15 @@ const PlayQuizPage = () => {
             results: allQuestionsResults,
             questionsLength: allQuestions.length,
             title: data.quiz.title,
-            resultOwner: value?.userId,
             quizId: id,
             timeLimit: data?.quiz.timeLimit,
             applyTime: data.quiz.applyTime,
             entireTimeSpent:
                 data.quiz.applyTime === "entire"
                     ? data?.quiz.timeLimit - timeSpent.current
-                    : getAllTimeSpent(),
+                    : getAllTimeSpent().allTimeSpent,
             quizType: "solo",
+            points: getPoints(),
         };
 
         const promise = createResultFunc(result);
@@ -186,11 +225,8 @@ const PlayQuizPage = () => {
                 userAnswer: id,
                 correct: validateAns(),
                 questionId,
-                // image: {
-                //     data,
-                //     contentType,
-                // },
-                timeSpent: timeSpent.current,
+                // image: image?._id,
+                timeRemaining: timeSpent.current,
                 seenExplanation: false,
             },
         ]);
@@ -202,7 +238,7 @@ const PlayQuizPage = () => {
                 ? toast.success("Correct!!🎉", {
                       style: {
                           width: "230px",
-                          height: "60px",
+                          height: "45px",
                           background: "rgb(74,222,128)",
                           color: "white",
                           borderRadius: "2px",
@@ -214,15 +250,17 @@ const PlayQuizPage = () => {
                           primary: "rgb(74,222,128)",
                       },
                       icon: <span className="bi-check text-[33px]"></span>,
+                      duration: 2000,
                   })
                 : toast.error("Incorrect", {
                       style: {
                           width: "230px",
-                          height: "60px",
+                          height: "45px",
                           background: "rgb(239,68,68)",
                           color: "white",
                           borderRadius: "2px",
-                          boxShadow: "inset -2px -2px 10px rgba(0, 0, 0, 0.4)",
+                          boxShadow: `inset -2px -2px 10px 
+                          rgba(0, 0, 0, 0.4)`,
                           // border: "2px solid white",
                       },
                       iconTheme: {
@@ -231,6 +269,8 @@ const PlayQuizPage = () => {
                       icon: (
                           <span className="bi-x text-[33px] font-bold"></span>
                       ),
+
+                      duration: 2000,
                   });
         }
         if (data?.quiz.applyTime === "entire") {
@@ -245,7 +285,7 @@ const PlayQuizPage = () => {
 
     useEffect(() => {
         const preventReload = (event) => {
-            if (allQuestionsResults && startQuiz) {
+            if (allQuestionsResults.length && startQuiz) {
                 event.preventDefault();
                 event.returnValue = "";
             }

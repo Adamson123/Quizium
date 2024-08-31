@@ -1,12 +1,14 @@
-import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router";
 
 const ResultRatio = ({ data, getAllCorAndInCor }) => {
+    const navigate = useNavigate();
+
     const getPercentage = () => {
         const questionsLength = data?.questionsLength;
         const correct = getAllCorAndInCor(true);
         // const inCorrect = getAllCorAndInCor(false);  🤷‍♂️
         const percentage = (correct * 100) / questionsLength; // or 100 - (inCorrect / questionsLength) * 100)
-        return Math.round(percentage);
+        return Math.round(percentage) || 0;
     };
 
     const generateReview = () => {
@@ -127,6 +129,9 @@ const ResultRatio = ({ data, getAllCorAndInCor }) => {
                         {generateReview()?.message}
                     </p>
                     <button
+                        onClick={() => {
+                            navigate("/play/" + data?.quizId);
+                        }}
                         className="bg-shinyPurple text-white text-[12px] isidoraBold
             py-2 px-3 rounded insetShadow clickable"
                     >

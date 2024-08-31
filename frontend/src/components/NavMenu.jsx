@@ -40,8 +40,9 @@ const NavMenu = ({ show, setShow }) => {
                     transition: "width 0.3s ease-in-out",
                 }}
                 className={`fixed z-30 py-4 left-0 top-0 bottom-0 
-        ${show ? "w-[180px]" : "w-0"} 
-        agbalumo overflow-hidden md:w-[180px] bg-mainBg md:border-r border-grayOne `}
+                    ${show ? "w-[180px]" : "w-0"} 
+                    agbalumo overflow-hidden md:w-[180px]
+                    bg-mainBg md:border-r border-grayOne `}
             >
                 <div
                     className="h-full w-full flex flex-col 
@@ -53,8 +54,9 @@ const NavMenu = ({ show, setShow }) => {
            justify-between  pb-2 pr-2 border-b border-grayOne"
                     >
                         <h1
+                            onClick={() => navigate("/")}
                             className="font-bold text-4xl
-           text-shinyPurple agbalumoFont tracking-tighter"
+                            text-shinyPurple agbalumoFont tracking-tighter"
                         >
                             Quizium
                         </h1>

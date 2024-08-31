@@ -99,7 +99,17 @@ const IndQuizInfo = ({ data }) => {
                 </div>
                 <div className="pl-3 flex gap-2">
                     <span>Quiz type:</span>
-                    <span className=" ">Live quiz</span>
+                    <span className=" ">
+                        {
+                            //first letter to upper case
+                            data?.quizType[0].toUpperCase() +
+                                data?.quizType.substring(
+                                    1,
+                                    data?.quizType.length
+                                )
+                        }{" "}
+                        quiz
+                    </span>
                 </div>
             </div>
         </div>

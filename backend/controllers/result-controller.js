@@ -20,14 +20,14 @@ export const createResult = async (req, res) => {
             },
         });
     }
-    const result = await ResultsModel.create(data);
+    const result = await ResultsModel.create({ ...data, resultOwner: userId });
 
     return res.json({ id: result._id, msg: "Quiz Submitted" });
 };
 
 export const getSingleResult = async (req, res) => {
     const { id } = req.params;
-    const result = await ResultsModel.findById(id);
+    const result = await ResultsModel.findById(id); //.populate("results.image");
 
     if (!result) {
         throw new CustomError("404 result not found", 404);

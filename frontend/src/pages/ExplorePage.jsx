@@ -11,19 +11,17 @@ const ExplorePage = () => {
         >
             <QuizSettings setShow={setShowQuizPanel} show={showQuizPanel} />
 
+            {/* Hero section */}
             <div className="mb-14 flex gap-5 w-full">
                 <div
-                    className="bg-blurryPurple p-5 rounded w-full
-        flex flex-col justify-between h-auto items-start"
+                    className="bg-blurryPurple p-5 rounded  w-[50%]
+             flex flex-col justify-between h-auto items-start"
                 >
                     <div className="">
                         <h1 className="text-4xl isidoraSemiBold">Join Quiz</h1>
-                        <h3
-                            className="text-xs mt-2 tracking-wider text-grayFive 
-                        "
-                        >
+                        <h3 className="text-xs mt-2 tracking-wider text-grayFive">
                             Join an Ongoing Quiz or Dive into a World of
-                            Questions
+                            Questions.
                         </h3>
                     </div>
 
@@ -35,7 +33,7 @@ const ExplorePage = () => {
                     </button>
                 </div>
                 <div
-                    className="bg-blurryPurple p-5 rounded  w-full
+                    className="bg-blurryPurple p-5 rounded  w-[50%]
                     flex flex-col justify-between h-auto items-start"
                 >
                     <div>
@@ -43,7 +41,7 @@ const ExplorePage = () => {
                             Create Quiz
                         </h1>
                         <h3 className="text-xs mt-2 tracking-wider text-grayFive">
-                            Craft Engaging Quizzes in Minutes
+                            Craft Engaging Quizzes in Minutes.
                         </h3>
                     </div>
 

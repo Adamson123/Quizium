@@ -29,7 +29,7 @@ const Header = ({
           text-shinyPurple agbalumoFont tracking-tighter 
           text-[25px] md:text-3xl cursor-pointer"
                 >
-                    Qz
+                    Qz.
                 </h1>
                 {config.draft ? (
                     <span

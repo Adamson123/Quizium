@@ -1,55 +1,76 @@
 const fs = require("fs");
 const msg = {
-  login: "error logging in",
-  signup: "error signing up",
-  double: {
-    name: "Adam",
-    class: "###",
-    triple: {
-      winner: "yes",
-      looser: "no",
+    login: "error logging in",
+    signup: "error signing up",
+    double: {
+        name: "Adam",
+        class: "###",
+        triple: {
+            winner: "yes",
+            looser: "no",
+        },
     },
-  },
 };
 
 const newObj = {};
 
 const getAllKeys = (obj) => {
-  const objArray = Object.keys(obj);
+    const objArray = Object.keys(obj);
 
-  for (let i = 0; i < objArray.length; i++) {
-    const key = objArray[i];
+    for (let i = 0; i < objArray.length; i++) {
+        const key = objArray[i];
 
-    newObj[key] = obj[key];
+        newObj[key] = obj[key];
 
-    if (typeof obj[key] === "object") {
-      if (Object.keys(newObj).includes(key)) {
-        newObj[key] = Object.keys(newObj[key]);
-      }
+        if (typeof obj[key] === "object") {
+            if (Object.keys(newObj).includes(key)) {
+                newObj[key] = Object.keys(newObj[key]);
+            }
+        }
+
+        if (typeof obj[key] === "object") {
+            getAllKeys(obj[key]);
+        }
     }
-
-    if (typeof obj[key] === "object") {
-      getAllKeys(obj[key]);
-    }
-  }
 };
 
 const getKeys = (obj) => {
-  const objArray = Object.keys(obj);
-  console.log(obj);
-  
-  for (let i = 0; i < objArray.length; i++) {
-    const key = objArray[i];
+    const objArray = Object.keys(obj);
+    console.log(obj);
 
-    console.log(key);
+    for (let i = 0; i < objArray.length; i++) {
+        const key = objArray[i];
 
-    if (typeof obj[key] === "object") {
-      getKeys(obj[key]);
+        console.log(key);
+
+        if (typeof obj[key] === "object") {
+            getKeys(obj[key]);
+        }
     }
-  }
 };
 
-getAllKeys(msg);
+//getAllKeys(msg);
 
+//console.log(newObj);
 
-console.log(newObj);
+const randomize = (arr) => {
+    const randomizedArr = [];
+
+    while (arr.length) {
+        const randomIndex = Math.floor(Math.random() * arr.length);
+        randomizedArr.push(arr[randomIndex]);
+        arr.splice(randomIndex, 1);
+    }
+
+    console.log(randomizedArr);
+};
+
+//randomize(["a", "b", "c", "d", "e", "f"]);
+const generateRandomNum = () => {
+    const randomNum = Math.floor(Math.random() * 9000000) + 1000000;
+    console.log(randomNum);
+};
+
+generateRandomNum();
+
+// http://localhost:5173/

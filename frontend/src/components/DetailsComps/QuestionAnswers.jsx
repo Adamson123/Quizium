@@ -13,7 +13,7 @@ const QuestionAnswers = ({ quest }) => {
                                  quest.answer.includes(opt._id)
                                      ? "bg-green-500"
                                      : "bg-red-500"
-                             } rounded-[2px] insetShadow`}
+                             } rounded-[2px]`}
                     >
                         <span>{shortenText(opt.text, 45)}</span>
                         <span
@@ -34,7 +34,7 @@ const QuestionAnswers = ({ quest }) => {
                     className={`flex justify-between items-center px-2 
          py-1 ${
              quest.answer.includes("true") ? "bg-green-500" : "bg-red-500"
-         } rounded-[2px] insetShadow`}
+         } rounded-[2px]`}
                 >
                     <span>True</span>
                     <span
@@ -47,7 +47,7 @@ const QuestionAnswers = ({ quest }) => {
                     className={`flex justify-between items-center px-2 
           py-1 ${
               quest.answer.includes("false") ? "bg-green-500" : "bg-red-500"
-          } rounded-[2px] insetShadow`}
+          } rounded-[2px]`}
                 >
                     <span>False</span>
                     <span
@@ -65,7 +65,7 @@ const QuestionAnswers = ({ quest }) => {
                     <p
                         key={index}
                         className={`flex justify-between items-center px-2 
-                py-1 bg-green-500 rounded-[2px] insetShadow`}
+                        py-1 bg-green-500 rounded-[2px]`}
                     >
                         <span>{shortenText(ans, 45)}</span>
                         <span

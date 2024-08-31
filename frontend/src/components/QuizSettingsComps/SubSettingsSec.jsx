@@ -26,7 +26,7 @@ const SubSettingsSec = ({
                 </span>
                 {/* Cover-image*/}
 
-                <div className="min-w-full rounded relative min-h-full">
+                <div className="min-w-full rounded relative min-h-[250px]">
                     {convertingImage && (
                         <Loading
                             cus={`loading-lg absolute top-[50%] left-[50%] 
@@ -39,7 +39,8 @@ const SubSettingsSec = ({
                                 ? URL.createObjectURL(pickedImage)
                                 : fallbackToDefaultCover()
                         }
-                        className="w-full h-full object-cover rounded shadow-md"
+                        className="w-full h-full object-cover
+                        rounded shadow-md"
                         alt="quiz cover image display"
                     />
                     <input
@@ -63,7 +64,7 @@ const SubSettingsSec = ({
                 </div>
             </div>
 
-            {/* Subjects */}
+            {/* Categories */}
             <div className=" flex flex-col">
                 <span className="mb-2 text-[14px] font-bold">Category</span>
                 <select

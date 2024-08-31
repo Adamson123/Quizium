@@ -10,6 +10,10 @@ import LibraryPage from "./pages/LibraryPage";
 import DetailsPage from "./pages/DetailsPage";
 import PlayQuizPage from "./pages/PlayQuizPage";
 import ResultPage from "./pages/ResultPage";
+import HostLivePage from "./pages/HostLivePage";
+import JoinLivePage from "./pages/JoinLivePage";
+import Join from "./components/JoinLiveComps/Join";
+import Room from "./components/JoinLiveComps/Room";
 
 function App() {
     return (
@@ -35,6 +39,10 @@ function App() {
                     }
                 />
 
+                <Route path="/join-live" element={<JoinLivePage />}>
+                    <Route index element={<Join />} />
+                    <Route path=":id" element={<Room />} />
+                </Route>
                 <Route
                     path="/library"
                     element={
@@ -44,14 +52,7 @@ function App() {
                     }
                 />
                 <Route path="/quiz-editor/:id" element={<QuizEditorPage />} />
-                <Route
-                    path="/play/:id"
-                    element={
-                        <Layout showHeader={false}>
-                            <PlayQuizPage />
-                        </Layout>
-                    }
-                />
+                <Route path="/play/:id" element={<PlayQuizPage />} />
                 <Route
                     path="/details/:id"
                     element={
@@ -60,6 +61,7 @@ function App() {
                         </Layout>
                     }
                 />
+                <Route path="/host-live/:id" element={<HostLivePage />} />
                 <Route
                     path="/result/:id"
                     element={

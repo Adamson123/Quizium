@@ -100,6 +100,12 @@ const QuizEditorPage = () => {
     }, [allQuestions, currentQuestion]);
 
     const handleCreateQuiz = async (quiz, image, duplicate) => {
+        if (allQuestions.length >= 25) {
+            return toast.error(
+                "You have reached your limit, Questions can't be added anymore"
+            );
+        }
+
         const quizInfo = quiz
             ? quiz
             : {

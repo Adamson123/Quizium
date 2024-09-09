@@ -1,11 +1,11 @@
-const analizeQuiz = (allQuestions) => {
+const analyzeQuiz = (allQuestions) => {
     const errorMessage = (field, value, type) => {
         /*checking if the quiz with question type "quiz" 
       has more than 1 options that is not empty*/
         if (field === "options" && type === "quiz") {
             //filter out filled options
             const filteredOptions = value.filter((op) => {
-                return op.text !== "";
+                return op.text.trim(" ") !== "";
             });
             if (filteredOptions.length > 1) return "";
         }
@@ -13,18 +13,18 @@ const analizeQuiz = (allQuestions) => {
         let filteredAnswers;
         if (field === "answer") {
             filteredAnswers = value.filter((op) => {
-                return op !== "";
+                return op.trim(" ") !== "";
             });
         }
 
         /*return if its options field and the type is not quiz 
       cause we are only validating options fields in quiz with questionType "quiz"
       or if field is question and the value is not empty or if field is answer 
-      and the answer has valid element in it*/
+      and the answer has valid value in it*/
 
         if (
             (field === "options" && type !== "quiz") ||
-            (field === "question" && value) ||
+            (field === "question" && value.trim(" ")) ||
             (field === "answer" && filteredAnswers.length)
         ) {
             return "";
@@ -74,7 +74,8 @@ const analizeQuiz = (allQuestions) => {
     if (!analizedQuestions.length) {
         return;
     }
+
     return analizedQuestions;
 };
 
-export default analizeQuiz;
+export default analyzeQuiz;

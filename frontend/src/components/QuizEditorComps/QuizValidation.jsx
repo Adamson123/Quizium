@@ -1,6 +1,6 @@
 import { memo } from "react";
 import Warning from "../ui/Warning";
-import analizeQuiz from "./analizeQuiz";
+import analyzeQuiz from "./analyzeQuiz";
 
 const QuizValidation = memo(({ saveOptionConfig }) => {
     const {
@@ -41,8 +41,8 @@ const QuizValidation = memo(({ saveOptionConfig }) => {
                 >
                     {/* message */}
 
-                    {analizeQuiz(allQuestions) &&
-                        analizeQuiz(allQuestions).map((question, index) => {
+                    {analyzeQuiz(allQuestions) &&
+                        analyzeQuiz(allQuestions).map((question, index) => {
                             return (
                                 <div
                                     onClick={() => {

@@ -5,7 +5,7 @@ import Loading from "../ui/Loading";
 const Header = ({
     setShow,
     setShowRightSect,
-    handleUpdateQuiz,
+    handleUpdateQuestion,
     allQuestions,
     allQuestions_2,
     updatingQuest,
@@ -67,7 +67,7 @@ const Header = ({
                 </div>
                 <div className="relative">
                     <button
-                        onClick={handleUpdateQuiz}
+                        onClick={handleUpdateQuestion}
                         className={`${
                             allQuestions !== allQuestions_2
                                 ? "bg-red-600 clickable"
@@ -109,7 +109,7 @@ const Header = ({
                 {/* save button*/}
                 <button
                     onClick={() => {
-                        handleUpdateQuiz();
+                        handleUpdateQuestion();
                         setShowSaveOption(true);
                     }}
                     className="p-[7px] clickable isidoraBold bg-shinyPurple insetShadow rounded"

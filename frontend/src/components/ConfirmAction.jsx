@@ -8,7 +8,9 @@ const ConfirmAction = ({
         <div
             className={`bg-transparentBlack fixed 
             top-0 right-0 bottom-0 left-0 flex justify-center 
-            items-center scaleUp z-20 ${showConfirm ? "scale-1" : "scale-0"}`}
+            items-center scaleUp  ${
+                showConfirm ? "scale-1" : "scale-0"
+            } z-[10000000]`}
         >
             <div className="px-6 py-5 bg-secMainBg flex flex-col gap-5 rounded">
                 <span className="text-[16px]">{text}</span>

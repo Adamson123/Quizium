@@ -1,10 +1,9 @@
 import { useState } from "react";
 import NavMenu from "./NavMenu";
 import { useNavigate } from "react-router";
-const Header = ({ text, setSearch, search }) => {
+const Header = ({ text, setSearch, search, searchFocus, setSearchFocus }) => {
     const navigate = useNavigate();
     const [openNavMenu, setOpenNavMenu] = useState(false);
-    const [searchFocus, setSearchFocus] = useState(false);
 
     return (
         <>
@@ -24,16 +23,16 @@ const Header = ({ text, setSearch, search }) => {
                     ></span>
 
                     <div className="flex-1 flex items-center">
-                        {/* logo */}
-                        {!searchFocus ? (
+                        {/* Quizium */}
+                        {!searchFocus && !search ? (
                             <div
                                 onClick={() => navigate("/")}
                                 className={`md:hidden overflow-hidden
-                                     w-auto mr-5 cursor-pointer`}
+                                     w-auto mr-3 cursor-pointer`}
                             >
                                 <h1
-                                    className="font-bold text-[20px]
-                            text-shinyPurple agbalumoFont tracking-tighter"
+                                    className="font-bold text-[23px]
+                                    text-shinyPurple agbalumoFont mb-[6px] tracking-tighter"
                                 >
                                     Quizium
                                 </h1>

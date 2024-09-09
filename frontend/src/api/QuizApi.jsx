@@ -1,10 +1,13 @@
 import { requestOptions } from "./utils/RequestOptions";
 
-export const getQiuzzes = async (skip, limit) => {
+export const getQiuzzes = async (query) => {
     try {
-        const res = await fetch(`/api/quiz?skip=${skip}&limit=${limit}`, {
-            credentials: "include",
-        });
+        const res = await fetch(
+            `/api/quiz?skip=${query.skip}&limit=${query.limit}&category=${query.category}`,
+            {
+                credentials: "include",
+            }
+        );
 
         const data = await res.json();
 
@@ -85,7 +88,7 @@ export const getQuizWithQuestions = async (config) => {
 
 export const getUserQuizzes = async () => {
     try {
-        const res = await fetch(`/api/quiz/by-user`, {
+        const res = await fetch(`/api/quiz/user-quizzes`, {
             credentials: "include",
         });
         const data = await res.json();

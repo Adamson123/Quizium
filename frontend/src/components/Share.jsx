@@ -58,7 +58,7 @@ const Share = ({ showShare, setShowShare }) => {
                         </button>
                     </div>
 
-                    <div className="gap-4 mt-5 flex items-end">
+                    <div className="gap-4 mt-5 flex items-center">
                         <a
                             href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
                                 showShare.url
@@ -86,8 +86,8 @@ const Share = ({ showShare, setShowShare }) => {
                             )}}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="bg-black h-[40px] w-[40px] flex
-                             justify-center items-center rounded-full"
+                            className="bg-black h-[38px] w-[38px] flex
+                             justify-center items-center rounded-full mt-[5px]"
                         >
                             <span className="bi-twitter-x text-[15px]"></span>
                         </a>

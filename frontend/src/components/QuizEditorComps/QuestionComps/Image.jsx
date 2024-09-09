@@ -3,7 +3,7 @@ import bufferToObjUrl from "../../../utils/bufferToObjUrl";
 import Loading from "../../ui/Loading";
 import { convertToWebp } from "../../../utils/convertToWebp";
 const Image = memo(({ imageProps }) => {
-    const { singleQuestion, handleDeleteQuiz, imagePicked, setPickedImage } =
+    const { singleQuestion, handleDeleteQuestion, imagePicked, setPickedImage } =
         imageProps;
     const uploadRef = useRef();
 
@@ -38,7 +38,7 @@ const Image = memo(({ imageProps }) => {
                     flex justify-between"
                 >
                     <button
-                        onClick={() => handleDeleteQuiz("")}
+                        onClick={() => handleDeleteQuestion("")}
                         className="bg-[rgba(0,0,0,0.4)] p-1 px-2 rounded"
                     >
                         <span className="bi-trash-fill text-[17px]"></span>

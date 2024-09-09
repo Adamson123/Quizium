@@ -4,6 +4,9 @@ import QuestionsNav from "./HeaderComps/QuestionsNav";
 import EntireTime from "./HeaderComps/EntireTime";
 import { useNavigate } from "react-router";
 import EachTime from "./HeaderComps/EachTime";
+import Warning from "../ui/Warning";
+import HoverForInfo from "../HoverForInfo";
+import analyzeQuiz from "../QuizEditorComps/analyzeQuiz";
 const Header = ({
     currentQuestion,
     setCurrentQuestion,
@@ -20,6 +23,8 @@ const Header = ({
     singleQuestion,
     selectAnswer,
     allQuestionsResults,
+    hostId,
+    setTimedUpQuests,
 }) => {
     const navigate = useNavigate();
     const quizAudio = useMemo(() => {
@@ -28,10 +33,10 @@ const Header = ({
         return audio;
     }, []);
 
-    const [play, setPlay] = useState(false);
+    const [playMusic, setPlayMusic] = useState(false);
 
     useEffect(() => {
-        if (play) {
+        if (playMusic) {
             quizAudio.play();
         } else {
             quizAudio.pause();
@@ -40,7 +45,7 @@ const Header = ({
         return () => {
             quizAudio.pause();
         };
-    }, [play]);
+    }, [playMusic]);
 
     //to restart the audio
     useEffect(() => {
@@ -81,15 +86,30 @@ const Header = ({
                     </div>
 
                     <div className="">
-                        <h2 className="text-[15px] isidoraSemiBold">
-                            Solo Quiz
+                        <h2
+                            className="text-[15px] isidoraSemiBold 
+                        flex items-center gap-1"
+                        >
+                            {hostId ? "Live Quiz" : "Solo Quiz"}
+                            {/* <Warning absolute={false} cus={"mt-1"} /> */}
+                            {analyzeQuiz(allQuestions) && (
+                                <HoverForInfo
+                                    parentEdit={
+                                        "bg-red-500 z-20 cursor-pointer"
+                                    }
+                                    edit={"left-[-100px] z-20 text-center"}
+                                    icon="bi-exclamation"
+                                    text={`This quiz is damaged so you might
+                                     experience some problems.`}
+                                />
+                            )}
                         </h2>
                     </div>
                     <div className="">
                         <button
-                            onClick={() => setPlay(!play)}
+                            onClick={() => setPlayMusic(!playMusic)}
                             className={`${
-                                play
+                                playMusic
                                     ? "bg-[rgba(0,255,0,0.6)]"
                                     : "bg-[rgba(255,0,0,0.6)]"
                             } text-[20px] w-9 h-9
@@ -97,7 +117,7 @@ const Header = ({
                         >
                             <span
                                 className={` ${
-                                    play
+                                    playMusic
                                         ? "bi-volume-up-fill"
                                         : "bi-volume-mute-fill"
                                 } mt-[1px]`}
@@ -118,6 +138,7 @@ const Header = ({
                         getTwentyPercentage={getTwentyPercentage}
                         allQuestionsResults={allQuestionsResults}
                         allQuestions={allQuestions}
+                        hostId={hostId}
                     />
                 ) : (
                     <EachTime
@@ -128,6 +149,8 @@ const Header = ({
                         allQuestionsResults={allQuestionsResults}
                         timeSpent={timeSpent}
                         getTwentyPercentage={getTwentyPercentage}
+                        hostId={hostId}
+                        setTimedUpQuests={setTimedUpQuests}
                     />
                 )}
 

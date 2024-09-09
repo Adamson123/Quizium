@@ -15,7 +15,7 @@ const Question = ({
     imagePicked,
     setPickedImage,
     allQuestions_2,
-    handleDeleteQuiz,
+    handleDeleteQuestion,
     //questionConfig,
 }) => {
     const questionRef = useRef("");
@@ -78,7 +78,7 @@ const Question = ({
 
         return {
             singleQuestion,
-            handleDeleteQuiz,
+            handleDeleteQuestion,
             imagePicked,
             setPickedImage,
         };

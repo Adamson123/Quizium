@@ -1,6 +1,7 @@
+import convtToSimpleDate from "../../utils/convtToSimpleDate";
 import shortenText from "../../utils/shortenText";
 
-const IndQuizInfo = ({ data }) => {
+const OtherQuizInfo = ({ data }) => {
     const avgTimgSpent = () => {
         const time = data?.entireTimeSpent;
         let minutes = Math.round(time / 60);
@@ -16,12 +17,15 @@ const IndQuizInfo = ({ data }) => {
         };
         /*so besically if you are converting a time measurement to another measurement
          eg:second to minute and you still want to get the left out remainder
-          to yourself,just do you yourself modulo 60 i mean if its 62 seconds to minute 
+          ,just do number itself modulo 60 i mean if its 62 seconds to minute 
           and you still want to get the remainder,  just do 62 / 60 for minutes
           and 62 % 60 for the remainder,result will be 1 min 2 sec */
     };
 
-    console.log(avgTimgSpent());
+    // console.log(avgTimgSpent());
+    const isLiveQuiz = () => {
+        return data?.quizType === "live";
+    };
     return (
         <div
             className="flex 
@@ -73,7 +77,11 @@ const IndQuizInfo = ({ data }) => {
                     <span>Players</span>
                     <span className="flex min-w-[70px] gap-2 text-right">
                         <span className="bi-person-fill text-red-500"></span>
-                        <span className="">17</span>
+                        <span className="">
+                            {isLiveQuiz()
+                                ? data?.hostInfos?.participants.length
+                                : " ___"}
+                        </span>
                     </span>
                 </div>
             </div>
@@ -85,30 +93,40 @@ const IndQuizInfo = ({ data }) => {
             >
                 <div className="pl-3 flex gap-2">
                     <span>Hosted by:</span>
-                    <span className="">{shortenText("Aj breed", 18)}</span>
+                    <span className="">
+                        {isLiveQuiz()
+                            ? shortenText(data?.hostInfos?.hostedBy.name, 18)
+                            : "___"}
+                    </span>
                 </div>
 
                 <div className="pl-3 flex gap-2">
                     <span>Started:</span>
-                    <span className="">Feb 25 2026, 11:00am</span>
+                    <span className="">
+                        {isLiveQuiz()
+                            ? convtToSimpleDate(
+                                  data?.hostInfos?.createdAt,
+                                  true
+                              )
+                            : "___"}
+                    </span>
                 </div>
 
                 <div className="pl-3 flex gap-2">
                     <span>Ended:</span>
-                    <span className=" ">Feb 25 2026, 12:00am</span>
+                    <span className=" ">
+                        {isLiveQuiz() && data?.hostInfos?.ended
+                            ? convtToSimpleDate(
+                                  data?.hostInfos?.updatedAt,
+                                  true
+                              )
+                            : "___"}
+                    </span>
                 </div>
                 <div className="pl-3 flex gap-2">
                     <span>Quiz type:</span>
                     <span className=" ">
-                        {
-                            //first letter to upper case
-                            data?.quizType[0].toUpperCase() +
-                                data?.quizType.substring(
-                                    1,
-                                    data?.quizType.length
-                                )
-                        }{" "}
-                        quiz
+                        {isLiveQuiz() ? "Live" : "Solo"} quiz
                     </span>
                 </div>
             </div>
@@ -116,4 +134,4 @@ const IndQuizInfo = ({ data }) => {
     );
 };
 
-export default IndQuizInfo;
+export default OtherQuizInfo;

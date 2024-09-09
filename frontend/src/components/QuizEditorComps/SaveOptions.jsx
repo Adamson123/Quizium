@@ -3,7 +3,7 @@ import { useMutation } from "react-query";
 import { updateQuiz } from "../../api/QuizApi";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
-import analizeQuiz from "./analizeQuiz";
+import analyzeQuiz from "./analyzeQuiz";
 
 const SaveOptions = memo(({ saveOptionConfig }) => {
     const {
@@ -29,12 +29,15 @@ const SaveOptions = memo(({ saveOptionConfig }) => {
 
     const submitSetting = async () => {
         if (isLoading) return;
-        // draft is false, analizeQuiz returns something positive and the uppermost draft value is true
+        // draft is false, analyzeQuiz returns something positive and the uppermost draft value is true
 
+        //if we are trying to set already  dratfed quiz as draft
         if (settings.draft && config.draft) {
             setShowSaveOption(false);
+            return;
         }
-        if (!settings.draft && analizeQuiz(allQuestions) && config.draft) {
+        if (!settings.draft && analyzeQuiz(allQuestions) && config.draft) {
+            console.log("failed two");
             setShowSaveOption(false);
             return setShowQuizValid(true);
         }
@@ -43,7 +46,7 @@ const SaveOptions = memo(({ saveOptionConfig }) => {
             "settings",
             JSON.stringify({
                 ...settings,
-                draft: analizeQuiz(allQuestions) ? true : settings.draft,
+                draft: analyzeQuiz(allQuestions) ? true : settings.draft,
             })
         );
         formData.append("file", {});
@@ -63,8 +66,8 @@ const SaveOptions = memo(({ saveOptionConfig }) => {
         refetch();
         setShowSaveOption(false);
 
-        //if analizeQuiz returns a positive value and user is try to publish quiz
-        if (analizeQuiz(allQuestions) && !settings.draft) {
+        //if analyzeQuiz returns a positive value and user is try to publish quiz
+        if (analyzeQuiz(allQuestions) && !settings.draft) {
             setShowQuizValid(true);
             toast.error(
                 "Quiz has been reset to draft because it didn't pass the quiz validation test",
@@ -82,7 +85,7 @@ const SaveOptions = memo(({ saveOptionConfig }) => {
             );
         }
 
-        if (!settings.draft && !analizeQuiz(allQuestions)) {
+        if (!settings.draft && !analyzeQuiz(allQuestions)) {
             // navigate("/library");
         }
     };
@@ -157,7 +160,7 @@ const SaveOptions = memo(({ saveOptionConfig }) => {
                     </label>
                 </div>
 
-                <div className="flex justify-center gap-3 mt-10">
+                <div className="flex justify-center gap-3 mt-8">
                     <button
                         onClick={() => setShowSaveOption(false)}
                         className="px-3 py-2 bg-grayTwo rounded

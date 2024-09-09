@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const HoverForInfo = ({ edit, text }) => {
+const HoverForInfo = ({ edit, parentEdit, text, icon = "bi-question" }) => {
     const [showInfo, setShowInfo] = useState(false);
     return (
         <div
@@ -9,8 +9,8 @@ const HoverForInfo = ({ edit, text }) => {
             className="relative"
         >
             <span
-                className="skeleton py-[1px] px-[2px] 
-             bg-[rgba(0,0,0,0.6)] rounded-full text-[10px] bi-question"
+                className={`skeleton py-[1px] px-[2px] 
+             bg-[rgba(0,0,0,0.6)] rounded-full text-[10px] ${icon} ${parentEdit}`}
             ></span>
             <div
                 style={{

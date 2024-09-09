@@ -10,22 +10,28 @@ const EntireTime = ({
     getTwentyPercentage,
     allQuestions,
     allQuestionsResults,
+    hostId,
 }) => {
-    //   console.log(typeof timeLimit, timeLimit);
+    const getFromStorage = () => {
+        const lsTime = sessionStorage.getItem(`remainingTime-${hostId}`);
+        const storedTime = hostId && lsTime ? Number(lsTime) : timeLimit;
 
-    const [countTime, setCountTime] = useState(timeLimit);
+        return storedTime;
+    };
+
+    const [countTime, setCountTime] = useState(getFromStorage());
     const setCountTimeRef = useRef(true);
 
     useEffect(() => {
         if (setCountTimeRef.current === true && timeLimit) {
-            setCountTime(timeLimit);
+            setCountTime(getFromStorage());
             setCountTimeRef.current = false;
         }
         //setting time spent from here because countTime is being updated only here
         if (
             !startQuiz ||
-            !timeLimit ||
-            allQuestionsResults.length === allQuestions.length
+            !timeLimit
+            // ||allQuestionsResults.length === allQuestions.length
         ) {
             // setTimeSpent(timeLimit - countTime);
             return;
@@ -36,11 +42,18 @@ const EntireTime = ({
                 const countingTime = countTime - 1;
                 timeSpent.current = countingTime;
                 setCountTime(countingTime);
+
+                if (hostId) {
+                    sessionStorage.setItem(
+                        `remainingTime-${hostId}`,
+                        countingTime
+                    );
+                }
             }
 
-            if (countTime === 0) {
+            if (countTime <= 0) {
                 setTimeUp(true);
-                submitQuiz();
+                //submitQuiz();
             }
         }, 1000);
 

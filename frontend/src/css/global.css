@@ -50,10 +50,10 @@
 }
 
 .insetShadow {
-    box-shadow: inset 0px -5px 0px rgba(0, 0, 0, 0.3);
+    box-shadow: inset 0px -3.7px 0px rgba(0, 0, 0, 0.3);
 }
 .outsetShadow {
-    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.144);
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
 }
 .insetShadowTwo {
     box-shadow: inset 0px -3px 0px rgba(0, 0, 0, 0.3);
@@ -72,6 +72,9 @@
 .shadowAround2 {
     box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.103),
         -1px -1px 3px rgba(0, 0, 0, 0.103);
+}
+.dropShadow {
+    filter: drop-shadow(3px 1px 3.5px rgba(0, 0, 0, 0.37));
 }
 .adora {
     font-family: adora;
@@ -96,7 +99,7 @@
 }
 
 .clickable:hover {
-    transform: scale(0.9);
+    transform: scale(0.97);
 }
 .clickable {
     transition: transform 0.1s;
@@ -226,7 +229,9 @@
 .choiceAlert {
     background: blue;
 }
-
+.hideScroll {
+    scrollbar-width: none;
+}
 .dark {
     --mainBg: 10, 8, 45;
     --sec-mainBg: 26, 16, 61;

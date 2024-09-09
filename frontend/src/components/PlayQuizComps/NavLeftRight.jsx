@@ -11,6 +11,8 @@ const NavLeftRight = ({
     allQuestionsResults,
     applyTime,
     findQuestionResult,
+    timedUpQuests,
+    singleQuestion,
 }) => {
     const condition = () => {
         if (applyTime === "entire") {
@@ -19,6 +21,7 @@ const NavLeftRight = ({
             return applyTime === "each" && findQuestionResult();
         }
     };
+    //  console.log(timeSpent.current), "current";
 
     return (
         <div

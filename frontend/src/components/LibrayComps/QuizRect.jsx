@@ -101,7 +101,7 @@ const QuizRect = ({
                         {
                             /* Title for small screen */
                             <span className="slg:hidden">
-                                {shortenText(quiz.title, 35)}
+                                {shortenText(quiz.title, 28)}
                             </span>
                         }
                         {

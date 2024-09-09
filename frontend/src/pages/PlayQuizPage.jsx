@@ -7,8 +7,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import NavLeftRight from "../components/PlayQuizComps/NavLeftRight";
 import StartQuizCount from "../components/PlayQuizComps/StartQuizCount";
 import { createResult } from "../api/ResultApi";
-
-import { dataContext } from "../layouts/Layout";
+//import { dataContext } from "../layouts/Layout";
 import ConfirmAction from "../components/ConfirmAction";
 import toast from "react-hot-toast";
 import TimeUp from "../components/PlayQuizComps/TimeUp";
@@ -19,10 +18,12 @@ import PageIsLoading from "../components/ui/PageIsLoading";
 
 /* applyTime = "entire" is when a general time is set for all questions
 (Which means you can answer each questions at your own pace, but there is still a limit but
-for set for all at once) */
+it set for) */
 
-const PlayQuizPage = () => {
-    const { id } = useParams();
+const PlayQuizPage = ({ quizId, hostId, socket, userId }) => {
+    let { id } = useParams();
+
+    id = quizId || id;
     const { data, isLoading, error, refetch } = useQuery(
         ["quiz-questions", id],
         () => getQuizWithQuestions({ id, checkOwner: false }),
@@ -34,32 +35,97 @@ const PlayQuizPage = () => {
         useMutation(createResult);
     const navigate = useNavigate();
 
+    const getResFromLocalStore = () => {
+        let lsResult = sessionStorage.getItem(hostId);
+        lsResult = lsResult ? JSON.parse(lsResult) : [];
+
+        return hostId ? lsResult : [];
+    };
+
+    const getCurrentQuestFromStore = () => {
+        const lsCurrentQuest = sessionStorage.getItem(
+            `currentQuestion-${hostId}`
+        );
+        const storedCurrentQuest =
+            hostId && lsCurrentQuest ? Number(lsCurrentQuest) : 0;
+
+        return storedCurrentQuest;
+    };
+
     const [allQuestions, setAllQuestions] = useState([]);
     const [singleQuestion, setSingleQuestion] = useState([]);
-    const [currentQuestion, setCurrentQuestion] = useState(0);
-    const [allQuestionsResults, setAllQuestionsResults] = useState([]);
-    const [startQuiz, setStartQuiz] = useState(false);
+    const [currentQuestion, setCurrentQuestion] = useState(
+        getCurrentQuestFromStore()
+    );
+    const [allQuestionsResults, setAllQuestionsResults] = useState(
+        getResFromLocalStore()
+    );
+
+    const [startQuiz, setStartQuiz] = useState(
+        allQuestionsResults.length ? true : false
+    );
     const [showStartCount, setShowStartCount] = useState(true);
     const timeSpent = useRef(0);
     const [showConfirm, setShowConfirm] = useState(false);
     const [timeUp, setTimeUp] = useState(false);
-    const resultId = useRef();
+    const [resultId, setResultId] = useState("");
+    //might be used in the future for storing timed up questions
+    const [timedUpQuests, setTimedUpQuests] = useState([]);
+    const questionNavRef = useRef();
+    const submittedRef = useRef(false);
+    const quizEndedRef = useRef(false);
 
     const randomizeQuestions = (arr) => {
+        if (!arr) {
+            return;
+        }
+        //getting the order that maybe already saved in the localstorage. so we dont't need to randomize anymore
+        const lsRandomizedQuests = sessionStorage.getItem(
+            `randomized-${hostId}`
+        );
+        //parsing it if it's returns a positive value and  whether the user is playing alive quiz
+        const parsedIds =
+            hostId && lsRandomizedQuests ? JSON.parse(lsRandomizedQuests) : [];
+
         const randomizedQuestions = [];
-        while (arr.length) {
-            const randomIndex = Math.floor(Math.random() * arr.length);
-            randomizedQuestions.push(arr[randomIndex]);
-            arr.splice(randomIndex, 1);
+
+        if (parsedIds.length) {
+            //pushing it into randomized quests array according to the order the ids are saved in ls storage
+            parsedIds.forEach((id) => {
+                const question = arr.find((que) => que._id === id);
+                if (question) {
+                    randomizedQuestions.push(question);
+                }
+            });
+        }
+
+        //
+        if (!randomizedQuestions.length) {
+            while (arr.length) {
+                const randomIndex = Math.floor(Math.random() * arr.length);
+                randomizedQuestions.push(arr[randomIndex]);
+                arr.splice(randomIndex, 1);
+            }
+        }
+
+        //only saving the order to localstorage if the quiz is live
+        if (hostId) {
+            //saving the order of this quiz by the ids
+            const randomizedQuestionsIds = randomizedQuestions.map((quest) => {
+                return quest?._id;
+            });
+            sessionStorage.setItem(
+                `randomized-${hostId}`,
+                JSON.stringify(randomizedQuestionsIds)
+            );
         }
 
         return randomizedQuestions;
     };
-
     useEffect(() => {
         if (data) {
             setAllQuestions(
-                randomizeQuestions(data.quiz.questionsId?.questions) || []
+                randomizeQuestions(data?.quiz.questionsId?.questions) || []
             );
         }
     }, [data]);
@@ -68,16 +134,20 @@ const PlayQuizPage = () => {
         if (allQuestions.length) {
             setSingleQuestion(allQuestions[currentQuestion]);
         }
+        if (hostId) {
+            sessionStorage.setItem(
+                `currentQuestion-${hostId}`,
+                currentQuestion
+            );
+        }
     }, [allQuestions, currentQuestion]);
 
-    const findQuestionResult = (questId = singleQuestion._id) => {
+    const findQuestionResult = (questId = singleQuestion?._id) => {
         const questionResult = allQuestionsResults.find(
             (quest) => quest.questionId === questId
         );
         return questionResult;
     };
-    const questionNavRef = useRef();
-    const value = useContext(dataContext);
 
     //will give us all the time spent on each questions added up together(each)
     const getAllTimeSpent = () => {
@@ -97,26 +167,28 @@ const PlayQuizPage = () => {
     const getPoints = () => {
         //gets points from only questions that are answered correctly
         const questionPoints =
-            allQuestionsResults.filter((res) => {
+            allQuestionsResults?.filter((res) => {
                 return res.correct === true;
             }).length * 10;
 
         //gets points or timeRemaining from only questions that are answered correctly
         let pointsForEach = 0;
-        allQuestionsResults.forEach((res) => {
+        allQuestionsResults?.forEach((res) => {
             if (res.correct) {
                 pointsForEach += res.timeRemaining;
             }
         });
 
         //applying points base on applyTime value
-        const timePoints = data.quiz.applyTime === "entire" ? 0 : pointsForEach;
+        const timePoints =
+            data?.quiz.applyTime === "entire" ? 0 : pointsForEach;
         const points = questionPoints + timePoints;
 
         return points;
     };
 
     const submitQuiz = async (navi) => {
+        //doing this for only solo quiz
         if (!startQuiz) {
             return;
         }
@@ -136,8 +208,9 @@ const PlayQuizPage = () => {
                 data.quiz.applyTime === "entire"
                     ? data?.quiz.timeLimit - timeSpent.current
                     : getAllTimeSpent().allTimeSpent,
-            quizType: "solo",
+            quizType: hostId ? "live" : "solo",
             points: getPoints(),
+            hostInfos: hostId,
         };
 
         const promise = createResultFunc(result);
@@ -155,10 +228,10 @@ const PlayQuizPage = () => {
         }
 
         if (navi) {
+            history.replaceState(null, "", "/");
             navigate("/result/" + res.id);
         }
-
-        resultId.current = res.id;
+        setResultId(res.id);
     };
 
     const selectAnswer = (id) => {
@@ -285,7 +358,7 @@ const PlayQuizPage = () => {
 
     useEffect(() => {
         const preventReload = (event) => {
-            if (allQuestionsResults.length && startQuiz) {
+            if (allQuestionsResults.length && startQuiz && !hostId) {
                 event.preventDefault();
                 event.returnValue = "";
             }
@@ -297,14 +370,46 @@ const PlayQuizPage = () => {
         };
     });
 
-    console.log("play quiz is re-rendering");
+    useEffect(() => {
+        if (!hostId || !data || !startQuiz) {
+            return;
+        }
+        socket.emit("update-points", {
+            points: getPoints(),
+            id: hostId,
+            userId,
+        });
 
-    if (!data && isLoading) {
-        return <PageIsLoading message={"Loading..."} />;
-    }
+        sessionStorage.setItem(hostId, JSON.stringify(allQuestionsResults));
+        socket.on("get-host-info-res", (info) => {
+            if (!info.err) {
+                return;
+            }
+            quizEndedRef.current = true;
+            setTimeUp(true);
+            socket.disconnect();
 
-    if (error) {
-        toast.error(`  ${error.err}`, {
+            return;
+        });
+    }, [socket, allQuestionsResults, startQuiz]);
+
+    useEffect(() => {
+        if (timeUp && !submittedRef.current) {
+            if (quizEndedRef.current) {
+                // toast.error("Quiz was ended");
+            }
+            submitQuiz();
+            submittedRef.current = true;
+            return;
+        }
+    }, [timeUp]);
+
+    if (
+        error ||
+        (!data && !isLoading) ||
+        (!isLoading && !data?.quiz.questionsId)
+    ) {
+        toast.error(`  ${error?.err || "Error opening quiz"}`, {
             icon: (
                 <span
                     className="bi-ban absolute w-5 h-5 bg-yellow-500 
@@ -313,13 +418,8 @@ const PlayQuizPage = () => {
                 ></span>
             ),
         });
-
-        if (!data.quiz.questionsId) {
-            toast.error("No questions");
-            //return navigate("/");
-        }
-
-        if (error.err === "404 quiz not found") {
+        //=== "404 quiz not found"
+        if (error?.err) {
             history.replaceState(null, "", "/");
             return navigate("/404");
         } else {
@@ -327,9 +427,13 @@ const PlayQuizPage = () => {
         }
     }
 
+    if ((!data && isLoading) || (!allQuestions.length && !isLoading)) {
+        return <PageIsLoading message={"Loading..."} />;
+    }
+
     return (
         <div className="flex flex-col gap-3 pb-2 bg-secMainBg">
-            {showStartCount && (
+            {showStartCount && !allQuestionsResults.length && (
                 <StartQuizCount
                     setStartQuiz={setStartQuiz}
                     startQuiz={startQuiz}
@@ -352,6 +456,8 @@ const PlayQuizPage = () => {
                 singleQuestion={singleQuestion}
                 selectAnswer={selectAnswer}
                 allQuestionsResults={allQuestionsResults}
+                setTimedUpQuests={setTimedUpQuests}
+                hostId={hostId}
             />
             <NavLeftRight
                 allQuestions={allQuestions}
@@ -363,6 +469,8 @@ const PlayQuizPage = () => {
                 allQuestionsResults={allQuestionsResults}
                 applyTime={data?.quiz.applyTime}
                 findQuestionResult={findQuestionResult}
+                timedUpQuests={timedUpQuests}
+                singleQuestion={singleQuestion}
             />
             <Question
                 singleQuestion={singleQuestion}
@@ -380,9 +488,16 @@ const PlayQuizPage = () => {
                 text="Are you sure you want to submit this quiz"
                 setShowConfirm={setShowConfirm}
                 showConfirm={showConfirm}
-                executeAction={() => submitQuiz(true)}
+                executeAction={() => {
+                    submitQuiz(true);
+                }}
             />
-            <TimeUp timeUp={timeUp} resultId={resultId} navigate={navigate} />
+            <TimeUp
+                timeUp={timeUp}
+                resultId={resultId}
+                navigate={navigate}
+                quizEndedRef={quizEndedRef}
+            />
         </div>
     );
 };

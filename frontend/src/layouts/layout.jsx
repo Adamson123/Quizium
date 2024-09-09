@@ -16,6 +16,7 @@ const Layout = ({ children, text, showHeader = true }) => {
     );
 
     const [search, setSearch] = useState("");
+    const [searchFocus, setSearchFocus] = useState(false);
     const value = {
         data,
         refetch,
@@ -25,14 +26,23 @@ const Layout = ({ children, text, showHeader = true }) => {
         name,
         isLoading,
         search,
+        setSearch,
         userId: _id,
+        setSearchFocus,
+        searchFocus,
     };
 
     return (
         <div className="flex flex-col">
             <dataContext.Provider value={value}>
                 {showHeader && (
-                    <Header text={text} search={search} setSearch={setSearch} />
+                    <Header
+                        text={text}
+                        search={search}
+                        setSearch={setSearch}
+                        searchFocus={searchFocus}
+                        setSearchFocus={setSearchFocus}
+                    />
                 )}
                 {children}
             </dataContext.Provider>

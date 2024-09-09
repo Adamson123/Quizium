@@ -1,0 +1,19 @@
+ console.log({
+            lastDivClient: lastDivClient?.x,
+            scrollWidth: scrollWidth,
+            scrollLeft: rowRef.current?.scrollLeft,
+            clientWidth: rowRef.current?.clientWidth,
+            maxScrollVal,
+        });
+
+
+ // ? quizCover.map((quiz, index) => {
+                    //       return (
+                    //           <QuizCard
+                    //               key={index}
+                    //               info={quiz}
+                    //               index={index}
+                    //               ref={distributeRef(index)}
+                    //           />
+                    //       );
+                    //   })

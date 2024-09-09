@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./css/output.css";
 import "./css/global.css";
-import "./assets/boostrap-icons/bootstrap-icons.css";
+import "./assets/boostrap-icons/bootstrap-icons.min.css";
 import { BrowserRouter as Router } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 //import "react-toastify/ReactToastify.css"

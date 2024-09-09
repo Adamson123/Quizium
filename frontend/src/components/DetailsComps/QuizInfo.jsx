@@ -9,6 +9,8 @@ import { addToFavorites } from "../../api/UserApi";
 import Share from "../Share";
 import { useNavigate, useParams } from "react-router";
 import { createHost } from "../../api/HostApi";
+import Loading from "../ui/Loading";
+import HoverForInfo from "../HoverForInfo";
 const QuizInfo = ({
     quizInfo,
     isLoading,
@@ -26,12 +28,10 @@ const QuizInfo = ({
 
     const inFavorites = (id) => {
         console.log(quizInfo.viewerFavorites, id);
-
         return quizInfo.viewerFavorites?.includes(id);
     };
 
     const [showShare, setShowShare] = useState({ open: false, url: "" });
-
     const addToFavorite = async (id, value) => {
         if (isUpdating) {
             return;
@@ -69,9 +69,30 @@ const QuizInfo = ({
         if (isHosting) {
             return;
         }
-        const res = await createHostFunc({ id });
+        const res = await createHostFunc({
+            id,
+            questionsLength: quizInfo.questLength,
+            applyTime: quizInfo.applyTime,
+            title: quizInfo.title,
+        });
         console.log(res);
         navigate("/host-live/" + res.id);
+    };
+    const getQuizType = () => {
+        const type =
+            quizInfo?.applyTime === "entire"
+                ? "Exam-Style Scoring"
+                : "Speed-Based Scoring";
+
+        const description =
+            quizInfo?.applyTime === "entire"
+                ? `Focus on accuracy with a single time limit for the whole quiz.
+         No extra points for speed, so take your time and get it right.`
+                : `Answer quickly to score more, Each question has a timer,
+         and faster responses mean higher points. 
+         Accuracy still matters, so think fast.`;
+
+        return { type, description };
     };
     return (
         <div
@@ -99,23 +120,28 @@ const QuizInfo = ({
             <div className="px-3 flex flex-col items-center gap-3">
                 {/* Title */}
                 <div className="flex w-full relative justify-center">
-                    <h1 className="isidoraBold text-3xl max-w-[70%] md:max-w-[75%] text-center break-words">
+                    <h1
+                        className="isidoraBold text-3xl max-w-[70%]
+                     md:max-w-[75%] text-center break-words"
+                    >
                         {quizInfo?.title}
                     </h1>
                     {/* share , add to favorites */}
-                    <span
-                        onClick={(event) => {
-                            event.stopPropagation();
-                            setOpenQuizMenu(!openQuizMenu);
-                        }}
-                        style={{
-                            transition: "background 0.4s ease-in-out",
-                        }}
-                        className="py-2 px-3 hover:bg-[rgba(0,0,0,0.3)] 
+                    {!isLoading && (
+                        <span
+                            onClick={(event) => {
+                                event.stopPropagation();
+                                setOpenQuizMenu(!openQuizMenu);
+                            }}
+                            style={{
+                                transition: "background 0.4s ease-in-out",
+                            }}
+                            className="py-2 px-3 hover:bg-[rgba(0,0,0,0.3)] 
                  rounded-full cursor-pointer text-right absolute right-0"
-                    >
-                        <span className="bi-three-dots"></span>
-                    </span>
+                        >
+                            <span className="bi-three-dots"></span>
+                        </span>
+                    )}
                     {/* quiz three dots menu */}
                     {openQuizMenu && (
                         <div
@@ -168,15 +194,15 @@ const QuizInfo = ({
                     )}
                 </div>
 
-                {quizInfo.description && (
-                    <p className="text-[13px] text-center">
+                {quizInfo?.description && (
+                    <p className="text-[12px] text-center">
                         {quizInfo.description}
                     </p>
                 )}
 
                 <div
                     className="isidoraSemiBold text-[13px] text-grayFive 
-        flex justify-between flex-wrap gap-2"
+        flex justify-center flex-wrap gap-2 "
                 >
                     {/* plays */}
                     <p>
@@ -195,29 +221,47 @@ const QuizInfo = ({
                     <p>
                         <span className="bi-tag"></span> {quizInfo?.category}
                     </p>
+                    <span className="bi-dot font-bold"></span>
+                    {/* Scoring */}
+                    <p className="text-[13px] flex gap-1">
+                        <span className="bi-journal-text"></span>{" "}
+                        {getQuizType()?.type}
+                        {!isLoading && (
+                            <HoverForInfo
+                                text={getQuizType()?.description}
+                                edit={"-right-3"}
+                                parentEdit={"cursor-pointer"}
+                            />
+                        )}
+                    </p>
                 </div>
 
                 {/* Play  , host live */}
                 <div className="flex gap-2">
                     <button
                         onClick={() => navigate(`/play/${id}`)}
-                        className="bg-shinyPurple px-5 py-2 pb-3 rounded 
-            insetShadow isidoraBold text-[14px] clickable"
+                        className="bg-shinyPurple w-24 h-10 rounded 
+                    insetShadow isidoraBold text-[14px] clickable"
                     >
                         Play
                     </button>
                     <button
                         onClick={() => hostLive()}
-                        className="bg-grayTwo px-5 py-2 pb-3 rounded
-                        insetShadow isidoraBold text-[14px] clickable"
+                        className="bg-grayTwo w-24 h-10 rounded
+                        insetShadow isidoraBold text-[14px] clickable flex 
+                        items-center justify-center"
                     >
-                        Host live
+                        {isHosting ? (
+                            <Loading cus={"text-[14px]"} />
+                        ) : (
+                            "Host live"
+                        )}
                     </button>
                 </div>
                 {/* created by */}
                 <div
                     className="flex items-center text-[13px]
-         isidoraSemiBold gap-2 mt-3 flex-col"
+                    isidoraSemiBold gap-2 mt-3 flex-col"
                 >
                     {/* profile image */}
                     <div className="h-[35px] w-[35px]">

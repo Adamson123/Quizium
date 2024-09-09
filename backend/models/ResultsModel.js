@@ -47,9 +47,9 @@ const ResultsSchema = new mongoose.Schema(
             required: true,
             enum: ["solo", "live"],
         },
-        hostedQuiz: {
+        hostInfos: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "live-quizzes",
+            ref: "host-infos",
         },
     },
     { timestamps: true }

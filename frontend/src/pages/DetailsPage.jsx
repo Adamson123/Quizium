@@ -42,6 +42,7 @@ const DetailsPage = () => {
                 questionsId,
                 createdBy,
                 _id,
+                applyTime,
             } = allQuizDetails.quiz;
             const { viewerFavorites } = allQuizDetails;
 
@@ -54,10 +55,11 @@ const DetailsPage = () => {
                 coverImg: coverImg?.image.data.data,
                 questLength: questionsId?.questions.length,
                 name: createdBy.name,
-                profileImg: createdBy?.profileImg.image.data.data,
+                profileImg: createdBy?.profileImg?.image.data.data,
                 //favorites: createdBy?.favorites,
                 viewerFavorites: viewerFavorites || [],
                 _id,
+                applyTime,
             };
             setQuizInfo(info);
         }

@@ -11,8 +11,6 @@ const Join = () => {
     const { mutateAsync: getHostFunc } = useMutation(getHost);
 
     const handleGetHost = async () => {
-        console.log(joinCode);
-
         if (joinCode < 1000000) {
             return toast.error("Invalid join code");
         }
@@ -28,11 +26,16 @@ const Join = () => {
         });
 
         const res = await promise;
-        navigate("/join-live/" + res.id);
+
+        // if (res.hostInfo.ended) {
+        //     return // toast.error("Live quiz has ended");
+        // }
+
+        navigate("/join-live/" + res.hostInfo._id);
     };
     return (
         <div className="flex justify-center items-center min-h-screen">
-            <Header showBtn={false} />
+            <Header showBtn={false} navigate={navigate} />
             <div
                 className="p-6 rounded bg-transparentBlack flex
          flex-col gap-2 items-center w-[300px]"
@@ -51,7 +54,7 @@ const Join = () => {
                     className="bg-shinyPurple py-3  isidoraBold rounded
                w-full insetShadow clickable"
                 >
-                    Join Room
+                    Find Room
                 </button>
             </div>
         </div>

@@ -14,6 +14,15 @@ const ResultRect = ({ result }) => {
             return "True or False";
         }
     };
+
+    const includeAns = (ans) => {
+        const answer = result.answer.find((corAns) => {
+            return (
+                corAns.trim(" ").toLowerCase() === ans.trim(" ").toLowerCase()
+            );
+        });
+        return answer;
+    };
     return (
         <div className="p-3 border border-grayOne rounded">
             <div className="flex justify-between mb-2">
@@ -23,7 +32,7 @@ const ResultRect = ({ result }) => {
                 {result.correct ? (
                     <span
                         className="px-2 py-1 text-[10px] bg-green-600 p-1
-         text-green-300 rounded border border-green-300 "
+                  text-green-300 rounded border border-green-300 "
                     >
                         <span className="bi-check mt-2"></span>{" "}
                         <span>Correct</span>
@@ -31,7 +40,7 @@ const ResultRect = ({ result }) => {
                 ) : (
                     <span
                         className="px-2 py-1 text-[10px] bg-red-600 p-1
-         text-red-300 rounded border border-red-300 "
+                        text-red-300 rounded border border-red-300 "
                     >
                         <span className="bi-x mt-2"></span>{" "}
                         <span>Incorrect</span>
@@ -42,7 +51,7 @@ const ResultRect = ({ result }) => {
             <h2 className="isidoraSemiBold mb-2">{result.question}</h2>
 
             {/* Response and answer*/}
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3 font-bold">
                 {/* Response */}
                 <div className="flex flex-col gap-2">
                     <span className="text-[12px] text-grayFive">
@@ -56,14 +65,15 @@ const ResultRect = ({ result }) => {
                                 <span
                                     className={`flex items-center gap-3
                                          ${
-                                             result.answer.includes(ans)
+                                             includeAns(ans)
                                                  ? "bg-green-500"
                                                  : "bg-red-500"
-                                         } p-2 rounded border-2`}
+                                         } p-2 rounded`}
+                                    key={index}
                                 >
                                     <span
                                         className={`  ${
-                                            result.answer.includes(ans)
+                                            includeAns(ans)
                                                 ? "bi-check"
                                                 : "bi-x"
                                         } text-[15px] mt-[2px] font-bold`}
@@ -88,6 +98,7 @@ const ResultRect = ({ result }) => {
                         {result.answer.map((ans, index) => {
                             return (
                                 <span
+                                    key={index}
                                     className="flex items-center 
                                 bg-green-500 py-[10px] p-2 rounded"
                                 >

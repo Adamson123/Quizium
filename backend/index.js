@@ -16,7 +16,15 @@ import { notFoundMiddleWare } from "./middlewares/notFoundMiddleware.js";
 import { getInfoAtStart, tableLog } from "./utils/tableLog.js";
 import { jwtCheckAndVerify } from "./middlewares/jwtCheckAndVerify.js";
 import { Server } from "socket.io";
-import { addUser, getHostInfo } from "./controllers/host-controller.js";
+import {
+    joinUser,
+    getHostInfo,
+    endLive,
+    startQuiz,
+    leaveRoom,
+    updatePoints,
+    quizEnded,
+} from "./controllers/host-controller.js";
 import { isObjectIdOrHexString } from "mongoose";
 import { HostInfoModel } from "./models/HostInfoModel.js";
 const app = express();
@@ -62,10 +70,20 @@ app.use(notFoundMiddleWare);
 app.use(errorMiddleware);
 
 io = io.of("/host-live");
+
 io.on("connection", async (socket) => {
     console.log("user connected with id:" + socket.id);
+    socket.on("testing", (msg) => {
+        console.log("Someone is testing", msg);
+        io.to(socket.id).emit("testing-res", "Responding");
+    });
     getHostInfo(socket, io);
-    addUser(socket, io);
+    joinUser(socket, io);
+    startQuiz(socket, io);
+    leaveRoom(socket, io);
+    updatePoints(socket, io);
+    endLive(socket, io);
+    quizEnded(socket, io);
     socket.on("disconnect", () => {
         console.log("user with id:" + socket.id + " has been disconnected");
     });

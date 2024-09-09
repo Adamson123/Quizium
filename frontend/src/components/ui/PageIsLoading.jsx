@@ -1,4 +1,4 @@
-const PageIsLoading = (props) => {
+const PageIsLoading = ({ message }) => {
     return (
         <div
             className="fixed text-2xl top-0 bottom-0
@@ -8,7 +8,7 @@ items-center justify-center text-shinyPurple"
             <span className="loading loading-dots loading-lg"></span>
 
             <h2 className="text-shinyPurple text-[15px] isidoraBold">
-                {props.message}
+                {message}
             </h2>
         </div>
     );

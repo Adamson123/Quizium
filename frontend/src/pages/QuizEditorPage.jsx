@@ -11,13 +11,13 @@ import QuizSettings from "../components/QuizSettings";
 
 import PageIsLoading from "../components/ui/PageIsLoading";
 import Header from "../components/QuizEditorComps/Header";
-import QuizzesMenu from "../components/QuizEditorComps/QuestionsMenu";
+import QuestionsMenu from "../components/QuizEditorComps/QuestionsMenu";
 import RightSection from "../components/QuizEditorComps/RightSection";
 import Question from "../components/QuizEditorComps/Question";
 import toast from "react-hot-toast";
 import QuizValidation from "../components/QuizEditorComps/QuizValidation";
 import SaveOptions from "../components/QuizEditorComps/SaveOptions";
-//import analizeQuiz from "../components/QuizEditorComps/analizeQuiz";
+//import analyzeQuiz from "../components/QuizEditorComps/analyzeQuiz";
 
 const QuizEditorPage = () => {
     const { id } = useParams();
@@ -99,7 +99,7 @@ const QuizEditorPage = () => {
         }
     }, [allQuestions, currentQuestion]);
 
-    const handleCreateQuiz = async (quiz, image, duplicate) => {
+    const handleCreateQuestion = async (quiz, image, duplicate) => {
         if (allQuestions.length >= 25) {
             return toast.error(
                 "You have reached your limit, Questions can't be added anymore"
@@ -110,7 +110,6 @@ const QuizEditorPage = () => {
             ? quiz
             : {
                   question: "",
-                  answer: "",
                   explanation: "",
                   options: [
                       {
@@ -164,7 +163,7 @@ const QuizEditorPage = () => {
         setCurrentQuestion(res.quiz.questionsId.questions.length - 1);
     };
 
-    const handleUpdateQuiz = async () => {
+    const handleUpdateQuestion = async () => {
         if (
             (allQuestions_2 !== allQuestions || imagePicked) &&
             !updatingQuest
@@ -197,7 +196,7 @@ const QuizEditorPage = () => {
         }
     };
 
-    const handleDeleteQuiz = async (questId) => {
+    const handleDeleteQuestion = async (questId) => {
         if (deletingQuest) {
             return;
         }
@@ -243,7 +242,7 @@ const QuizEditorPage = () => {
 
     useEffect(() => {
         if (imagePicked) {
-            handleUpdateQuiz();
+            handleUpdateQuestion();
         }
     }, [imagePicked]);
 
@@ -301,7 +300,7 @@ const QuizEditorPage = () => {
             <Header
                 setShow={setShowQuizPanel}
                 setShowRightSect={setShowRightSect}
-                handleUpdateQuiz={handleUpdateQuiz}
+                handleUpdateQuestion={handleUpdateQuestion}
                 allQuestions={allQuestions}
                 allQuestions_2={allQuestions_2}
                 updatingQuest={updatingQuest}
@@ -336,7 +335,7 @@ const QuizEditorPage = () => {
                                 allQuestions={allQuestions}
                                 allQuestions_2={allQuestions_2}
                                 currentQuestion={currentQuestion}
-                                handleDeleteQuiz={handleDeleteQuiz}
+                                handleDeleteQuestion={handleDeleteQuestion}
                                 imagePicked={imagePicked}
                                 setAllQuestions={setAllQuestions}
                                 setPickedImage={setPickedImage}
@@ -351,21 +350,21 @@ const QuizEditorPage = () => {
                             setAllQuestions={setAllQuestions}
                             allQuestions={allQuestions}
                             currentQuestion={currentQuestion}
-                            handleUpdateQuiz={handleUpdateQuiz}
+                            handleUpdateQuestion={handleUpdateQuestion}
                             showRightSect={showRightSect}
                             setShowRightSect={setShowRightSect}
                             allQuestions_2={allQuestions_2}
-                            handleDeleteQuiz={handleDeleteQuiz}
-                            handleCreateQuiz={handleCreateQuiz}
+                            handleDeleteQuestion={handleDeleteQuestion}
+                            handleCreateQuestion={handleCreateQuestion}
                         />
                     </>
                 )}
                 {/* quizzes menu */}
-                <QuizzesMenu
+                <QuestionsMenu
                     allQuestions={allQuestions}
                     imagePicked={imagePicked}
-                    handleCreateQuiz={handleCreateQuiz}
-                    handleUpdateQuiz={handleUpdateQuiz}
+                    handleCreateQuestion={handleCreateQuestion}
+                    handleUpdateQuestion={handleUpdateQuestion}
                     setCurrentQuestion={setCurrentQuestion}
                     currentQuestion={currentQuestion}
                     setAllQuestions={setAllQuestions}

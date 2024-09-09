@@ -1,11 +1,11 @@
 import Warning from "../ui/Warning";
 import { useEffect, useRef } from "react";
 
-const QuizzesMenu = ({
+const QuestionsMenu = ({
     allQuestions,
     imagePicked,
-    handleCreateQuiz,
-    handleUpdateQuiz,
+    handleCreateQuestion,
+    handleUpdateQuestion,
     setCurrentQuestion,
     currentQuestion,
     singleQuestion,
@@ -70,7 +70,7 @@ const QuizzesMenu = ({
                         <div
                             onClick={() => {
                                 if (!imagePicked) {
-                                    handleUpdateQuiz();
+                                    handleUpdateQuestion();
                                     setCurrentQuestion(i);
                                 }
                             }}
@@ -100,8 +100,8 @@ const QuizzesMenu = ({
        insetShadow text-2xl rounded flex justify-center items-center
         font-bold  lg:w-28 clickable"
                 onClick={() => {
-                    handleUpdateQuiz();
-                    handleCreateQuiz();
+                    handleUpdateQuestion();
+                    handleCreateQuestion();
                 }}
             >
                 <span className="text-[13px] hidden lg:block isidoraBold">
@@ -114,4 +114,4 @@ const QuizzesMenu = ({
     );
 };
 
-export default QuizzesMenu;
+export default QuestionsMenu;

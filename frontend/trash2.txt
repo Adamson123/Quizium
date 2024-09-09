@@ -1,0 +1,213 @@
+ return (
+        <div
+            className="min-h-screen overflow-hidden
+         md:max-h-screen flex justify-center p-3 pt-[61px]"
+        >
+            <Header socket={socket} id={id} navigate={navigate} />
+            <div className="w-full flex flex-col gap-3 max-w-[550px]">
+                <JoinCode hostInfo={hostInfo} socket={socket} />
+                {!hostInfo?.started ? (
+                    <Participants hostInfo={hostInfo} />
+                ) : (
+                    /* Leaderboard and participant*/
+                    <div className="flex flex-col bg-transparentBlack rounded">
+                        {/* Leaderboard and participant nav */}
+                        <div className="flex justify-between h-10 text-[14px] isidoraBold">
+                            <span
+                                onClick={() => setTableToShow("leaderboard")}
+                                className={`flex items-center justify-center flex-1 h-full 
+                         border-shinyPurple cursor-pointer ${
+                             tableToShow === "leaderboard" &&
+                             "border-b-2 text-shinyPurple"
+                         }`}
+                            >
+                                Leaderboard
+                            </span>
+
+                            <span
+                                onClick={() => setTableToShow("participants")}
+                                className={`flex items-center justify-center flex-1 h-full 
+                             border-shinyPurple cursor-pointer ${
+                                 tableToShow === "participants" &&
+                                 "border-b-2 text-shinyPurple"
+                             }`}
+                            >
+                                Participants
+                            </span>
+                        </div>
+                        {tableToShow === "leaderboard" ? (
+                            <Leaderboard
+                                participants={hostInfo?.participants}
+                                style={{ background: "transparent" }}
+                            />
+                        ) : (
+                            <Participants
+                                hostInfo={hostInfo}
+                                showHead={false}
+                                style={{ background: "transparent" }}
+                            />
+                        )}
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+
+
+
+
+    /////////////////////
+
+    import { useEffect, useMemo, useRef, useState } from "react";
+import { getQiuzzes } from "../../api/QuizApi";
+import QuizCard from "./ui/QuizCard";
+import Skeleton from "./ui/Skeleton";
+import { useQuery } from "react-query";
+const QuizzesRow = ({ category }) => {
+    const { data, isLoading, error, isSuccess, refetch } = useQuery(
+        ["quiz-cover" + category],
+        () => getQiuzzes({ skip: 0, limit: 6, category })
+    );
+    const quizCover = useMemo(() => {
+        return data;
+    }, [data]);
+
+    const rowRef = useRef();
+    const [scrollValue, setScrollValue] = useState(0);
+    const [clientValue, setClientValue] = useState(0);
+
+    const renderRow = () => {
+        return isLoading || quizCover?.length;
+    };
+
+    useEffect(() => {
+        //  setScrollValue(rowRef.current?.offsetWidth);
+
+        const updateScrollValue = () => {
+            if (rowRef.current?.clientWidth >= rowRef.current?.scrollWidth) {
+                setScrollValue(0);
+                setClientValue(rowRef.current?.clientWidth);
+                if (rowRef.current) {
+                    rowRef.current.scrollLeft = 0;
+                }
+                console.log("first right");
+            }
+            if (
+                clientValue + rowRef.current?.clientWidth <
+                rowRef.current?.scrollWidth
+            ) {
+                if (rowRef.current) {
+                    rowRef.current.scrollLeft = rowRef.current?.scrollWidth;
+                }
+            }
+            // } else {
+            //     setClientValue(rowRef.current?.clientWidth);
+            //     console.log("second right");
+            // }
+        };
+
+        // updateScrollValue();
+
+        window.addEventListener("resize", updateScrollValue);
+
+        return () => {
+            window.removeEventListener("resize", updateScrollValue);
+        };
+    }, []);
+
+    //console.log(scrollValue, window.innerWidth, "width");
+
+    return renderRow() ? (
+        <div className="relative">
+            <h3 className="text-[20px] mb-3 font-semibold isidoraBold">
+                {category === "Science+Technology"
+                    ? category.replace("+", " & ")
+                    : category}
+            </h3>
+            {/* random question roll*/}
+            <div
+                ref={rowRef}
+                className="hideScroll scrollbar-thumb-red-700 quizShelf flex 
+                gap-4 overflow-x-auto
+             overflow-y-hidden py-2  scroll-smooth"
+            >
+                <div
+                    className="absolute w-full bg-re-400 flex
+                 justify-between top-[50%]
+                  translate-y-[-50%] z-10 text-grayFive"
+                >
+                    {
+                        <button
+                            onClick={() => {
+                                rowRef.current.scrollLeft -=
+                                    rowRef.current.clientWidth;
+
+                                setScrollValue(
+                                    rowRef.current.scrollLeft -
+                                        rowRef.current.clientWidth
+                                );
+                                setClientValue(
+                                    rowRef.current.scrollLeft -
+                                        rowRef.current.clientWidth
+                                );
+                            }}
+                            className={`w-[50px] h-[50px] rounded-full 
+                            border-2 border-grayFive bg-mainBg ${
+                                scrollValue > 0 ? "opacity-1" : "opacity-0"
+                            }`}
+                        >
+                            <span className="bi-arrow-left font-extrabold text-[18px]"></span>
+                        </button>
+                    }
+                    <button
+                        onClick={() => {
+                            rowRef.current.scrollLeft +=
+                                rowRef.current.clientWidth;
+
+                            setScrollValue(
+                                rowRef.current.scrollLeft +
+                                    rowRef.current.clientWidth
+                            );
+
+                            setClientValue(
+                                rowRef.current.scrollLeft +
+                                    rowRef.current.clientWidth
+                            );
+                        }}
+                        className={`w-[50px] h-[50px] rounded-full border-2
+                            bg-mainBg border-grayFive ${
+                                clientValue + rowRef.current?.clientWidth <
+                                rowRef.current?.scrollWidth
+                                    ? "opacity-1"
+                                    : "opacity-0"
+                            }`}
+                    >
+                        <span className="bi-arrow-right font-extrabold text-[18px]"></span>
+                    </button>
+                </div>
+                {/* Quiz */}
+
+                {quizCover
+                    ? quizCover.map((q, index) => {
+                          return (
+                              <QuizCard key={index} info={q} index={index} />
+                          );
+                      })
+                    : isLoading && (
+                          <>
+                              <Skeleton />
+                              <Skeleton />
+                              <Skeleton />
+                              <Skeleton />
+                              <Skeleton />
+                              <Skeleton />
+                          </>
+                      )}
+            </div>
+        </div>
+    ) : (
+        ""
+    );
+};
+
+export default QuizzesRow;

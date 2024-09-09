@@ -17,18 +17,37 @@ const HostInfoSchema = new mongoose.Schema(
                     type: mongoose.Schema.Types.ObjectId,
                     ref: "users",
                 },
-                name: String,
-                image: String,
+                nickname: String,
+                avatar: String,
+                points: {
+                    type: Number,
+                    default: 0,
+                },
             },
         ],
         started: {
             type: Boolean,
             default: false,
         },
-        played: {
+        ended: {
             type: Boolean,
             default: false,
         },
+        questionsLength: Number,
+        applyTime: String,
+        participantsResults: [
+            {
+                userId: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: "users",
+                },
+                result: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: "results",
+                },
+            },
+        ],
+        title: String,
     },
     { timestamps: true }
 );

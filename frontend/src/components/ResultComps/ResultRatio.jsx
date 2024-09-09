@@ -1,14 +1,16 @@
+import { useContext } from "react";
 import { useNavigate } from "react-router";
-
+import { dataContext } from "../../layouts/Layout";
 const ResultRatio = ({ data, getAllCorAndInCor }) => {
     const navigate = useNavigate();
+    const value = useContext(dataContext);
 
     const getPercentage = () => {
         const questionsLength = data?.questionsLength;
         const correct = getAllCorAndInCor(true);
         // const inCorrect = getAllCorAndInCor(false);  🤷‍♂️
-        const percentage = (correct * 100) / questionsLength; // or 100 - (inCorrect / questionsLength) * 100)
-        return Math.round(percentage) || 0;
+        const percentage = Math.round((correct * 100) / questionsLength); // or 100 - (inCorrect / questionsLength) * 100)
+        return percentage && percentage !== Infinity ? percentage : 0;
     };
 
     const generateReview = () => {
@@ -75,8 +77,49 @@ const ResultRatio = ({ data, getAllCorAndInCor }) => {
         return pickReview;
     };
 
+    const getPosition = () => {
+        const colors = ["#ffd900", "#c0c0c0", "#cd7f32"];
+
+        const userPosition = data?.hostInfos?.participants
+            .map((par, index) => {
+                return (
+                    par.userId === value?.userId && {
+                        position: index + 1,
+                        color: index < 3 ? colors[index] : "#9d28a1",
+                    }
+                );
+            })
+            .filter((val) => {
+                return val;
+            });
+
+        console.log(userPosition);
+
+        return userPosition && userPosition[0];
+    };
+
+    console.log(getPosition());
+
     return (
-        <div className="p-2">
+        <div className="p-2 relative">
+            {getPosition() && (
+                <span
+                    style={{
+                        color: getPosition().color,
+                    }}
+                    className="bi-award-fill absolute text-6xl
+              right-[-8px] top-[-8px] dropShadow"
+                >
+                    <span
+                        className="absolute w-[60px] flex 
+                    justify-center items-center top-3"
+                    >
+                        <span className="text-[27px] isidoraBold text-white">
+                            {getPosition().position}
+                        </span>
+                    </span>
+                </span>
+            )}
             {/* Radial and percentage */}
             <div
                 style={{

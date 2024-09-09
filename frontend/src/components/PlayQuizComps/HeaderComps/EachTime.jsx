@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 const EachTime = ({
@@ -9,6 +9,8 @@ const EachTime = ({
     allQuestionsResults,
     timeSpent,
     getTwentyPercentage,
+    hostId,
+    setTimedUpQuests,
 }) => {
     const [countTime, setCountTime] = useState(100);
     const [runInterval, setRunInterVal] = useState(true);
@@ -27,16 +29,18 @@ const EachTime = ({
         //will return 20 if timeLimit is 5
         const substractBy = Math.round(100 / singleQuestion.timeLimit);
         const intervalId = setInterval(() => {
-            if (countTime > 0) {
+            if (countTime - 2 > 0) {
                 const countingTime = countTime - substractBy;
                 setCountTime(countingTime);
+            } else {
+                toast.error("Time bonus gone! ☹");
+                setRunInterVal(false);
             }
 
             if (countTime <= 0) {
                 //we will automatically submit question answer(empty) here if time is up
                 //selectAnswer([]);
-                toast.error("Time up!");
-                setRunInterVal(false);
+                //  setTimedUpQuests((a) => (a = [...a, singleQuestion._id]));
             }
         }, 1000);
 

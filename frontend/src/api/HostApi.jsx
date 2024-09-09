@@ -35,6 +35,42 @@ export const getHost = async (info) => {
     }
 };
 
-export const socket = io("http://localhost:3002/host-live", {
-    autoConnect: false,
-});
+export const getUserHosts = async () => {
+    try {
+        const res = await fetch(`/api/host/user-hosts`, {
+            credentials: "include",
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.err);
+        return data;
+    } catch (error) {
+        throw { err: error.message };
+    }
+};
+
+export const deleteHost = async (id) => {
+    try {
+        const res = await fetch(
+            `/api/host/${id}`,
+            requestOptions({}, "", "DELETE")
+        );
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.err);
+
+        return data;
+    } catch (error) {
+        console.log("error from  update quiz settings ", error);
+        throw { err: error.message };
+    }
+};
+
+//http://localhost:3002
+export const socket = io(
+    window.location.origin.substring(
+        0,
+        window.location.origin.lastIndexOf(":")
+    ) + ":3002/host-live",
+    {
+        autoConnect: false,
+    }
+);

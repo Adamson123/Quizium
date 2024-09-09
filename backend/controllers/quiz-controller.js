@@ -210,8 +210,24 @@ export const deleteQuiz = async (req, res) => {
 
 export const getMultipleQuizzes = async (req, res) => {
     const { skip, limit } = req.query;
-    console.log("get multiple quiz:", "skip", skip, "limit", limit);
-    const quizzes = await QuizInfosModel.find({ draft: false })
+
+    const queriesObj = { draft: false };
+    const queries = Object.keys(req.query);
+    queries.forEach((query) => {
+        const queryVal =
+            req.query[query] === "Science Technology"
+                ? "Science & Technology"
+                : req.query[query];
+        if (queryVal) {
+            queriesObj[query] = queryVal;
+        }
+    });
+
+    delete queriesObj.skip;
+    delete queriesObj.limit;
+
+    console.log("get multiple quiz:", "skip", skip, "limit", limit, queries);
+    const quizzes = await QuizInfosModel.find(queriesObj)
         .skip(Number(skip))
         .limit(Number(limit))
         .populate("coverImg")

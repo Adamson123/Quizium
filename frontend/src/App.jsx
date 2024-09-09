@@ -14,12 +14,15 @@ import HostLivePage from "./pages/HostLivePage";
 import JoinLivePage from "./pages/JoinLivePage";
 import Join from "./components/JoinLiveComps/Join";
 import Room from "./components/JoinLiveComps/Room";
+import PlayLiveQuizPage from "./pages/PlayLiveQuizPage";
+import ReportsPage from "./pages/ReportsPage";
+import HostReportPage from "./pages/HostReportPage";
 
 function App() {
     return (
         <Routes>
             <Route element={<ProtectedRoutes />}>
-                {/* Admin route */}
+                {/* Explore route */}
                 <Route
                     path="/"
                     element={
@@ -29,7 +32,7 @@ function App() {
                     }
                 />
 
-                {/* settings route */}
+                {/* Profile settings route */}
                 <Route
                     path="/settings"
                     element={
@@ -39,10 +42,7 @@ function App() {
                     }
                 />
 
-                <Route path="/join-live" element={<JoinLivePage />}>
-                    <Route index element={<Join />} />
-                    <Route path=":id" element={<Room />} />
-                </Route>
+                {/* Library route where crafted and favorite quizzes will all be accessed */}
                 <Route
                     path="/library"
                     element={
@@ -51,8 +51,13 @@ function App() {
                         </Layout>
                     }
                 />
+                {/* This is where quiz will be crafted */}
                 <Route path="/quiz-editor/:id" element={<QuizEditorPage />} />
+                {/* Solo quiz route */}
                 <Route path="/play/:id" element={<PlayQuizPage />} />
+                {/* live quiz route */}
+                <Route path="/play-live/:id" element={<PlayLiveQuizPage />} />
+                {/* Quiz details route */}
                 <Route
                     path="/details/:id"
                     element={
@@ -61,7 +66,36 @@ function App() {
                         </Layout>
                     }
                 />
+
+                {/* Join live route */}
+                <Route path="/join-live" element={<JoinLivePage />}>
+                    {/* Where code will be inputed */}
+                    <Route index element={<Join />} />
+                    {/* where quiz live profile will be setup, and where quiz Participants
+                     will be displayed */}
+                    <Route path=":id" element={<Room />} />
+                </Route>
+                {/* Hosted live quiz route */}
                 <Route path="/host-live/:id" element={<HostLivePage />} />
+
+                {/* Reports route */}
+                <Route
+                    path="/reports"
+                    element={
+                        <Layout text="Reports">
+                            <ReportsPage />
+                        </Layout>
+                    }
+                />
+                <Route
+                    path="/host-report/:id"
+                    element={
+                        <Layout>
+                            <HostReportPage />
+                        </Layout>
+                    }
+                />
+                {/* Quiz result route */}
                 <Route
                     path="/result/:id"
                     element={
@@ -81,6 +115,7 @@ function App() {
                     </div>
                 }
             />
+
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/login" element={<LoginPage />} />
 

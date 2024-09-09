@@ -4,7 +4,6 @@ import LoadingQuizzes from "../components/LibrayComps/LoadingQuizzes";
 import { useContext, useEffect, useState } from "react";
 import { dataContext } from "../layouts/Layout";
 import QuizRect from "../components/LibrayComps/QuizRect";
-import Loading from "../components/ui/Loading";
 import Share from "../components/Share";
 import box from "../assets/svg/empty-box2.svg";
 import searchSvg from "../assets/svg/search.svg";
@@ -233,7 +232,7 @@ const LibraryPage = () => {
                     >
                         <img
                             src={value?.search ? searchSvg : box}
-                            alt="empty box signifies no quiz was found"
+                            alt="signifies no quiz was found"
                             className="h-40 w-40"
                         />
                     </div>

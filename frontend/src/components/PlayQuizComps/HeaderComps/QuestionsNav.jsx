@@ -23,8 +23,8 @@ const QuestionsNav = ({
                         rounded-full isidoraBold flex items-center justify-center ${
                             currentQuestion === index && "border-2 border-white"
                         } ${
-                            findQuestionResult(quest._id) &&
-                            (findQuestionResult(quest._id).correct
+                            findQuestionResult(quest?._id) &&
+                            (findQuestionResult(quest?._id).correct
                                 ? "bg-green-400"
                                 : "bg-red-500")
                         }`}

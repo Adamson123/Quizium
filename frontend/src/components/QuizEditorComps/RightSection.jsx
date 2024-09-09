@@ -9,9 +9,9 @@ const RightSection = ({
     currentQuestion,
     showRightSect,
     setShowRightSect,
-    handleDeleteQuiz,
-    handleCreateQuiz,
-    handleUpdateQuiz,
+    handleDeleteQuestion,
+    handleCreateQuestion,
+    handleUpdateQuestion,
 }) => {
     const [explanation, setExplantion] = useState(singleQuestion.explanation);
 
@@ -83,7 +83,7 @@ const RightSection = ({
         setAllQuestions(updatedMultipleQuestion);
     };
 
-    const duplicateQuiz = () => {
+    const duplicateQuestion = () => {
         const {
             question,
             explanation,
@@ -109,8 +109,8 @@ const RightSection = ({
             // answer: singleQuestion.questionType === "quiz" ? [] : answer,
         };
         const image = bufferToObj(singleQuestion.image?.image.data.data);
-        handleCreateQuiz(quizInfo, image, true);
-        handleUpdateQuiz();
+        handleCreateQuestion(quizInfo, image, true);
+        handleUpdateQuestion();
     };
 
     return (
@@ -188,14 +188,14 @@ const RightSection = ({
                 </div>
                 <div className="flex justify-center items-center gap-3 mt-4 px-3">
                     <button
-                        onClick={() => handleDeleteQuiz(singleQuestion._id)}
+                        onClick={() => handleDeleteQuestion(singleQuestion._id)}
                         className="bg-red-500 clickable rounded
                      insetShadow isidoraBold text-[13px] py-[9px] px-[50px]"
                     >
                         Delete
                     </button>
                     <button
-                        onClick={duplicateQuiz}
+                        onClick={duplicateQuestion}
                         className="bg-green-500 clickable rounded
                      insetShadow isidoraBold text-[13px] py-[9px] px-[50px]"
                     >

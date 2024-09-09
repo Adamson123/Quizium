@@ -1,24 +1,29 @@
 import { useNavigate, useParams } from "react-router";
-import IndQuizInfo from "../components/ResultComps/IndQuizInfo";
-import NavRight from "../components/ResultComps/NavRight";
+import OtherQuizInfo from "../components/ResultComps/OtherQuizInfo";
+import QAandLDNav from "../components/ResultComps/QAandLDNav";
 import PerformanceStats from "../components/ResultComps/PerformanceStats";
 import ResultRatio from "../components/ResultComps/ResultRatio";
 import Title from "../components/ResultComps/Title";
 import { useQuery } from "react-query";
 import { getSingleResult } from "../api/ResultApi";
 import PageIsLoading from "../components/ui/PageIsLoading";
-import QuestionsAnswered from "../components/ResultComps/QuestionsAnswered";
+import AnswerSummary from "../components/ResultComps/AnswerSummary";
+import toast from "react-hot-toast";
+import Leaderboard from "../components/HostLiveComps/Leaderboard";
+import { useState } from "react";
 
 const ResultPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const { data, isLoading, error, refetch } = useQuery(
-        ["quiz-questions", id],
+        ["quiz-result", id],
         () => getSingleResult(id),
         {
             retry: false,
         }
     );
+    //LD means leaderboard and QA means Answer Summary for some reasons
+    const [toShow, setToShow] = useState("QA");
 
     const getAllCorAndInCor = (para) => {
         const results = data?.results.filter((res) => {
@@ -27,8 +32,6 @@ const ResultPage = () => {
 
         return results?.length;
     };
-
-    console.log(data);
 
     if (!data && isLoading) {
         return <PageIsLoading message={"Loading result..."} />;
@@ -41,9 +44,12 @@ const ResultPage = () => {
 
     return (
         <div
-            className="pt-[65px]
+            className={`pt-[65px]
             md:pl-[180px] text-textColor flex flex-col w-full
-            slg:flex-row min-h-screen bg-secMainBg md:max-h-screen md:overflow-hidden"
+            slg:flex-row min-h-screen 
+            bg-secMainBg md:max-h-screen md:overflow-hidden ${
+                toShow === "LD" && "pb-5"
+            } md:pb-0`}
         >
             {/* Left */}
             <div
@@ -63,13 +69,37 @@ const ResultPage = () => {
                     getAllCorAndInCor={getAllCorAndInCor}
                 />
 
-                <IndQuizInfo data={data} />
+                <OtherQuizInfo data={data} />
             </div>
 
             {/* Right */}
             <div className="px-2 slg:w-[50%]">
-                <NavRight />
-                <QuestionsAnswered results={data?.results} />
+                <QAandLDNav
+                    toShow={toShow}
+                    setToShow={setToShow}
+                    participants={data?.hostInfos?.participants}
+                />
+                {toShow === "QA" ? (
+                    <AnswerSummary
+                        results={data?.results}
+                        edit={"p-2 pb-16 md:max-h-screen"}
+                    />
+                ) : (
+                    data?.hostInfos && (
+                        <Leaderboard
+                            showHeader={false}
+                            participants={data?.hostInfos.participants}
+                            edit={"mt-[6px]"}
+                            style={{ background: "transparent" }}
+                            rowEdit={`bg-transparentBlack w-full p-2 pr-3 pl-6 
+                             rounded shadow-[rgba(0, 0, 0, 0.4)]`}
+                            boardStyle={{
+                                padding: "0px",
+                                gap: "6px",
+                            }}
+                        />
+                    )
+                )}
             </div>
         </div>
     );

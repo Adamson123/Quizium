@@ -17,6 +17,6 @@ export const router = express.Router();
 router.post("/", upload.single("file"), createQuiz);
 router.get("/", getMultipleQuizzes);
 router.get("/single-quiz/:id", quizExist, getSingleQuizWithQuestions);
-router.get("/by-user", getUserQuizzes);
+router.get("/user-quizzes", getUserQuizzes);
 router.patch("/:id", quizExist, upload.single("file"), updateQuiz);
 router.delete("/:id", quizExist, deleteQuiz);

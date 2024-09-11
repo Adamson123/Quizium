@@ -988,6 +988,11 @@ html {
   }
 }
 
+.link {
+  cursor: pointer;
+  text-decoration-line: underline;
+}
+
 .menu {
   display: flex;
   flex-direction: column;
@@ -1413,6 +1418,16 @@ html {
 
 .join > :where(*:not(:first-child)):is(.btn) {
   margin-inline-start: calc(var(--border-btn) * -1);
+}
+
+.link:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.link:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
 }
 
 .loading {
@@ -1898,42 +1913,6 @@ html {
   }
 }
 
-.artboard.phone-1.horizontal,
-      .artboard.phone-1.artboard-horizontal {
-  width: 568px;
-  height: 320px;
-}
-
-.artboard.phone-2.horizontal,
-      .artboard.phone-2.artboard-horizontal {
-  width: 667px;
-  height: 375px;
-}
-
-.artboard.phone-3.horizontal,
-      .artboard.phone-3.artboard-horizontal {
-  width: 736px;
-  height: 414px;
-}
-
-.artboard.phone-4.horizontal,
-      .artboard.phone-4.artboard-horizontal {
-  width: 812px;
-  height: 375px;
-}
-
-.artboard.phone-5.horizontal,
-      .artboard.phone-5.artboard-horizontal {
-  width: 896px;
-  height: 414px;
-}
-
-.artboard.phone-6.horizontal,
-      .artboard.phone-6.artboard-horizontal {
-  width: 1024px;
-  height: 320px;
-}
-
 .join.join-vertical {
   flex-direction: column;
 }
@@ -1972,6 +1951,21 @@ html {
   border-start-start-radius: 0;
   border-end-end-radius: inherit;
   border-start-end-radius: inherit;
+}
+
+.select-xs {
+  height: 1.5rem;
+  min-height: 1.5rem;
+  padding-left: 0.5rem;
+  padding-right: 2rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  line-height: 1.625;
+}
+
+[dir="rtl"] .select-xs {
+  padding-left: 2rem;
+  padding-right: 0.5rem;
 }
 
 :where(.toast) {
@@ -2297,6 +2291,10 @@ html {
   top: 20%;
 }
 
+.top-\[25px\] {
+  top: 25px;
+}
+
 .top-\[26px\] {
   top: 26px;
 }
@@ -2339,6 +2337,10 @@ html {
 
 .z-\[10000000\] {
   z-index: 10000000;
+}
+
+.z-\[15\] {
+  z-index: 15;
 }
 
 .z-\[1\] {
@@ -2466,6 +2468,10 @@ html {
   margin-top: 2rem;
 }
 
+.mt-\[10px\] {
+  margin-top: 10px;
+}
+
 .mt-\[18px\] {
   margin-top: 18px;
 }
@@ -2586,10 +2592,6 @@ html {
   height: 200px;
 }
 
-.h-\[208px\] {
-  height: 208px;
-}
-
 .h-\[210px\] {
   height: 210px;
 }
@@ -2630,6 +2632,10 @@ html {
   height: 35px;
 }
 
+.h-\[370px\] {
+  height: 370px;
+}
+
 .h-\[38px\] {
   height: 38px;
 }
@@ -2664,22 +2670,6 @@ html {
 
 .h-full {
   height: 100%;
-}
-
-.h-48 {
-  height: 12rem;
-}
-
-.h-\[230px\] {
-  height: 230px;
-}
-
-.h-\[100\%\] {
-  height: 100%;
-}
-
-.h-\[1600px\] {
-  height: 1600px;
 }
 
 .max-h-\[148px\] {
@@ -2818,6 +2808,10 @@ html {
   width: 145px;
 }
 
+.w-\[160px\] {
+  width: 160px;
+}
+
 .w-\[180px\] {
   width: 180px;
 }
@@ -2940,6 +2934,10 @@ html {
 
 .max-w-\[600px\] {
   max-width: 600px;
+}
+
+.max-w-\[600x\] {
+  max-width: 600x;
 }
 
 .max-w-\[65\%\] {
@@ -3089,12 +3087,25 @@ html {
   gap: 10px;
 }
 
+.gap-\[1px\] {
+  gap: 1px;
+}
+
 .gap-\[27px\] {
   gap: 27px;
 }
 
 .gap-\[2px\] {
   gap: 2px;
+}
+
+.gap-x-5 {
+  -moz-column-gap: 1.25rem;
+       column-gap: 1.25rem;
+}
+
+.gap-y-2 {
+  row-gap: 0.5rem;
 }
 
 .overflow-auto {
@@ -3560,11 +3571,6 @@ html {
   padding-right: 2px;
 }
 
-.px-\[35px\] {
-  padding-left: 35px;
-  padding-right: 35px;
-}
-
 .px-\[50px\] {
   padding-left: 50px;
   padding-right: 50px;
@@ -3691,6 +3697,10 @@ html {
   padding-left: 1.5rem;
 }
 
+.pl-\[35px\] {
+  padding-left: 35px;
+}
+
 .pr-16 {
   padding-right: 4rem;
 }
@@ -3701,6 +3711,10 @@ html {
 
 .pr-3 {
   padding-right: 0.75rem;
+}
+
+.pr-5 {
+  padding-right: 1.25rem;
 }
 
 .pr-6 {
@@ -3751,12 +3765,8 @@ html {
   padding-top: 77px;
 }
 
-.pl-\[35px\] {
-  padding-left: 35px;
-}
-
-.pr-5 {
-  padding-right: 1.25rem;
+.pt-\[80px\] {
+  padding-top: 80px;
 }
 
 .text-left {
@@ -3815,6 +3825,10 @@ html {
 
 .text-\[12px\] {
   font-size: 12px;
+}
+
+.text-\[13\.3px\] {
+  font-size: 13.3px;
 }
 
 .text-\[13px\] {
@@ -3969,6 +3983,10 @@ html {
 .text-green-500 {
   --tw-text-opacity: 1;
   color: rgb(34 197 94 / var(--tw-text-opacity));
+}
+
+.text-mainBg {
+  color: rgb(var(--mainBg));
 }
 
 .text-orange-500 {
@@ -4283,6 +4301,10 @@ html {
 
   .md\:pl-\[185px\] {
     padding-left: 185px;
+  }
+
+  .md\:pl-\[195px\] {
+    padding-left: 195px;
   }
 
   .md\:pl-\[200px\] {

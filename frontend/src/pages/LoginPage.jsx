@@ -5,12 +5,15 @@ import { toast } from "react-hot-toast";
 import { useMutation } from "react-query";
 import Loading from "../components/ui/Loading";
 
+import LoginWithGoogle from "../components/AuthComps/LoginWithGoogle";
+
 const LoginPage = () => {
     const [info, setInfo] = useState({ email: "", password: "" });
     const [show, setShow] = useState(false);
 
-    const { mutateAsync: loginUser, isLoading } = useMutation(loginUserFunc);
     const navigate = useNavigate();
+    const { mutateAsync: loginUser, isLoading } = useMutation(loginUserFunc);
+
     const handleInfo = (event) => {
         setInfo(
             (i) => (i = { ...info, [event.target.name]: event.target.value })
@@ -69,9 +72,10 @@ const LoginPage = () => {
                             type="email"
                             placeholder="Email"
                             required
-                            className="placeholder:text-placeholder isidoraBold p-2 w-[300px] h-[50px] rounded-[5px] 
-            bg-grayOne border-[3px] outline-none text-textColor
-            text-[17px] border-lightGray"
+                            className="placeholder:text-placeholder isidoraBold
+                             p-2 w-[300px] h-[50px] rounded-[5px] 
+                            bg-grayOne border-[3px] outline-none text-textColor
+                            text-[17px] border-lightGray"
                         />
 
                         <div className="relative">
@@ -82,28 +86,35 @@ const LoginPage = () => {
                                 type={show ? "text" : "password"}
                                 placeholder="Password"
                                 required
-                                className="placeholder:text-placeholder isidoraBold p-2 pr-7 w-[300px] h-[50px] rounded-[5px]
-             bg-grayOne border-[3px] outline-none text-textColor text-[17px] 
-             border-lightGray"
+                                className="placeholder:text-placeholder 
+                                isidoraBold p-2 pr-7 w-[300px] h-[50px] rounded-[5px]
+                                bg-grayOne border-[3px] outline-none text-textColor text-[17px] 
+                                border-lightGray"
                             />
                             <span
                                 onClick={() => setShow((s) => (s = !s))}
                                 className={`${
                                     show ? "bi-eye-slash-fill" : "bi-eye-fill"
                                 }
-                 absolute text-[18px] font-bold 
-                right-3 top-[13px] cursor-pointer text-grayThird`}
+                            absolute text-[18px] font-bold 
+                            right-3 top-[13px] cursor-pointer text-grayThird`}
                             ></span>
                         </div>
                     </div>
+                    <Link
+                        to="/reset-password"
+                        className="text-left w-full text-[13.3px] mt-[2px] isidoraSemiBold text-grayFive"
+                    >
+                        Forgot Password?
+                    </Link>
 
-                    <div className="mt-[18px] text-center">
+                    <div className="mt-[10px] text-center">
                         <button
                             type="submit"
                             className={`isidoraBold p-2 w-[300px] h-[50px] rounded-[5px]
-            ${
-                isLoading ? "bg-grayTwo" : "bg-shinyPurple"
-            }   outline-none text-[20px] insetShadow clickable`}
+                                ${
+                                    isLoading ? "bg-grayTwo" : "bg-shinyPurple"
+                                }   outline-none text-[20px] insetShadow clickable`}
                         >
                             {isLoading ? (
                                 <Loading cus={"loading-md"} />
@@ -111,11 +122,14 @@ const LoginPage = () => {
                                 "LOGIN"
                             )}
                         </button>
-                        <Link to="/signup">
-                            <p className="isidoraBold text-textColor mt-2">
-                                Don't have an account?{" "}
-                                <span className="text-shinyPurple">Signup</span>
-                            </p>
+
+                        <LoginWithGoogle />
+                        <Link
+                            to="/signup"
+                            className="isidoraBold text-textColor mt-2"
+                        >
+                            Don't have an account?{" "}
+                            <span className="text-shinyPurple">Signup</span>
                         </Link>
                     </div>
                 </div>

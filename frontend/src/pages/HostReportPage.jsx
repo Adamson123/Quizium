@@ -6,6 +6,7 @@ import { getHost } from "../api/HostApi";
 import QAandLDNav from "../components/HostReportComps/QAandLDNav";
 import ResAnswerSummary from "../components/HostReportComps/ResAnswerSummary";
 import ResLeaderboard from "../components/HostReportComps/ResLeaderboard";
+import SearchTrigger from "../components/SearchTrigger";
 
 const HostReportPage = () => {
     const { id } = useParams();
@@ -81,6 +82,7 @@ const HostReportPage = () => {
             bg-secMainBg gap-5 md:h-screen md:max-h-screen 
             md:overflow-hidden md:pb-[170px]`}
         >
+            <SearchTrigger/>
             {/* Title and general info */}
             <TitleAndGeneralInfo hostInfo={data?.hostInfo} />
 

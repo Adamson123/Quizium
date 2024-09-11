@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import QuizInfo from "../components/DetailsComps/QuizInfo";
 import Questions from "../components/DetailsComps/Questions";
 import toast from "react-hot-toast";
+import SearchTrigger from "../components/SearchTrigger";
 
 const DetailsPage = () => {
     const navigate = useNavigate();
@@ -88,6 +89,7 @@ const DetailsPage = () => {
             className="max-h-screen bg-secMainBg pt-[65px]
             md:pl-[185px] text-textColor md:flex md:justify-center"
         >
+            <SearchTrigger />
             {/* info */}
             <QuizInfo
                 quizInfo={quizInfo}

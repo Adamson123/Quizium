@@ -45,8 +45,8 @@ const NavMenu = ({ show, setShow }) => {
                     bg-mainBg md:border-r border-grayOne `}
             >
                 <div
-                    className="h-full w-full flex flex-col 
-        px-3 "
+                    className="h-full w-full flex flex-col
+                    px-3"
                 >
                     {/* logo and profile container */}
                     <div
@@ -56,7 +56,8 @@ const NavMenu = ({ show, setShow }) => {
                         <h1
                             onClick={() => navigate("/")}
                             className="font-bold text-4xl
-                            text-shinyPurple agbalumoFont tracking-tighter"
+                            text-shinyPurple agbalumoFont 
+                            tracking-tighter cursor-pointer"
                         >
                             Quizium
                         </h1>

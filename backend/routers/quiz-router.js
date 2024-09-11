@@ -6,6 +6,7 @@ import {
     getSingleQuizWithQuestions,
     getUserQuizzes,
     deleteQuiz,
+    searchQuizzes,
 } from "../controllers/quiz-controller.js";
 import multer from "multer";
 import { quizExist } from "../middlewares/quizExist.js";
@@ -18,5 +19,6 @@ router.post("/", upload.single("file"), createQuiz);
 router.get("/", getMultipleQuizzes);
 router.get("/single-quiz/:id", quizExist, getSingleQuizWithQuestions);
 router.get("/user-quizzes", getUserQuizzes);
+router.get("/search-quizzes", searchQuizzes);
 router.patch("/:id", quizExist, upload.single("file"), updateQuiz);
 router.delete("/:id", quizExist, deleteQuiz);

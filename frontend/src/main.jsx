@@ -8,6 +8,8 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 //import "react-toastify/ReactToastify.css"
 import { Toaster } from "react-hot-toast";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { clientID } from "./utils/envImport.jsx";
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -21,7 +23,10 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>
         <Router>
             <QueryClientProvider client={queryClient}>
-                <App />
+                <GoogleOAuthProvider clientId={clientID}>
+                    <App />
+                </GoogleOAuthProvider>
+
                 <Toaster
                     position="top-center"
                     containerStyle={{

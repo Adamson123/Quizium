@@ -18,8 +18,11 @@ const UserSchema = new mongoose.Schema(
         },
         password: {
             type: String,
-            required: true,
+
             minlength: [4, "Password must be atleast 4 characters long"],
+        },
+        googleId: {
+            type: String,
         },
         profileImg: {
             type: mongoose.Schema.Types.ObjectId,

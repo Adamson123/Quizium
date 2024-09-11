@@ -11,6 +11,7 @@ import AnswerSummary from "../components/ResultComps/AnswerSummary";
 import toast from "react-hot-toast";
 import Leaderboard from "../components/HostLiveComps/Leaderboard";
 import { useState } from "react";
+import SearchTrigger from "../components/SearchTrigger";
 
 const ResultPage = () => {
     const { id } = useParams();
@@ -51,6 +52,7 @@ const ResultPage = () => {
                 toShow === "LD" && "pb-5"
             } md:pb-0`}
         >
+            <SearchTrigger />
             {/* Left */}
             <div
                 className="flex flex-col slg:w-[50%]

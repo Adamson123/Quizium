@@ -16,6 +16,5 @@ export const router = express.Router();
 
 router.get("/", getUser);
 router.patch("/personal", upload.single("file"), updatePersonalInfo);
-
 router.patch("/password", updatePassword);
 router.patch("/favorite", addToFavorites);

@@ -28,9 +28,6 @@ const LibraryPage = () => {
     const value = useContext(dataContext);
 
     const filterQuizzesFunc = (fby) => {
-        // if (fby === "played") {
-        //     return [];
-        // }
         if (fby === "favorites") {
             return allQuizzes.favoriteQuizzes?.favorites;
         }
@@ -93,10 +90,7 @@ const LibraryPage = () => {
             text: "drafts",
             icon: "bi-file-earmark-text-",
         },
-        // {
-        //     text: "played",
-        //     icon: "bi-play-",
-        // },
+
         {
             text: "favorites",
             icon: "bi-star-",

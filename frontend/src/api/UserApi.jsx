@@ -6,7 +6,6 @@ export const getUser = async () => {
     const res = await fetch(`/api/user`, {
         credentials: "include",
     });
-    //const res = await axios.post(`http://localhost:3002/api/auth/signup`, info);
 
     if (!res.ok) throw new Error("error signing up");
     const data = await res.json();
@@ -21,7 +20,6 @@ export const getProfilePicFunc = (info) => {
                 `/api/user/image`,
                 requestOptions(info, "", "GET")
             );
-            //const res = await axios.post(`http://localhost:3002/api/auth/signup`, info);
 
             if (!res.ok) throw new Error("error getting pic");
 
@@ -55,7 +53,6 @@ export const updatePersonalInfoFunc = async (info) => {
             `/api/user/personal`,
             requestOptions(info, "", "PATCH")
         );
-        //const res = await axios.post(`http://localhost:3002/api/auth/signup`, info);
 
         const data = await res.json();
 
@@ -76,7 +73,6 @@ export const updatePasswordFunc = async (info) => {
             `/api/user/password`,
             requestOptions(info, "application/json", "PATCH")
         );
-        //const res = await axios.post(`http://localhost:3002/api/auth/signup`, info);
 
         const data = await res.json();
 
@@ -87,9 +83,7 @@ export const updatePasswordFunc = async (info) => {
         return data;
     } catch (error) {
         console.log("error fr crt", error);
-        if (error.message === "Failed to fetch") {
-            throw { err: "Please check your connection" };
-        }
+
         throw { err: error.message };
     }
 };
@@ -100,7 +94,6 @@ export const addToFavorites = async (info) => {
             `/api/user/favorite/`,
             requestOptions(info, "application/json", "PATCH")
         );
-        //const res = await axios.post(`http://localhost:3002/api/auth/signup`, info);
 
         const data = await res.json();
 

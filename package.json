@@ -1,14 +1,14 @@
 {
-  "name": "Quizium",
-  "version": "1.0.0",
-  "main": "test.js",
-  "scripts": {
-    "dev:fe": "cd frontend && npm run dev -- --host",
-    "dev:be": "cd backend && npm run dev",
-    "dev:tw": "cd frontend && npm start"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": ""
+    "name": "Quizium",
+    "version": "1.0.0",
+    "main": "test.js",
+    "scripts": {
+        "dev:fe": "cd frontend && npm run dev -- --host",
+        "dev:be": "cd backend && npm run dev",
+        "dev:tw": "cd frontend && npm start"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "description": ""
 }

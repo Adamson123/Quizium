@@ -2,7 +2,9 @@ import { UsersModel } from "../models/UsersModel.js";
 import { CustomError } from "../errors/CustomError.js";
 import { handleTokenAndCookie } from "../utils/handleTokenAndCookie.js";
 import { hashPassword } from "../utils/hashPassword.js";
-import { ProfImagesModel } from "../models/ProfImagesModel.js";
+import { OAuth2Client } from "google-auth-library";
+import nodemailer from "nodemailer";
+import jwt from "jsonwebtoken";
 
 export const signup = async (req, res) => {
     console.log("somebody hit create user");
@@ -89,6 +91,83 @@ export const login = async (req, res) => {
     handleTokenAndCookie(user._id, res);
 
     return res.status(200).json({ msg: "Welcome Back" });
+};
+
+export const googleLogin = async (req, res) => {
+    const { token } = req.body;
+    if (!token) throw new CustomError("Authentication error", 401);
+
+    const client = new OAuth2Client(process.env.CLIENT_ID);
+
+    const ticket = await client.verifyIdToken({
+        idToken: token,
+        audience: process.env.CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+    const { email, name, sub: googleId } = payload;
+
+    let user = await UsersModel.findOne({ googleId });
+
+    if (!user) {
+        user = await UsersModel.create({
+            email,
+            name,
+            googleId,
+        });
+    }
+
+    console.log(user);
+
+    handleTokenAndCookie(user._id, res);
+
+    return res.status(200).json({ msg: "Welcome" });
+    //console.log(userInfo);
+};
+
+export const resetPassword = async (req, res) => {};
+
+export const resetPasswordLink = async (req, res) => {
+    const { email } = req.body;
+
+    const user = await UsersModel.findOne({ email });
+
+    if (!user) throw new CustomError("User with email does not exist", 404);
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_KEY, {
+        expiresIn: "5h",
+    });
+
+    const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: "dapoajibade66@gmail.com",
+            pass: process.env.EMAIL_PASSWORD,
+        },
+    });
+
+    const mailOptions = {
+        from: '"Quizium Support" <dapoajibade66@gmail.com>',
+        to: email,
+        subject: "Reset your password",
+        text: "Click the link to reset your password: <link>",
+        html: `<p>Click the link to reset your password: <a href='http://localhost:5173/reset-password/${token}'>Reset Password</a></p>`,
+    };
+
+    transporter
+        .sendMail(mailOptions)
+        .then((info) => {
+            //console.log(info);
+
+            return res
+                .status(200)
+                .json({ msg: "Reset link has been sent to your email" });
+        })
+        .catch((error) => {
+            console.log(error);
+
+            return res.status(500).json({ err: "Error sending reset link" });
+        });
 };
 
 export const logout = async (req, res) => {

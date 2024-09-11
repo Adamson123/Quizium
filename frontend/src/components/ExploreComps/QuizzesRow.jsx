@@ -20,6 +20,7 @@ const QuizzesRow = ({ category }) => {
     const otherDivsRef = useRef();
     const [showLeftBtn, setShowLeftBtn] = useState(false);
     const [showRightBtn, setShowRightBtn] = useState(true);
+    const updatedOnStart = useRef(false);
 
     const renderRow = () => {
         return isLoading || quizCover?.length;
@@ -49,11 +50,16 @@ const QuizzesRow = ({ category }) => {
     };
 
     useEffect(() => {
+        if (!quizCover?.length || updatedOnStart.current) return;
+
+        updateScrollBtn();
+        updatedOnStart.current = true;
         window.addEventListener("resize", updateScrollBtn);
+
         return () => {
             window.removeEventListener("resize", updateScrollBtn);
         };
-    }, []);
+    }, [quizCover]);
 
     const distributeRef = (index) => {
         if (index === 0) {
@@ -66,7 +72,7 @@ const QuizzesRow = ({ category }) => {
     };
 
     return renderRow() ? (
-        <div className="relative" onLoad={updateScrollBtn}>
+        <div className="relative">
             <h3 className="text-[20px] mb-3 font-semibold isidoraBold">
                 {category === "Science+Technology"
                     ? category.replace("+", " & ")

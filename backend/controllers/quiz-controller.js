@@ -209,24 +209,34 @@ export const deleteQuiz = async (req, res) => {
 };
 
 export const getMultipleQuizzes = async (req, res) => {
-    const { skip, limit } = req.query;
+    const { skip, limit, category } = req.query;
 
-    const queriesObj = { draft: false };
-    const queries = Object.keys(req.query);
-    queries.forEach((query) => {
-        const queryVal =
-            req.query[query] === "Science Technology"
+    const queriesObj = {
+        draft: false,
+        category:
+            category === "Science Technology"
                 ? "Science & Technology"
-                : req.query[query];
-        if (queryVal) {
-            queriesObj[query] = queryVal;
-        }
-    });
+                : category,
+        visibility: "public",
+    };
 
-    delete queriesObj.skip;
-    delete queriesObj.limit;
+    console.log(queriesObj);
 
-    console.log("get multiple quiz:", "skip", skip, "limit", limit, queries);
+    //const queries = Object.keys(req.query);
+    // queries.forEach((query) => {
+    //     const queryVal =
+    //         req.query[query] === "Science Technology"
+    //             ? "Science & Technology"
+    //             : req.query[query];
+    //     if (queryVal) {
+    //         queriesObj[query] = queryVal;
+    //     }
+    // });
+
+    // delete queriesObj.skip;
+    // delete queriesObj.limit;
+
+    console.log("get multiple quiz:", "skip", skip, "limit", limit);
     const quizzes = await QuizInfosModel.find(queriesObj)
         .skip(Number(skip))
         .limit(Number(limit))
@@ -234,6 +244,85 @@ export const getMultipleQuizzes = async (req, res) => {
         .populate({ path: "createdBy", populate: { path: "profileImg" } });
 
     return res.status(200).json(quizzes);
+};
+
+export const searchQuizzes = async (req, res) => {
+    const { query, category, scoring, min, max } = req.query;
+
+    const queriesObj = {
+        draft: false,
+        visibility: "public",
+    };
+    if (query) {
+        queriesObj["title"] = { $regex: query, $options: "i" };
+        queriesObj["description"] = { $regex: query, $options: "i" };
+    }
+    if (scoring) {
+        const applyTime = scoring === "Exam-Style Scoring" ? "entire" : "each";
+        queriesObj["applyTime"] = applyTime;
+    }
+    if (category && category !== "All") {
+        const accCategory =
+            category === "Science Technology"
+                ? "Science & Technology"
+                : category;
+        queriesObj["category"] = accCategory;
+    }
+    if (
+        min &&
+        max &&
+        typeof Number(min) === "number" &&
+        typeof Number(max) === "number"
+    ) {
+        queriesObj["questionsLength"] = {
+            $gte: Number(min),
+            $lte: Number(max),
+        };
+    }
+
+    let quizzes = await QuizInfosModel.find(queriesObj)
+        .skip(0)
+        .limit(20)
+        .populate("coverImg");
+
+    const pushToQuizzes = (arr) => {
+        const quizzesIds = quizzes.map((val) => {
+            return String(val?._id);
+        });
+
+        arr.forEach((val) => {
+            if (!quizzesIds.includes(String(val?._id))) {
+                quizzes.push(val);
+            }
+        });
+    };
+
+    //if no quizzes was found or quiz is less than 20, we will find by only description
+    if (!quizzes.length || (quizzes.length < 20 && query)) {
+        delete queriesObj.description;
+
+        const skipDescription = await QuizInfosModel.find(queriesObj)
+            .skip(0)
+            .limit(20)
+            .populate("coverImg");
+
+        pushToQuizzes(skipDescription);
+
+        //if no quizzes was found or quiz is less than 20 again, we will find by only title
+        if (quizzes.length < 20) {
+            queriesObj["description"] = { $regex: query, $options: "i" };
+            delete queriesObj.title;
+
+            const skipTitle = await QuizInfosModel.find(queriesObj)
+                .skip(0)
+                .limit(20)
+                .populate("coverImg");
+
+            pushToQuizzes(skipTitle);
+        }
+    }
+
+    return res.status(200).json({ quizzes });
 };
 
 export const getUserQuizzes = async (req, res) => {

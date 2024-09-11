@@ -1,4 +1,4 @@
-import { delayTest } from "../utils/delayTest";
+import { requestOptions } from "./utils/RequestOptions";
 
 const postOptions = (info) => {
     return {
@@ -46,6 +46,47 @@ export const loginUserFunc = async (info) => {
         return data;
     } catch (error) {
         console.log(error);
+        throw { err: error.message };
+    }
+};
+
+export const googleLogin = async (info) => {
+    try {
+        const res = await fetch(
+            `/api/auth/google-login`,
+            postOptions({ token: info.credential })
+        );
+        //const res = await axios.post(`http://localhost:3002/api/auth/login`, info);
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            throw new Error(data.err);
+        }
+        return data;
+    } catch (error) {
+        console.log(error);
+        throw { err: error.message };
+    }
+};
+
+export const resetPasswordLink = async (email) => {
+    try {
+        const res = await fetch(
+            `/api/auth/reset-password-link`,
+            requestOptions({ email }, "application/json", "POST")
+        );
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            throw new Error(data.err);
+        }
+
+        return data;
+    } catch (error) {
+        console.log("error fr crt", error);
+
         throw { err: error.message };
     }
 };

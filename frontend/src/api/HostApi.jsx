@@ -65,12 +65,13 @@ export const deleteHost = async (id) => {
 };
 
 //http://localhost:3002
-export const socket = io(
+const publicApi = "https://quizium.onrender.com/host-live";
+const localApi =
     window.location.origin.substring(
         0,
         window.location.origin.lastIndexOf(":")
-    ) + ":3002/host-live",
-    {
-        autoConnect: false,
-    }
-);
+    ) + ":3002/host-live";
+
+export const socket = io(localApi, {
+    autoConnect: false,
+});

@@ -1,3 +1,4 @@
+import getQueryParams from "../components/SearchComps/getQueryParams";
 import { requestOptions } from "./utils/RequestOptions";
 
 export const getQiuzzes = async (query) => {
@@ -91,6 +92,33 @@ export const getUserQuizzes = async () => {
         const res = await fetch(`/api/quiz/user-quizzes`, {
             credentials: "include",
         });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.err);
+        return data;
+    } catch (error) {
+        throw { err: error.message };
+    }
+};
+
+export const searchQuizzes = async () => {
+    const [query, category, scoring, min, max] = [
+        getQueryParams().get("query"),
+        getQueryParams().get("category"),
+        getQueryParams().get("scoring"),
+        getQueryParams().get("min"),
+        getQueryParams().get("max"),
+    ];
+
+    const search = { query, category, scoring, min, max };
+    console.log(search);
+
+    try {
+        const res = await fetch(
+            `/api/quiz/search-quizzes?query=${query}&category=${category}&scoring=${scoring}&min=${min}&max=${max}`,
+            {
+                credentials: "include",
+            }
+        );
         const data = await res.json();
         if (!res.ok) throw new Error(data.err);
         return data;

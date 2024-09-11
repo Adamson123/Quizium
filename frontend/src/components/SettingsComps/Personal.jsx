@@ -43,10 +43,10 @@ const Personal = () => {
     //submit image and name update
     const handlePersonalInfoSubmit = async (event) => {
         event.preventDefault();
-        if (value?.name !== personalInput.name || imagePicked) {
+        if (value?.name !== personalInput?.name || imagePicked) {
             const formdata = new FormData();
             formdata.append("file", imagePicked);
-            formdata.append("name", personalInput.name);
+            formdata.append("name", personalInput?.name);
 
             const promise = updatePersonalData(formdata);
 
@@ -136,7 +136,7 @@ const Personal = () => {
                         {/* Username input */}
 
                         <SettingInputComp
-                            input={personalInput.name}
+                            input={personalInput?.name}
                             setInput={setPersonalInput}
                             type="text"
                             name="name"
@@ -160,7 +160,7 @@ const Personal = () => {
                     className={`w-full rounded-[3px] mt-3 
                     p-3 ${
                         imagePicked ||
-                        personalInput.name.trim(" ") !== value?.name
+                        personalInput?.name.trim(" ") !== value?.name
                             ? "bg-shinyPurple clickable"
                             : "bg-grayTwo"
                     }  font-bold insetShadow isidoraBold`}
@@ -170,7 +170,7 @@ const Personal = () => {
                 {
                     //online show up if an image is picked or name is changed
                     (imagePicked ||
-                        personalInput.name.trim(" ") !== value?.name) && (
+                        personalInput?.name.trim(" ") !== value?.name) && (
                         <button
                             onClick={() => {
                                 setImagePicked("");

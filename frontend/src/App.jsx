@@ -17,6 +17,10 @@ import Room from "./components/JoinLiveComps/Room";
 import PlayLiveQuizPage from "./pages/PlayLiveQuizPage";
 import ReportsPage from "./pages/ReportsPage";
 import HostReportPage from "./pages/HostReportPage";
+import SearchPage from "./pages/SearchPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
+import ForgotPassword from "./components/ResetPasswordComps/ForgotPassword";
+import ResetPassword from "./components/ResetPasswordComps/ResetPassword";
 
 function App() {
     return (
@@ -28,6 +32,15 @@ function App() {
                     element={
                         <Layout>
                             <ExplorePage />
+                        </Layout>
+                    }
+                />
+                {/* Search route */}
+                <Route
+                    path="/search"
+                    element={
+                        <Layout>
+                            <SearchPage />
                         </Layout>
                     }
                 />
@@ -75,6 +88,7 @@ function App() {
                      will be displayed */}
                     <Route path=":id" element={<Room />} />
                 </Route>
+
                 {/* Hosted live quiz route */}
                 <Route path="/host-live/:id" element={<HostLivePage />} />
 
@@ -118,7 +132,10 @@ function App() {
 
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/login" element={<LoginPage />} />
-
+            <Route path="/reset-password" element={<ResetPasswordPage />}>
+                <Route index element={<ForgotPassword />} />
+                <Route path=":id/:token" element={<ResetPassword />} />
+            </Route>
             <Route path="*" element={<Navigate to="/404" />} />
         </Routes>
     );

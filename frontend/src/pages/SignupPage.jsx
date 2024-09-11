@@ -4,6 +4,7 @@ import { createUserFunc } from "../api/AuthUserApi";
 import { toast } from "react-hot-toast";
 import { useMutation } from "react-query";
 import Loading from "../components/ui/Loading";
+import LoginWithGoogle from "../components/AuthComps/LoginWithGoogle";
 const SignupPage = () => {
     const [info, setInfo] = useState({ name: "", email: "", password: "" });
     const [show, setShow] = useState(false);
@@ -118,6 +119,7 @@ const SignupPage = () => {
                                 "SIGN UP"
                             )}
                         </button>
+                        <LoginWithGoogle />
                         <Link to="/login">
                             <p className="isidoraBold text-textColor mt-2">
                                 Already have an account?{" "}

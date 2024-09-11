@@ -1,10 +1,16 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import NavMenu from "./NavMenu";
 import { useNavigate } from "react-router";
 const Header = ({ text, setSearch, search, searchFocus, setSearchFocus }) => {
     const navigate = useNavigate();
     const [openNavMenu, setOpenNavMenu] = useState(false);
+    const searchRef = useRef();
 
+    useEffect(() => {
+        if (!searchFocus) {
+            searchRef?.current.blur();
+        }
+    }, [searchFocus]);
     return (
         <>
             <div
@@ -48,6 +54,7 @@ const Header = ({ text, setSearch, search, searchFocus, setSearchFocus }) => {
                                 absolute top-[11px] left-[13px]"
                             ></span>
                             <input
+                                ref={searchRef}
                                 onFocus={() => setSearchFocus(true)}
                                 onBlur={() => setSearchFocus(false)}
                                 onChange={(event) => {
@@ -69,9 +76,12 @@ const Header = ({ text, setSearch, search, searchFocus, setSearchFocus }) => {
                     {/* notification button */}
                     <button
                         className="bg-shinyPurple px-[10px] py-[7px] rounded-full 
-        flex items-center justify-center insetShadowTwo clickable"
+                        flex items-center justify-center insetShadowTwo clickable"
                     >
-                        <span className="text-textColor bi-bell text-[15px] cursor-pointer"></span>
+                        <span
+                            className="text-textColor 
+                        bi-headphones text-[15px] cursor-pointer"
+                        ></span>
                     </button>
                 </div>
             </div>

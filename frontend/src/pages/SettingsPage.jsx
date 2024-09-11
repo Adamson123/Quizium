@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { dataContext } from "../layouts/Layout";
 import Personal from "../components/SettingsComps/Personal";
 import Password from "../components/SettingsComps/Password";
+import SearchTrigger from "../components/SearchTrigger";
 
 const SettingsPage = () => {
     //user info coming from the layout component
@@ -14,6 +15,7 @@ const SettingsPage = () => {
             className="pt-16 bg-secMainBg text-textColor min-h-screen flex 
     flex-col items-center md:pl-[180px]"
         >
+            <SearchTrigger />
             <h2
                 className="text-3xl text-center 
         font-bold text-textColor isidoraBold mt-2"

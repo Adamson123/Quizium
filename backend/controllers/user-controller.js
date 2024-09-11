@@ -6,7 +6,6 @@ import {
     findAndPopulateUserQuizzes,
     populateQuizAndQuest,
 } from "../utils/populateQuiz.js";
-import { QuizInfosModel } from "../models/QuizInfosModel.js";
 
 //get user info function
 export const getUser = async (req, res) => {
@@ -93,6 +92,7 @@ export const updatePersonalInfo = async (req, res) => {
 export const updatePassword = async (req, res) => {
     const { currentPassword, newPassword, confirmPassword } = req.body;
     const { userId } = req;
+    const { user } = req;
 
     if (!currentPassword || !newPassword)
         throw new CustomError(
@@ -113,7 +113,17 @@ export const updatePassword = async (req, res) => {
         );
     }
 
-    const user = req.user;
+    //if the user signed up with google
+    if (!user.password) {
+        const hashedPassword = await hashPassword(newPassword);
+
+        await UsersModel.findByIdAndUpdate(
+            { _id: userId },
+            { password: hashedPassword }
+        );
+
+        return res.status(200).json({ msg: "Password Updated" });
+    }
 
     const isMatch = await user.verifyPassword(currentPassword);
 

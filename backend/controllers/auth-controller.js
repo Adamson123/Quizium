@@ -105,7 +105,7 @@ export const googleLogin = async (req, res) => {
     });
 
     const payload = ticket.getPayload();
-    const { email, name, sub: googleId } = payload;
+    const { email, name } = payload;
 
     let user = await UsersModel.findOne({ email });
 

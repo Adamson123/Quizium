@@ -220,7 +220,7 @@ export const getMultipleQuizzes = async (req, res) => {
         visibility: "public",
     };
 
-    console.log(queriesObj);
+    //console.log(queriesObj);
 
     //const queries = Object.keys(req.query);
     // queries.forEach((query) => {
@@ -241,7 +241,11 @@ export const getMultipleQuizzes = async (req, res) => {
         .skip(Number(skip))
         .limit(Number(limit))
         .populate("coverImg")
-        .populate({ path: "createdBy", populate: { path: "profileImg" } });
+        .populate({
+            path: "createdBy",
+            select: "-password",
+            populate: { path: "profileImg" },
+        });
 
     return res.status(200).json(quizzes);
 };

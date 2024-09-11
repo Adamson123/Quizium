@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { useNavigate } from "react-router";
-import { dataContext } from "../../layouts/cayout";
+import { dataContext } from "../../layouts/Layout";
 const ResultRatio = ({ data, getAllCorAndInCor }) => {
     const navigate = useNavigate();
     const value = useContext(dataContext);

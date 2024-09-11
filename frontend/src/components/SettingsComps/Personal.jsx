@@ -4,7 +4,7 @@ import { updatePersonalInfoFunc } from "../../api/UserApi";
 import toast from "react-hot-toast";
 import Loading from "../ui/Loading";
 import SettingInputComp from "./SettingInputComp";
-import { dataContext } from "../../layouts/cayout";
+import { dataContext } from "../../layouts/Layout";
 
 const Personal = () => {
     const value = useContext(dataContext);

@@ -5,7 +5,7 @@ import { getUserResults } from "../api/ResultApi";
 import { useContext, useEffect, useState } from "react";
 import Share from "../components/Share";
 import { getUserHosts } from "../api/HostApi";
-import { dataContext } from "../layouts/cayout";
+import { dataContext } from "../layouts/Layout";
 import box from "../assets/svg/empty-box2.svg";
 import searchSvg from "../assets/svg/search.svg";
 

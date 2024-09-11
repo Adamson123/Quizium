@@ -2,7 +2,7 @@ import { Navigate, Route, Routes } from "react-router";
 import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
 import ProtectedRoutes from "./pages/ProtectedRoutes";
-import Layout from "./layouts/cayout";
+import Layout from "./layouts/Layout";
 import ExplorePage from "./pages/ExplorePage";
 import SettingsPage from "./pages/SettingsPage";
 import QuizEditorPage from "./pages/QuizEditorPage";

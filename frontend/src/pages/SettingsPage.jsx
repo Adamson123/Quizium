@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { dataContext } from "../layouts/cayout";
+import { dataContext } from "../layouts/Layout";
 import Personal from "../components/SettingsComps/Personal";
 import Password from "../components/SettingsComps/Password";
 import SearchTrigger from "../components/SearchTrigger";

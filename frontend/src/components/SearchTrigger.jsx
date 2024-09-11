@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { dataContext } from "../layouts/Layout";
+import { dataContext } from "../layouts/cayout";
 
 const SearchTrigger = ({
     category = "All",

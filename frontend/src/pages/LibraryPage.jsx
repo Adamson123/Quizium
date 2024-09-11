@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "react-query";
 import { deleteQuiz, getUserQuizzes } from "../api/QuizApi";
 import LoadingQuizzes from "../components/LibrayComps/LoadingQuizzes";
 import { useContext, useEffect, useState } from "react";
-import { dataContext } from "../layouts/Layout";
+import { dataContext } from "../layouts/cayout";
 import QuizRect from "../components/LibrayComps/QuizRect";
 import Share from "../components/Share";
 import box from "../assets/svg/empty-box2.svg";

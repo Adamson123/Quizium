@@ -4,7 +4,7 @@ import { logoutUserFunc } from "../api/AuthUserApi";
 import { useMutation } from "react-query";
 import { useContext } from "react";
 
-import { dataContext } from "../layouts/Layout";
+import { dataContext } from "../layouts/cayout";
 import shortenText from "../utils/shortenText";
 
 const NavMenu = ({ show, setShow }) => {

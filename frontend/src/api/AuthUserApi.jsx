@@ -14,7 +14,10 @@ const postOptions = (info) => {
 export const createUserFunc = async (info) => {
     try {
         // await delayTest();
-        const res = await fetch(`/api/auth/signup`, postOptions(info));
+        const res = await fetch(
+            `${import.meta.env.API_URL}/api/auth/signup`,
+            postOptions(info)
+        );
         //const res = await axios.post(`http://localhost:3002/api/auth/signup`, info);
 
         const data = await res.json();
@@ -35,7 +38,10 @@ export const loginUserFunc = async (info) => {
     try {
         // await delayTest();
 
-        const res = await fetch(`/api/auth/login`, postOptions(info));
+        const res = await fetch(
+            `${import.meta.env.API_URL}/api/auth/login`,
+            postOptions(info)
+        );
         //const res = await axios.post(`http://localhost:3002/api/auth/login`, info);
 
         const data = await res.json();

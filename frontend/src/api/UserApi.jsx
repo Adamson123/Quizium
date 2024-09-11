@@ -3,7 +3,7 @@ import { useQuery } from "react-query";
 import { requestOptions } from "./utils/RequestOptions";
 
 export const getUser = async () => {
-    const res = await fetch(`/api/user`, {
+    const res = await fetch(`${import.meta.env.API_URL}/api/user`, {
         credentials: "include",
     });
 

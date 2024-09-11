@@ -4,9 +4,7 @@ import { requestOptions } from "./utils/RequestOptions";
 export const getQiuzzes = async (query) => {
     try {
         const res = await fetch(
-            `${import.meta.env.API_URL}/api/quiz?skip=${query.skip}&limit=${
-                query.limit
-            }&category=${query.category}`,
+            `/api/quiz?skip=${query.skip}&limit=${query.limit}&category=${query.category}`,
             {
                 credentials: "include",
             }

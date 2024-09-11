@@ -1,7 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import Header from "../components/Header";
 import { getUser } from "../api/UserApi";
-import bufferToObjUrl from "../utils/bufferToObjUrl";
+import bufferToObjUrl from "../utils/cufferToObjUrl";
 import newUser from "../assets/images/defaultProfile/newUser.png";
 import { useQuery } from "react-query";
 

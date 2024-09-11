@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router";
-import bufferToObjUrl from "../../utils/bufferToObjUrl";
+import bufferToObjUrl from "../../utils/cufferToObjUrl";
 import quizImg from "../../assets/images/defaultCover/quizium-8.webp";
 import { useMutation } from "react-query";
 import toast from "react-hot-toast";

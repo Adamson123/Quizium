@@ -1,10 +1,14 @@
 import { memo, useMemo, useRef } from "react";
-import bufferToObjUrl from "../../../utils/bufferToObjUrl";
+import bufferToObjUrl from "../../../utils/cufferToObjUrl";
 import Loading from "../../ui/Loading";
 import { convertToWebp } from "../../../utils/convertToWebp";
 const Image = memo(({ imageProps }) => {
-    const { singleQuestion, handleDeleteQuestion, imagePicked, setPickedImage } =
-        imageProps;
+    const {
+        singleQuestion,
+        handleDeleteQuestion,
+        imagePicked,
+        setPickedImage,
+    } = imageProps;
     const uploadRef = useRef();
 
     console.log("Image rendered");

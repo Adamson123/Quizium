@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import quizium from "../../assets/images/defaultCover/quizium-4.webp";
 import Options from "./QuestionComps/Options";
-import bufferToObjUrl from "../../utils/bufferToObjUrl";
+import bufferToObjUrl from "../../utils/cufferToObjUrl";
 import TypeAnswer from "./QuestionComps/TypeAnswer";
 import { toast } from "react-hot-toast";
 import TrueFalse from "./QuestionComps/TrueFalse";

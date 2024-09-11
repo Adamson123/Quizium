@@ -9,7 +9,7 @@ export default defineConfig({
     server: {
         proxy: {
             "/api": {
-                target: localApi,
+                target: publicApi,
                 changeOrigin: true,
             },
         },

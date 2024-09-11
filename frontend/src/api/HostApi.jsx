@@ -72,6 +72,6 @@ const localApi =
         window.location.origin.lastIndexOf(":")
     ) + ":3002/host-live";
 
-export const socket = io(localApi, {
+export const socket = io(publicApi, {
     autoConnect: false,
 });

@@ -107,7 +107,7 @@ export const googleLogin = async (req, res) => {
     const payload = ticket.getPayload();
     const { email, name, sub: googleId } = payload;
 
-    let user = await UsersModel.findOne({ googleId });
+    let user = await UsersModel.findOne({ email });
 
     if (!user) {
         user = await UsersModel.create({

@@ -1,6 +1,6 @@
 import { memo, useState } from "react";
 import quizImg from "../../assets/images/defaultCover/quizium-4.webp";
-import bufferToObjUrl from "../../utils/cufferToObjUrl";
+import bufferToObjUrl from "../../utils/bufferToObjUrl";
 import QuestionAnswers from "./QuestionAnswers";
 import shortenText from "../../utils/shortenText";
 const Questions = memo(({ questions }) => {

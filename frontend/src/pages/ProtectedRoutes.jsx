@@ -3,7 +3,7 @@ import { getUser } from "../api/UserApi";
 
 import PageIsLoading from "../components/ui/PageIsLoading";
 import { useQuery } from "react-query";
-import bufferToObjUrl from "../utils/cufferToObjUrl";
+import bufferToObjUrl from "../utils/bufferToObjUrl";
 import newUser from "../assets/images/defaultProfile/newUser.png";
 import { useEffect, useState } from "react";
 

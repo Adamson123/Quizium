@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 import image from "../../assets/images/defaultCover/quizium-8.webp";
-import bufferToObjUrl from "../../utils/cufferToObjUrl";
+import bufferToObjUrl from "../../utils/bufferToObjUrl";
 import shortenText from "../../utils/shortenText";
 const QuizRect = ({ quiz }) => {
     const navigate = useNavigate();

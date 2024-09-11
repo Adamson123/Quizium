@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import quizImg2 from "../../assets/images/defaultCover/quizium-1.webp";
 import user from "../../assets/images/defaultProfile/newUser.png";
-import bufferToObjUrl from "../../utils/cufferToObjUrl";
+import bufferToObjUrl from "../../utils/bufferToObjUrl";
 import convtToSimpleDate from "../../utils/convtToSimpleDate";
 import toast from "react-hot-toast";
 import { useMutation } from "react-query";

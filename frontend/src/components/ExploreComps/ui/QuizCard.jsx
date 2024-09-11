@@ -1,5 +1,5 @@
 import { forwardRef, memo, useState } from "react";
-import bufferToObjUrl from "../../../utils/cufferToObjUrl";
+import bufferToObjUrl from "../../../utils/bufferToObjUrl";
 import quiziumImg from "../../../assets/images/defaultCover/quizium-8.webp";
 import newUser from "../../../assets/images/defaultProfile/newUser.png";
 import { useNavigate } from "react-router";

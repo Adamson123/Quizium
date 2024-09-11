@@ -29,13 +29,15 @@ import { isObjectIdOrHexString } from "mongoose";
 import { HostInfoModel } from "./models/HostInfoModel.js";
 const app = express();
 const server = http.createServer(app);
+
+const devUrl = [
+    "http://192.168.43.224:5173",
+    "http://localhost:5173",
+    "http://127.0.0.1:5500",
+];
 app.use(
     cors({
-        origin: [
-            "http://192.168.43.224:5173",
-            "http://localhost:5173",
-            "http://127.0.0.1:5500",
-        ],
+        origin: "*",
         credentials: true,
     })
 );

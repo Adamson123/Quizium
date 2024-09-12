@@ -3,7 +3,7 @@ import { requestOptions } from "./utils/RequestOptions";
 const postOptions = (info) => {
     return {
         method: "POST",
-        //  credentials: "include",
+        credentials: "include",
         headers: {
             "Content-Type": "application/json",
         },

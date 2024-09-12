@@ -131,7 +131,7 @@ export const resetPasswordLink = async (req, res) => {
         to: email.email,
         subject: "Reset your password",
         text: "Click the link to reset your password: <link>",
-        html: `<p>Click the link to reset your password: <a href='http://localhost:5173/reset-password/${token}'>Reset Password</a></p>`,
+        html: `<p>Click the link to reset your password: <a href='https://quizium-test.onrender.com/${token}'>Reset Password</a></p>`,
     };
 
     transporter

@@ -72,7 +72,7 @@ const localApi =
         window.location.origin.lastIndexOf(":")
     ) + ":3002/host-live";
 
-const publicApi = "https://quizium-test.onrender.com";
+const publicApi = "https://quizium-test.onrender.com/host-live";
 
 export const socket = io(publicApi, {
     autoConnect: false,

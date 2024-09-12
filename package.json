@@ -6,7 +6,7 @@
         "dev:fe": "cd frontend && npm run dev -- --host",
         "dev:be": "cd backend && npm run dev",
         "dev:tw": "cd frontend && npm start",
-        "render-postbuild": "npm install --prefix frontend --production=false && cd frontend && npm run build",
+        "render-postbuild": "npm install --prefix frontend --production=false && cd frontend && npm install && npm run build",
         "install": "npm install --prefix backend && npm install --prefix frontend",
         "build": "cd frontend && npm install && npm run build",
         "start": "npm run start --prefix backend"

@@ -53,44 +53,6 @@ export const createQuestion = async (req, res) => {
         { new: true, upsert: true }
     );
 
-    // //updating answer array with isCorrect:true options Id
-    // let answer = [];
-    // let questId;
-    // question.questions.forEach((quest, index) => {
-    //     // console.log(quest);
-
-    //     console.log(question.questions.length, index, "length");
-
-    //     if (question.questions.length - 1 === index) {
-    //         console.log(quest, "quest");
-    //         console.log(question.questions[index - 1], quest, "quest");
-
-    //         quest.options.forEach((opt) => {
-    //             //console.log(opt);
-    //             if (opt.isCorrect) {
-    //                 answer.push(opt._id);
-    //             }
-    //             questId = quest._id;
-    //         });
-    //     }
-    // });
-
-    // /*updating answer array with isCorrect:true if answer is filled,
-    //  doing this for concise duplication of questions with question answers*/
-    // if (answer.length) {
-    //     question = await QuestionsModel.findOneAndUpdate(
-    //         {
-    //             parentId: quiz._id,
-    //             "questions._id": questId,
-    //         },
-    //         {
-    //             $set: {
-    //                 "questions.$.answer": answer,
-    //             },
-    //         }
-    //     );
-    // }
-
     /*if the quiz does not have a questionId before for some 
     reasons(maybe as we are creating the quiz)(might be removed in the future)*/
     if (!quiz.questionsId) {

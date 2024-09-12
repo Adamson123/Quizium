@@ -16,6 +16,7 @@ import { notFoundMiddleWare } from "./middlewares/notFoundMiddleware.js";
 import { getInfoAtStart, tableLog } from "./utils/tableLog.js";
 import { jwtCheckAndVerify } from "./middlewares/jwtCheckAndVerify.js";
 import { Server } from "socket.io";
+import path from "path";
 import {
     joinUser,
     getHostInfo,
@@ -25,20 +26,22 @@ import {
     updatePoints,
     quizEnded,
 } from "./controllers/host-controller.js";
-import { isObjectIdOrHexString } from "mongoose";
-import { HostInfoModel } from "./models/HostInfoModel.js";
+
 const app = express();
+const __dirname = path.resolve();
 const server = http.createServer(app);
-app.use(
-    cors({
-        origin: [
-            "http://192.168.43.224:5173",
-            "http://localhost:5173",
-            "http://127.0.0.1:5500",
-        ],
-        credentials: true,
-    })
-);
+
+// app.use(
+//     cors({
+//         origin: [
+//             "http://192.168.43.224:5173",
+//             "http://localhost:5173",
+//             "http://127.0.0.1:5500",
+//         ],
+//         credentials: true,
+//         methods: ["POST", "GET", "DELETE", "PATCH"],
+//     })
+// );
 
 let io = new Server(server, {
     cors: {
@@ -62,9 +65,16 @@ app.use("/api/question", jwtCheckAndVerify, questionRouter);
 app.use("/api/result", jwtCheckAndVerify, resultRouter);
 app.use("/api/host", jwtCheckAndVerify, hostRouter);
 
-app.get("/", (req, res) => {
+app.get("/api", (req, res) => {
     res.send("welcome to Quizium server🎉");
 });
+
+//if (process.env.NODE_ENV === "production") {
+app.use(express.static(path.join(__dirname, "../frontend", "dist")));
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
+});
+///}
 
 app.use(notFoundMiddleWare);
 app.use(errorMiddleware);

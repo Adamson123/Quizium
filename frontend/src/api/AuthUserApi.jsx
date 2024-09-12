@@ -16,10 +16,7 @@ export const createUserFunc = async (info) => {
         console.log(info, "was hitted");
 
         // await delayTest();
-        const res = await fetch(
-            `https://quizium-1.onrender.com/api/auth/signup`,
-            postOptions(info)
-        );
+        const res = await fetch(`/api/auth/signup`, postOptions(info));
 
         const data = await res.json();
 
@@ -39,10 +36,7 @@ export const loginUserFunc = async (info) => {
     try {
         // await delayTest();
 
-        const res = await fetch(
-            `https://quizium.onrender.com/api/auth/login`,
-            postOptions(info)
-        );
+        const res = await fetch(`/api/auth/login`, postOptions(info));
         //const res = await axios.post(`http://localhost:3002/api/auth/login`, info);
 
         const data = await res.json();

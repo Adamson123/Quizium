@@ -3,7 +3,7 @@ import { useQuery } from "react-query";
 import { requestOptions } from "./utils/RequestOptions";
 
 export const getUser = async () => {
-    const res = await fetch(`https://quizium.onrender.com/api/user`, {
+    const res = await fetch(`/api/user`, {
         credentials: "include",
     });
 

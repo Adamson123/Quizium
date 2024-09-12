@@ -16,6 +16,7 @@ import { notFoundMiddleWare } from "./middlewares/notFoundMiddleware.js";
 import { getInfoAtStart, tableLog } from "./utils/tableLog.js";
 import { jwtCheckAndVerify } from "./middlewares/jwtCheckAndVerify.js";
 import { Server } from "socket.io";
+import path from "path";
 import {
     joinUser,
     getHostInfo,
@@ -27,6 +28,7 @@ import {
 } from "./controllers/host-controller.js";
 
 const app = express();
+const __dirname = path.resolve();
 const server = http.createServer(app);
 
 app.use(
@@ -38,7 +40,7 @@ app.use(
             "https://quiziumtest.onrender.com",
         ],
         credentials: true,
-        methods:["POST","GET","DELETE","PATCH"]
+        methods: ["POST", "GET", "DELETE", "PATCH"],
     })
 );
 
@@ -64,9 +66,16 @@ app.use("/api/question", jwtCheckAndVerify, questionRouter);
 app.use("/api/result", jwtCheckAndVerify, resultRouter);
 app.use("/api/host", jwtCheckAndVerify, hostRouter);
 
-app.get("/", (req, res) => {
+app.get("/api", (req, res) => {
     res.send("welcome to Quizium server🎉");
 });
+
+if (process.env.NODE_ENV === "production") {
+    app.use(express.static(path.join(__dirname, "../frontend", "dist")));
+    app.get("*", (req, res) => {
+        res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
+    });
+}
 
 app.use(notFoundMiddleWare);
 app.use(errorMiddleware);

@@ -2,10 +2,14 @@
     "name": "Quizium",
     "version": "1.0.0",
     "main": "test.js",
+    "private": true,
     "scripts": {
         "dev:fe": "cd frontend && npm run dev -- --host",
         "dev:be": "cd backend && npm run dev",
-        "dev:tw": "cd frontend && npm start"
+        "dev:tw": "cd frontend && npm start",
+        "install": "npm install --prefix backend && npm install --prefix frontend",
+        "build": "npm run build --prefix frontend",
+        "start": "npm run start --prefix backend"
     },
     "keywords": [],
     "author": "",

@@ -126,7 +126,7 @@ const LoginPage = () => {
                         <LoginWithGoogle />
                         <Link
                             to="/signup"
-                            className="isidoraBold text-textColor mt-2"
+                            className="isidoraBold text-textColor mt-[11px]"
                         >
                             Don't have an account?{" "}
                             <span className="text-shinyPurple">Signup</span>

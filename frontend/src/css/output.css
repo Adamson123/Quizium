@@ -2500,6 +2500,10 @@ html {
   margin-top: 8px;
 }
 
+.mt-\[11px\] {
+  margin-top: 11px;
+}
+
 .box-border {
   box-sizing: border-box;
 }

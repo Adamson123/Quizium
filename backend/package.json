@@ -5,7 +5,7 @@
     "type": "module",
     "scripts": {
         "test": "jest --watch",
-        "start": "NODE_ENV=production node server.js",
+        "start": "node server.js",
         "dev": "nodemon server.js"
     },
     "keywords": [],

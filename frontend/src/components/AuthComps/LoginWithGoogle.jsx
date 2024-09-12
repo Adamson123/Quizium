@@ -18,7 +18,7 @@ const LoginWithGoogle = () => {
         toast.promise(promise, {
             loading: "Logging In",
             success: (data) => {
-                //console.log(data.msg);
+            
                 return data.msg;
             },
             error: (data) => {

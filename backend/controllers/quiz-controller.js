@@ -220,21 +220,7 @@ export const getMultipleQuizzes = async (req, res) => {
         visibility: "public",
     };
 
-    //console.log(queriesObj);
-
-    //const queries = Object.keys(req.query);
-    // queries.forEach((query) => {
-    //     const queryVal =
-    //         req.query[query] === "Science Technology"
-    //             ? "Science & Technology"
-    //             : req.query[query];
-    //     if (queryVal) {
-    //         queriesObj[query] = queryVal;
-    //     }
-    // });
-
-    // delete queriesObj.skip;
-    // delete queriesObj.limit;
+    
 
     console.log("get multiple quiz:", "skip", skip, "limit", limit);
     const quizzes = await QuizInfosModel.find(queriesObj)

@@ -135,7 +135,7 @@ export const updateQuestion = async (req, res) => {
     }
 
     const { quiz: updatedQuiz } = await populateQuizAndQuest(quiz._id);
-    // console.log(quiz);
+  
 
     return res.status(200).json({ msg: "Question updated", quiz: updatedQuiz });
 };
@@ -145,8 +145,6 @@ export const updateQuestion = async (req, res) => {
 export const deleteQuestion = async (req, res) => {
     const quiz = req.quiz;
     const data = req.body;
-
-    console.log(data);
 
     if (data.questId) {
         const question = await QuestionsModel.findOneAndUpdate(

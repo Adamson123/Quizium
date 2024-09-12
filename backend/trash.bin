@@ -35,7 +35,7 @@ router.post("/uploadImage", upload.single("file"), async (req, res) => {
     try {
         const { originalname, buffer, mimetype } = req.file;
 
-        console.log("buffer", buffer);
+      
 
         const image = await QuizImagesModel.create({
             image: {

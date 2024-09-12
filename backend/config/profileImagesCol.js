@@ -8,7 +8,6 @@ export let gfs;
 export let gridfsBucket;
 export const connectToProfileImagesCol = async () => {
     try {
-        console.log(conn);
         conn.once("open", () => {
             gfs = Grid(conn.db, mongoose.mongo);
             gfs.collection("profile-images");

@@ -81,7 +81,6 @@ export const getUserHosts = async (req, res) => {
 };
 
 export const deleteHost = async (req, res) => {
-    //console.log(id, "here");
     const { id } = req.params;
     const host = await HostInfoModel.findByIdAndDelete(id);
     return res.status(200).json({ msg: "Host info deleted", host });

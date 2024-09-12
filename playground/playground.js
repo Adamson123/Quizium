@@ -49,9 +49,7 @@ const getKeys = (obj) => {
     }
 };
 
-//getAllKeys(msg);
 
-//console.log(newObj);
 
 const randomize = (arr) => {
     const randomizedArr = [];

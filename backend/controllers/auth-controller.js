@@ -117,24 +117,40 @@ export const googleLogin = async (req, res) => {
         });
     }
 
-
     handleTokenAndCookie(user._id, res);
 
     return res.status(200).json({ msg: "Welcome" });
     //console.log(userInfo);
 };
 
-export const resetPassword = async (req, res) => {};
+export const resetPassword = async (req, res) => {
+    const { token } = req.query;
+    const { password } = req.body;
+
+    const verifyToken = jwt.verify(token, process.env.JWT_KEY);
+    if (!verifyToken) {
+        throw new CustomError("Invalid token", 401);
+    }
+    const { id } = verifyToken;
+
+    const hashedPassword = await hashPassword(password);
+
+    await UsersModel.findByIdAndUpdate(id, {
+        password: hashedPassword,
+    });
+
+    return res.status(200).json({ msg: "Password has been rest" });
+};
 
 export const resetPasswordLink = async (req, res) => {
     const { email } = req.body;
 
-    const user = await UsersModel.findOne({ email });
+    const user = await UsersModel.findOne({ email: email.email });
 
     if (!user) throw new CustomError("User with email does not exist", 404);
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_KEY, {
-        expiresIn: "5h",
+        expiresIn: "1h",
     });
 
     const transporter = nodemailer.createTransport({
@@ -145,12 +161,15 @@ export const resetPasswordLink = async (req, res) => {
         },
     });
 
+    const localApi = "http://localhost:5173";
+    const publicApi = "https://quizium.onrender.com";
+
     const mailOptions = {
         from: '"Quizium Support" <dapoajibade66@gmail.com>',
-        to: email,
+        to: email.email,
         subject: "Reset your password",
         text: "Click the link to reset your password: <link>",
-        html: `<p>Click the link to reset your password: <a href=https://quizium.onrender.com/reset-password/${token}'>Reset Password</a></p>`,
+        html: `<p>Click the link to reset your password: <a href=${publicApi}/reset-password/${token}>Reset Password</a></p>`,
     };
 
     transporter

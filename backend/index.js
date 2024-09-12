@@ -31,17 +31,17 @@ const app = express();
 const __dirname = path.resolve();
 const server = http.createServer(app);
 
-// app.use(
-//     cors({
-//         origin: [
-//             "http://192.168.43.224:5173",
-//             "http://localhost:5173",
-//             "http://127.0.0.1:5500",
-//         ],
-//         credentials: true,
-//         methods: ["POST", "GET", "DELETE", "PATCH"],
-//     })
-// );
+app.use(
+    cors({
+        origin: [
+            "http://192.168.43.224:5173",
+            "http://localhost:5173",
+            "http://127.0.0.1:5500",
+        ],
+        credentials: true,
+        methods: ["POST", "GET", "DELETE", "PATCH"],
+    })
+);
 
 let io = new Server(server, {
     cors: {

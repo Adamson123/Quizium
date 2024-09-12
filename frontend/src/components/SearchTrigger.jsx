@@ -4,7 +4,7 @@ import { dataContext } from "../layouts/Layout";
 
 const SearchTrigger = ({
     category = "All",
-    scoring = "Exam-Style Scoring",
+    scoring = "Any",
     numOfQuests = { min: "", max: "" },
     refetch,
 }) => {

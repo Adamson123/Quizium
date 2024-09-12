@@ -20,7 +20,7 @@ const ExplorePage = () => {
     return (
         <div
             className="md:pl-[200px] isidoraReg text-textColor 
-            py-[100px] pl-[35px] bg-mainBg min-h-screen"
+            pt-[70px] pb-10 pl-[35px] bg-mainBg min-h-screen"
         >
             <SearchTrigger />
             <QuizSettings setShow={setShowQuizPanel} show={showQuizPanel} />

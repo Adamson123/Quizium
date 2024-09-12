@@ -85,7 +85,7 @@ const Filters = ({ refetch, isLoading }) => {
                         setTriggerRefetch(true);
                     }}
                 >
-                    {["Exam-Style Scoring", "Speed-Based Scoring"].map(
+                    {["Any", "Exam-Style Scoring", "Speed-Based Scoring"].map(
                         (scoring, index) => {
                             return (
                                 <option value={scoring} key={index}>

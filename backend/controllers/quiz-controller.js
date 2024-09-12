@@ -220,8 +220,6 @@ export const getMultipleQuizzes = async (req, res) => {
         visibility: "public",
     };
 
-    
-
     console.log("get multiple quiz:", "skip", skip, "limit", limit);
     const quizzes = await QuizInfosModel.find(queriesObj)
         .skip(Number(skip))
@@ -247,7 +245,7 @@ export const searchQuizzes = async (req, res) => {
         queriesObj["title"] = { $regex: query, $options: "i" };
         queriesObj["description"] = { $regex: query, $options: "i" };
     }
-    if (scoring) {
+    if (scoring && scoring !== "Any") {
         const applyTime = scoring === "Exam-Style Scoring" ? "entire" : "each";
         queriesObj["applyTime"] = applyTime;
     }

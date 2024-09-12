@@ -1,15 +1,47 @@
 import { useState } from "react";
 import Loading from "../ui/Loading";
 import { useMutation } from "react-query";
+import { resetPassword } from "../../api/AuthUserApi";
+import { useNavigate, useParams } from "react-router";
+import toast from "react-hot-toast";
 
 const ResetPassword = () => {
-    const { mutateAsync: resetPasswordFunc, isLoading } = useMutation(() => {});
+    const { token } = useParams();
+
+    const navigate = useNavigate();
+    const { mutateAsync: resetPasswordFunc, isLoading } =
+        useMutation(resetPassword);
 
     const [show, setShow] = useState(false);
     const [password, setPassword] = useState("");
+
+    const handleResetPassword = async (event) => {
+        event.preventDefault();
+        if (isLoading) {
+            return;
+        }
+
+        const promise = resetPasswordFunc({ token, password });
+
+        toast.promise(promise, {
+            loading: "Resetting password",
+            success: (data) => {
+                return data.msg;
+            },
+            error: (data) => {
+                return data.err;
+            },
+        });
+        const res = await promise;
+        if (res?.msg) navigate("/login");
+    };
+
     return (
         <div className="flex justify-center min-h-screen items-center">
-            <form className="flex flex-col gap-3 justify-center m-auto">
+            <form
+                onSubmit={(event) => handleResetPassword(event)}
+                className="flex flex-col gap-3 justify-center m-auto"
+            >
                 <h2 className="agbalumoFont text-textColor text-center text-3xl">
                     Enter New Password
                 </h2>

@@ -91,6 +91,31 @@ export const resetPasswordLink = async (email) => {
     }
 };
 
+export const resetPassword = async (info) => {
+    try {
+        const res = await fetch(
+            `/api/auth/reset-password?token=${info.token}`,
+            requestOptions(
+                { password: info.password },
+                "application/json",
+                "PATCH"
+            )
+        );
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            throw new Error(data.err);
+        }
+
+        return data;
+    } catch (error) {
+        console.log("error fr crt", error);
+
+        throw { err: error.message };
+    }
+};
+
 export const logoutUserFunc = async () => {
     try {
         const res = await fetch("/api/auth/logout", postOptions({}));

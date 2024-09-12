@@ -72,17 +72,6 @@ const Header = ({ text, setSearch, search, searchFocus, setSearchFocus }) => {
                             />
                         </div>
                     </div>
-
-                    {/* notification button */}
-                    <button
-                        className="bg-shinyPurple px-[10px] py-[7px] rounded-full 
-                        flex items-center justify-center insetShadowTwo clickable"
-                    >
-                        <span
-                            className="text-textColor 
-                        bi-headphones text-[15px] cursor-pointer"
-                        ></span>
-                    </button>
                 </div>
             </div>
 

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import LoadingTitleAndGenerlInfo from "./LoadingTitleAndGenerlInfo";
 
 const TitleAndGeneralInfo = ({ hostInfo }) => {
     const getCompletionRate = () => {
@@ -19,8 +20,6 @@ const TitleAndGeneralInfo = ({ hostInfo }) => {
         return percentage && percentage !== Infinity ? percentage : 0;
     };
 
-    console.log(typeof getCompletionRate());
-
     const [generalInfo, setGeneralInfo] = useState([
         {
             name: "Completion rate",
@@ -37,11 +36,6 @@ const TitleAndGeneralInfo = ({ hostInfo }) => {
             value: hostInfo?.questionsLength,
             icon: "bi-patch-question",
         },
-        // {
-        //     name: "Scoring",
-        //     value: "Exam-style Scoring",
-        //     icon: "bi-alarm",
-        // },
     ]);
 
     useEffect(() => {
@@ -63,6 +57,7 @@ const TitleAndGeneralInfo = ({ hostInfo }) => {
             },
         ]);
     }, [hostInfo]);
+
     return (
         <div>
             {/* Title */}
@@ -79,34 +74,38 @@ const TitleAndGeneralInfo = ({ hostInfo }) => {
                 </div>
                 {/* Completion rate, Total students, Questions*/}
                 <div className="flex flex-wrap gap-2 max-h-[148px]">
-                    {generalInfo.map((info, index) => {
-                        return (
-                            <div
-                                key={index}
-                                className="flex items-center p-3 border
-                                border-grayFive gap-2 rounded flex-1"
-                            >
-                                {/* icon */}
+                    {hostInfo ? (
+                        generalInfo.map((info, index) => {
+                            return (
                                 <div
-                                    className="w-10 h-10 bg-grayFive flex
-                                  items-center justify-center rounded shadowAround"
+                                    key={index}
+                                    className="flex items-center p-3 border
+                                border-grayFive gap-2 rounded flex-1"
                                 >
-                                    <span
-                                        className={`${info.icon} text-[18px]`}
-                                    ></span>
+                                    {/* icon */}
+                                    <div
+                                        className="w-10 h-10 bg-grayFive flex
+                                  items-center justify-center rounded shadowAround"
+                                    >
+                                        <span
+                                            className={`${info.icon} text-[18px]`}
+                                        ></span>
+                                    </div>
+                                    {/* Completion rate text */}
+                                    <div className="flex flex-col">
+                                        <span className="text-[12px] text-nowrap text-grayFive">
+                                            {info.name}
+                                        </span>
+                                        <span className="isidoraBold text-[13px] text-nowrap">
+                                            {info.value}
+                                        </span>
+                                    </div>
                                 </div>
-                                {/* Completion rate text */}
-                                <div className="flex flex-col">
-                                    <span className="text-[12px] text-nowrap text-grayFive">
-                                        {info.name}
-                                    </span>
-                                    <span className="isidoraBold text-[13px] text-nowrap">
-                                        {info.value}
-                                    </span>
-                                </div>
-                            </div>
-                        );
-                    })}
+                            );
+                        })
+                    ) : (
+                        <LoadingTitleAndGenerlInfo />
+                    )}
                 </div>
             </div>
         </div>

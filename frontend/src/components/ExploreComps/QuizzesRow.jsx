@@ -62,7 +62,7 @@ const QuizzesRow = ({ category }) => {
     }, [quizCover]);
 
     const distributeRef = (index) => {
-        if (index === 0) {
+        if (index === 0 && quizCover?.length > 1) {
             return firstDivRef;
         } else if (index === quizCover?.length - 1) {
             return lastDivRef;

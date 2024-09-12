@@ -1,32 +1,34 @@
 const NavRow = ({ rowRef, showLeftBtn, showRightBtn }) => {
     return (
-        <div
-            className="absolute w-full bg-re-400 flex
-                 justify-between top-[50%] z-10 text-grayFive"
+        <
+            // className="absolute w-full bg-re-400 flex
+            //      justify-between top-[50%] z-10 text-grayFive"
         >
-            {
-                <button
-                    onClick={() => {
-                        rowRef.current.scrollLeft -= rowRef.current.clientWidth;
-                    }}
-                    className={`w-[50px] h-[50px] rounded-full 
-                            border border-grayFive bg-mainBg ${
-                                showLeftBtn ? "opacity-[0.5]" : "opacity-0"
+            <button
+                onClick={() => {
+                    rowRef.current.scrollLeft -= rowRef.current.clientWidth;
+                }}
+                className={`w-[50px] h-[50px] rounded-full 
+                            border border-grayFive bg-mainBg absolute  top-[50%] left-2 ${
+                                showLeftBtn ? "opacity-[0.5] z-10" : "opacity-0"
                             }`}
-                >
-                    <span
-                        className="bi-chevron-left
+            >
+                <span
+                    className="bi-chevron-left
                              font-extrabold text-[18px]"
-                    ></span>
-                </button>
-            }
+                ></span>
+            </button>
+            {/* Unclickable path */}
+
             <button
                 onClick={() => {
                     rowRef.current.scrollLeft += rowRef.current.clientWidth;
                 }}
                 className={`w-[50px] h-[50px] rounded-full border
-                            bg-mainBg border-grayFive ${
-                                showRightBtn ? "opacity-[0.5]" : "opacity-0"
+                            bg-mainBg border-grayFive absolute top-[50%] right-2 ${
+                                showRightBtn
+                                    ? "opacity-[0.5] z-10"
+                                    : "opacity-0"
                             }`}
             >
                 <span
@@ -34,7 +36,7 @@ const NavRow = ({ rowRef, showLeftBtn, showRightBtn }) => {
                         font-extrabold text-[18px]"
                 ></span>
             </button>
-        </div>
+        </>
     );
 };
 

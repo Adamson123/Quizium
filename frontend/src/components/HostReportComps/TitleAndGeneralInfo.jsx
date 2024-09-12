@@ -74,7 +74,7 @@ const TitleAndGeneralInfo = ({ hostInfo }) => {
                 </div>
                 {/* Completion rate, Total students, Questions*/}
                 <div className="flex flex-wrap gap-2 max-h-[148px]">
-                    {false ? (
+                    {hostInfo ? (
                         generalInfo.map((info, index) => {
                             return (
                                 <div

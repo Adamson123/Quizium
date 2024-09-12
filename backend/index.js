@@ -25,8 +25,7 @@ import {
     updatePoints,
     quizEnded,
 } from "./controllers/host-controller.js";
-import { isObjectIdOrHexString } from "mongoose";
-import { HostInfoModel } from "./models/HostInfoModel.js";
+
 const app = express();
 const server = http.createServer(app);
 
@@ -39,6 +38,7 @@ app.use(
             "https://quiziumtest.onrender.com",
         ],
         credentials: true,
+        methods:["POST","GET","DELETE","PATCH"]
     })
 );
 

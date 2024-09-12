@@ -13,6 +13,8 @@ const postOptions = (info) => {
 
 export const createUserFunc = async (info) => {
     try {
+        console.log(info, "was hitted");
+
         // await delayTest();
         const res = await fetch(
             `https://quizium-1.onrender.com/api/auth/signup`,

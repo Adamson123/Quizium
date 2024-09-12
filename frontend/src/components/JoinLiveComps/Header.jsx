@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ConfirmAction from "../ConfirmAction";
 import SocketState from "../SocketState";
-import { Navigate } from "react-router";
+
 import { Link } from "react-router-dom";
 
 const Header = ({
@@ -11,7 +11,6 @@ const Header = ({
     userId,
     alreadyJoined = () => {},
     alreadySubmitted,
-    navigate,
 }) => {
     const [showConfirm, setShowConfirm] = useState(false);
 

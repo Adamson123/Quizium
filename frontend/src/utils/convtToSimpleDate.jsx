@@ -17,8 +17,6 @@ const convtToSimpleDate = (date, showTime) => {
         "Dec",
     ];
 
-    console.log(date);
-
     const trimmedTime = day.substring(day.indexOf("T") + 1, day.indexOf("Z"));
     const hour = trimmedTime.split(":")[0];
 

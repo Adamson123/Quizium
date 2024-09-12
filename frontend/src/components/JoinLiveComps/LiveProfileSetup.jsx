@@ -25,7 +25,7 @@ const LiveProfileSetup = ({ generateAvatar, socket, userId }) => {
             return toast.error("Input your nickname");
         }
 
-        const toastId = toast.loading("Joing room");
+        const toastId = toast.loading("Joining room");
         socket.emit("join-user", {
             nickname,
             avatar: currentAvatar,

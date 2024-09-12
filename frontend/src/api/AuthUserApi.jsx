@@ -15,7 +15,7 @@ export const createUserFunc = async (info) => {
     try {
         // await delayTest();
         const res = await fetch(
-            `https://quizium.onrender.com/api/auth/signup`,
+            `https://quizium-1.onrender.com/api/auth/signup`,
             postOptions(info)
         );
 

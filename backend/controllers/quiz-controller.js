@@ -241,7 +241,7 @@ export const getMultipleQuizzes = async (req, res) => {
         .skip(Number(skip))
         .limit(Number(limit))
         .populate("coverImg")
-        .populate({ path: "createdBy", populate: { path: "profileImg" } });
+        .populate({ path: "createdBy",select:"-password", populate: { path: "profileImg" } });
 
     return res.status(200).json(quizzes);
 };

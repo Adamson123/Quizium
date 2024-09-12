@@ -103,12 +103,12 @@ const LoginPage = () => {
                     </div>
                     <Link
                         to="/reset-password"
-                        className="text-left w-full text-[13.3px] mt-[2px] isidoraSemiBold text-grayFive"
+                        className="text-left w-full text-[13.3px] mt-[3px] isidoraSemiBold text-grayFive"
                     >
                         Forgot Password?
                     </Link>
 
-                    <div className="mt-[10px] text-center">
+                    <div className="mt-[8px] text-center">
                         <button
                             type="submit"
                             className={`isidoraBold p-2 w-[300px] h-[50px] rounded-[5px]

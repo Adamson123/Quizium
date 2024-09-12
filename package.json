@@ -1,7 +1,6 @@
 {
     "name": "Quizium",
     "version": "1.0.0",
-    "main": "test.js",
     "private": true,
     "scripts": {
         "dev:fe": "cd frontend && npm run dev -- --host",

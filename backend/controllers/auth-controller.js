@@ -45,23 +45,6 @@ export const signup = async (req, res) => {
 
     const hashedPassword = await hashPassword(password);
 
-    // let user;
-    // if (req.file) {
-    //     const { buffer, mimetype } = req.file;
-
-    //     const image = await ProfImagesModel.create({
-    //         image: {
-    //             data: buffer,
-    //             contentType: mimetype,
-    //         },
-    //     });
-
-    //     user = await UsersModel.create({
-    //         ...req.body,
-    //         password: hashedPassword,
-    //         profileImg: image_id,
-    //     });
-    // } else {
     const user = await UsersModel.create({
         ...req.body,
         password: hashedPassword,
@@ -85,6 +68,9 @@ export const login = async (req, res) => {
 
     if (!user) throw new CustomError("Invalid Credentials", 401);
 
+    if (!user?.password) {
+        throw new CustomError("Invalid Password", 401);
+    }
     const isMatch = await user.verifyPassword(password);
     if (!isMatch) throw new CustomError("Invalid Password", 401);
 

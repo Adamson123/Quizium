@@ -45,28 +45,10 @@ export const signup = async (req, res) => {
 
     const hashedPassword = await hashPassword(password);
 
-    // let user;
-    // if (req.file) {
-    //     const { buffer, mimetype } = req.file;
-
-    //     const image = await ProfImagesModel.create({
-    //         image: {
-    //             data: buffer,
-    //             contentType: mimetype,
-    //         },
-    //     });
-
-    //     user = await UsersModel.create({
-    //         ...req.body,
-    //         password: hashedPassword,
-    //         profileImg: image_id,
-    //     });
-    // } else {
     const user = await UsersModel.create({
         ...req.body,
         password: hashedPassword,
     });
-    //}
 
     handleTokenAndCookie(user._id, res);
 
@@ -117,8 +99,6 @@ export const googleLogin = async (req, res) => {
         });
     }
 
-    console.log(user);
-
     handleTokenAndCookie(user._id, res);
 
     return res.status(200).json({ msg: "Welcome" });
@@ -130,7 +110,7 @@ export const resetPassword = async (req, res) => {};
 export const resetPasswordLink = async (req, res) => {
     const { email } = req.body;
 
-    const user = await UsersModel.findOne({ email });
+    const user = await UsersModel.findOne({ email: email.email });
 
     if (!user) throw new CustomError("User with email does not exist", 404);
 
@@ -148,7 +128,7 @@ export const resetPasswordLink = async (req, res) => {
 
     const mailOptions = {
         from: '"Quizium Support" <dapoajibade66@gmail.com>',
-        to: email,
+        to: email.email,
         subject: "Reset your password",
         text: "Click the link to reset your password: <link>",
         html: `<p>Click the link to reset your password: <a href='http://localhost:5173/reset-password/${token}'>Reset Password</a></p>`,
@@ -157,8 +137,6 @@ export const resetPasswordLink = async (req, res) => {
     transporter
         .sendMail(mailOptions)
         .then((info) => {
-            //console.log(info);
-
             return res
                 .status(200)
                 .json({ msg: "Reset link has been sent to your email" });

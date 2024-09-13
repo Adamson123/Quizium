@@ -200,7 +200,7 @@ const QuizEditorPage = () => {
         if (deletingQuest) {
             return;
         }
-        if (allQuestions.length === 1) {
+        if (allQuestions.length === 1 && questId) {
             toast.error("Question can't be deleted");
             return;
         }
@@ -211,8 +211,6 @@ const QuizEditorPage = () => {
                 image: singleQuestion.image?._id,
             },
         };
-
-        console.log(info);
 
         const promise = deleteQuestionFunc(info);
 

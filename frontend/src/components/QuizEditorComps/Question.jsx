@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef } from "react";
 
 import Warning from "../ui/Warning";
-
 import Options from "./QuestionComps/Options";
 import TrueFalse from "./QuestionComps/TrueFalse";
 import TypeAnswer from "./QuestionComps/TypeAnswer";
@@ -16,6 +15,7 @@ const Question = ({
     setPickedImage,
     allQuestions_2,
     handleDeleteQuestion,
+
     //questionConfig,
 }) => {
     const questionRef = useRef("");
@@ -73,6 +73,7 @@ const Question = ({
         updateIsCorrect.current = true;
     };
 
+    const uploadRef = useRef();
     const imageProps = useMemo(() => {
         console.log("allQuestions changed");
 
@@ -81,6 +82,7 @@ const Question = ({
             handleDeleteQuestion,
             imagePicked,
             setPickedImage,
+            uploadRef,
         };
     }, [allQuestions_2, imagePicked, singleQuestion.image]);
 
@@ -138,7 +140,35 @@ const Question = ({
                 )}
             </div>
             {/* Upload Image */}
-            <Image imageProps={imageProps} />
+            <>
+                {singleQuestion.image && (
+                    <div
+                        className="bg-red-600 w-full px-1 pt-1 pb-2
+                    rounded insetShadow
+                    flex justify-between"
+                    >
+                        <button
+                            onClick={async () => {
+                                handleDeleteQuestion("");
+                            }}
+                            className="bg-[rgba(0,0,0,0.4)] p-1 px-2 rounded"
+                        >
+                            <span className="bi-trash-fill text-[17px]"></span>
+                        </button>
+
+                        <button
+                            onClick={() => {
+                                uploadRef.current.click();
+                            }}
+                            className="bg-[rgba(0,0,0,0.4)] text-[13px] p-1 px-2 rounded isidoraBold"
+                        >
+                            Change Image
+                        </button>
+                    </div>
+                )}
+                <Image imageProps={imageProps} />
+            </>
+
             {/*  Enter Options */}
             <div className="flex flex-col gap-4 mt-10">{optionsToRender()}</div>
         </div>

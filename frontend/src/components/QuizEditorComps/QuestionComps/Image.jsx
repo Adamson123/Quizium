@@ -8,8 +8,8 @@ const Image = memo(({ imageProps }) => {
         handleDeleteQuestion,
         imagePicked,
         setPickedImage,
+        uploadRef,
     } = imageProps;
-    const uploadRef = useRef();
 
     console.log("Image rendered");
 
@@ -35,30 +35,7 @@ const Image = memo(({ imageProps }) => {
     return (
         <div>
             {/* Change Image */}
-            {singleQuestion.image && (
-                <div
-                    className="bg-red-600 w-full px-1 pt-1 pb-2
-                    rounded insetShadow
-                    flex justify-between"
-                >
-                    <button
-                        onClick={() => handleDeleteQuestion("")}
-                        className="bg-[rgba(0,0,0,0.4)] p-1 px-2 rounded"
-                    >
-                        <span className="bi-trash-fill text-[17px]"></span>
-                    </button>
 
-                    <button
-                        onClick={() => {
-                            uploadRef.current.click();
-                        }}
-                        className="bg-[rgba(0,0,0,0.4)] text-[13px] p-1 px-2 rounded
-     isidoraBold"
-                    >
-                        Change Image
-                    </button>
-                </div>
-            )}
             <input
                 onChange={updateImage}
                 ref={uploadRef}

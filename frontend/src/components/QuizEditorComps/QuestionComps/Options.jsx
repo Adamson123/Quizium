@@ -20,12 +20,12 @@ const Options = ({
     const optionRefs = useRef([]);
 
     useEffect(() => {
-        if (allQuestions_2 === allQuestions) {
-            // Add text to options
-            allQuestions[currentQuestion]?.options.forEach((option, i) => {
-                optionRefs.current[i].innerText = option.text;
-            });
-        }
+        //if (allQuestions_2 === allQuestions) {
+        // Add text to options
+        allQuestions[currentQuestion]?.options.forEach((option, i) => {
+            optionRefs.current[i].innerText = option.text;
+        });
+        //}
     }, [currentQuestion, allQuestions_2]);
 
     const updateOptions = (event, id) => {

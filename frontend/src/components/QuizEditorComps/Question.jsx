@@ -23,10 +23,9 @@ const Question = ({
     const updateIsCorrect = useRef(false);
     // adding text to options if allQuestion array has been populated (it's latest version has been updated in the server)
     useEffect(() => {
-        if (allQuestions_2 === allQuestions) {
-            questionRef.current.innerText =
-                allQuestions[currentQuestion]?.question;
-        }
+        //  if (allQuestions_2 === allQuestions) {
+        questionRef.current.innerText = allQuestions[currentQuestion]?.question;
+        /// }
     }, [currentQuestion, allQuestions_2]);
 
     //will be called when user is typing...

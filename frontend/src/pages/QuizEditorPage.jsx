@@ -230,8 +230,21 @@ const QuizEditorPage = () => {
             return;
         }
 
-        setAllQuestions(res.quiz.questionsId.questions);
-        setAllQuestions_2(res.quiz.questionsId.questions);
+        let resQuestions = res.quiz.questionsId.questions;
+
+        if (!questId) {
+            resQuestions = resQuestions.map((quest, index) => {
+                if (currentQuestion === index) {
+                    console.log("yes");
+                    return { ...singleQuestion, image: "" };
+                } else {
+                    return quest;
+                }
+            });
+        }
+
+        setAllQuestions(resQuestions);
+        setAllQuestions_2(resQuestions);
 
         if (questId && currentQuestion === allQuestions.length - 1) {
             setCurrentQuestion(currentQuestion - 1);

@@ -71,11 +71,12 @@ const Personal = () => {
                 : newUser;
 
             value?.setValue({ ...value, email, name, _id, profileImage });
-            // await value?.refetch();
+            setImagePicked("");
+            //await value?.refetch();
 
             // if (res.msg) {
             //     value?.setProfileImage(URL.createObjectURL(imagePicked));
-            //     setImagePicked("");
+            //
             // }
             //update profile image to make it reflect in other components it's used
         }

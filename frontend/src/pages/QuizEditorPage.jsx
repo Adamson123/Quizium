@@ -188,8 +188,18 @@ const QuizEditorPage = () => {
             }
 
             if (imagePicked) {
-                setAllQuestions(res.quiz.questionsId.questions);
-                setAllQuestions_2(res.quiz.questionsId.questions);
+                const resQuestions = res.quiz.questionsId.questions?.map(
+                    (quest, index) => {
+                        if (currentQuestion === index) {
+                            return { ...singleQuestion, image: quest?.image };
+                        } else {
+                            return quest;
+                        }
+                    }
+                );
+
+                setAllQuestions(resQuestions);
+                setAllQuestions_2(resQuestions);
             }
             setShowSaveNoti(false);
             setPickedImage("");

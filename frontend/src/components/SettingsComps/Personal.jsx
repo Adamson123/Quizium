@@ -39,6 +39,7 @@ const Personal = () => {
             }
 
             setImagePicked(optimizedImage);
+            event.target.value = "";
         }
     };
 

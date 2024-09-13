@@ -7,6 +7,7 @@ import SettingInputComp from "./SettingInputComp";
 import { dataContext } from "../../layouts/Layout";
 import newUser from "../../assets/images/defaultProfile/newUser.png";
 import bufferToObjUrl from "../../utils/bufferToObjUrl";
+import { convertToWebp } from "../../utils/convertToWebp";
 
 const Personal = () => {
     const value = useContext(dataContext);

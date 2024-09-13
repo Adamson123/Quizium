@@ -84,6 +84,7 @@ const QuizzesRow = ({ category }) => {
                 showLeftBtn={showLeftBtn}
                 showRightBtn={showRightBtn}
             />
+
             <div
                 onScroll={updateScrollBtn}
                 ref={rowRef}

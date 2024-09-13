@@ -1,7 +1,8 @@
-🎉 Welcome to Quizium! 🎓
+# 🎉 Welcome to Quizium! 🎓
 
 Quizium is an advanced platform designed to help you create, play, and host quizzes seamlessly. Whether you're an educator, a trivia enthusiast, or just someone who enjoys challenging friends, Quizium provides all the tools you need.
-⚙️ Core Features
+
+## ⚙️ Core Features
 
     🛠️ Easy quiz creation using our user-friendly quiz editor.
     🖼️ Add cover images to personalize your quizzes.
@@ -16,12 +17,12 @@ Quizium is an advanced platform designed to help you create, play, and host quiz
     🏆 Real-time score tracking for participants during live-hosted quizzes.
     🔐 Google Sign-In is integrated for secure and convenient login.
 
-🔥 Scoring Methods
+## 🔥 Scoring Methods
 
     Speed-Based Scoring: Prioritizes both accuracy and the speed of answering questions.
     Exam-Style Scoring: Focuses solely on accuracy within a set time limit.
 
-💻 Technologies Used
+## 💻 Technologies Used
 
     🟢 MongoDB
     ⚙️ Express

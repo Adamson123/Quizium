@@ -4,6 +4,8 @@ Quizium is an advanced platform designed to help you create, play, and host quiz
 
 ## ⚙️ Core Features
 
+### More features might be added in the future.
+
     🛠️ Easy quiz creation using our user-friendly quiz editor.
     🖼️ Add cover images to personalize your quizzes.
     🔒 Set your quizzes to private or public.
@@ -30,3 +32,5 @@ Quizium is an advanced platform designed to help you create, play, and host quiz
     🔧 Node.js
 
 Quizium offers a dynamic platform for creating and engaging with quizzes. Challenge yourself and others by exploring the world of quizzes today. 🚀
+
+Quizium : https://quizium.onrender.com/

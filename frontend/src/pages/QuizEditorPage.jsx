@@ -345,7 +345,7 @@ const QuizEditorPage = () => {
 
     console.log("create question re-rendered");
 
-    if (!data && isLoading) {
+    if ((!data && isLoading) || !allQuestions?.length) {
         return <PageIsLoading message={"Setting up quiz editor..."} />;
     }
 

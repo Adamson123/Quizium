@@ -78,13 +78,16 @@ export const updatePersonalInfo = async (req, res) => {
             { name, profileImg: updateImage() }
         );
 
-        return res
-            .status(200)
-            .json({ msg: "Name and profile picture has been updated" });
+        const updatedUser = await UsersModel.findById({ _id: userId })
+            .select("-password")
+            .populate("profileImg");
+        return res.status(200).json({
+            msg: "Name and profile picture has been updated",
+            updatedUser,
+        });
     }
 
     await UsersModel.findByIdAndUpdate({ _id: userId }, { name });
-
     const updatedUser = await UsersModel.findById({ _id: userId })
         .select("-password")
         .populate("profileImg");

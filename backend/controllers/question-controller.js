@@ -85,7 +85,11 @@ export const updateQuestion = async (req, res) => {
     let image;
     if (req.file) {
         const { buffer, mimetype } = req.file;
-        image = await QuestionImagesModel.findById(data.image);
+
+        if (data.image) {
+            image = await QuestionImagesModel.findById(data.image);
+        }
+
         if (!image) {
             console.log("not here");
             image = await QuestionImagesModel.create({
@@ -121,7 +125,7 @@ export const updateQuestion = async (req, res) => {
                 "questions.$.explanation": data.explanation,
                 "questions.$.questionType": data.questionType,
                 "questions.$.answerOption": data.answerOption,
-                "questions.$.image": image && image._id,
+                "questions.$.image": image?._id,
             },
         }
     );
@@ -135,7 +139,6 @@ export const updateQuestion = async (req, res) => {
     }
 
     const { quiz: updatedQuiz } = await populateQuizAndQuest(quiz._id);
-  
 
     return res.status(200).json({ msg: "Question updated", quiz: updatedQuiz });
 };

@@ -1,5 +1,5 @@
 export const bufferToObj = (arr) => {
-    if (!arr) {
+    if (!arr?.length) {
         return;
     }
     const byteArray = new Uint8Array(arr);

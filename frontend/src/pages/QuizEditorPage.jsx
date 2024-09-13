@@ -17,6 +17,7 @@ import Question from "../components/QuizEditorComps/Question";
 import toast from "react-hot-toast";
 import QuizValidation from "../components/QuizEditorComps/QuizValidation";
 import SaveOptions from "../components/QuizEditorComps/SaveOptions";
+
 //import analyzeQuiz from "../components/QuizEditorComps/analyzeQuiz";
 
 const QuizEditorPage = () => {
@@ -82,8 +83,6 @@ const QuizEditorPage = () => {
     //updating all questions array if questions has been fetched
     useEffect(() => {
         if (data) {
-            //console.log(data);
-
             const { quiz } = data;
             if (quiz?.questionsId) {
                 setAllQuestions(quiz.questionsId.questions);
@@ -98,6 +97,67 @@ const QuizEditorPage = () => {
             setSingleQuestion(allQuestions[currentQuestion]);
         }
     }, [allQuestions, currentQuestion]);
+
+    /*setting this up because if we make a request to the server, we won't be updating
+     allQuestions with the response directly,
+    cause if we do, the changes made on any question when the request was made
+    will reset to the state it was before we made the request. 
+    so this will handle updating allQuestions */
+
+    const [updateAllQuestions, setUpdateAllQuestions] = useState({
+        update: false,
+        value: [],
+        method: "",
+        oldValue: [],
+    });
+
+    useEffect(() => {
+        if (!updateAllQuestions.update) {
+            return;
+        }
+
+        let resQuestions = [];
+        if (updateAllQuestions.method === "post") {
+            resQuestions = [...allQuestions, updateAllQuestions.value];
+        } else if (updateAllQuestions.method === "patch") {
+            resQuestions = allQuestions.map((quest) => {
+                if (quest._id === updateAllQuestions.value._id) {
+                    return updateAllQuestions.value;
+                } else {
+                    return quest;
+                }
+            });
+        } else {
+            /*if questId we will be deleting the whole question,
+             else we will be deleting only the question image*/
+            if (updateAllQuestions.value.questId) {
+                resQuestions = allQuestions.filter((quest) => {
+                    if (quest._id !== updateAllQuestions.value.questIdSec) {
+                        return quest;
+                    }
+                });
+            } else {
+                resQuestions = allQuestions.map((quest) => {
+                    if (quest._id === updateAllQuestions.value.questIdSec) {
+                        return { ...quest, image: "" };
+                    } else {
+                        return quest;
+                    }
+                });
+            }
+        }
+        setAllQuestions(resQuestions);
+        if (updateAllQuestions.oldValue !== allQuestions) {
+            /*if changes were made to allQuestions as we were
+             updating to the server, trigger another
+              update or let say trigger save btn*/
+            setAllQuestions_2(allQuestions);
+        } else {
+            setAllQuestions_2(resQuestions);
+        }
+        //  setCurrentQuestion(resQuestions.length - 1);
+        setUpdateAllQuestions({ updateAllQuestions, update: false });
+    }, [updateAllQuestions]);
 
     const handleCreateQuestion = async (quiz, image, duplicate) => {
         if (allQuestions.length >= 25) {
@@ -154,13 +214,17 @@ const QuizEditorPage = () => {
         });
 
         const res = await promise;
+
+        const resLength = res.quiz.questionsId.questions?.length;
+        setUpdateAllQuestions({
+            update: true,
+            value: res.quiz.questionsId.questions[resLength - 1], //,
+            method: "post",
+            oldValue: allQuestions,
+        });
         if (res.err) {
             return;
         }
-
-        setAllQuestions(res.quiz.questionsId.questions);
-        setAllQuestions_2(res.quiz.questionsId.questions);
-        setCurrentQuestion(res.quiz.questionsId.questions.length - 1);
     };
 
     const handleUpdateQuestion = async () => {
@@ -169,14 +233,16 @@ const QuizEditorPage = () => {
             !updatingQuest
         ) {
             const formData = new FormData();
-            formData.append("file", imagePicked);
-            formData.append("question", JSON.stringify(singleQuestion));
 
+            formData.append("file", imagePicked);
+
+            console.log(formData.get("file"), "lte");
+
+            formData.append("question", JSON.stringify(singleQuestion));
             const data = {
                 data: formData,
                 id,
             };
-
             const holdAllQuestions_2 = allQuestions_2;
             setAllQuestions_2(allQuestions);
 
@@ -188,18 +254,20 @@ const QuizEditorPage = () => {
             }
 
             if (imagePicked) {
-                const resQuestions = res.quiz.questionsId.questions?.map(
-                    (quest, index) => {
-                        if (currentQuestion === index) {
-                            return { ...singleQuestion, image: quest?.image };
-                        } else {
-                            return quest;
+                const updatedQuestion = res.quiz.questionsId.questions?.find(
+                    (quests) => {
+                        if (quests._id === singleQuestion._id) {
+                            return quests;
                         }
                     }
                 );
 
-                setAllQuestions(resQuestions);
-                setAllQuestions_2(resQuestions);
+                setUpdateAllQuestions({
+                    update: true,
+                    value: updatedQuestion,
+                    method: "patch",
+                    oldValue: allQuestions,
+                });
             }
             setShowSaveNoti(false);
             setPickedImage("");
@@ -242,18 +310,12 @@ const QuizEditorPage = () => {
 
         let resQuestions = res.quiz.questionsId.questions;
 
-        if (!questId) {
-            resQuestions = resQuestions.map((quest, index) => {
-                if (currentQuestion === index) {
-                    return { ...singleQuestion, image: "" };
-                } else {
-                    return quest;
-                }
-            });
-        }
-
-        setAllQuestions(resQuestions);
-        setAllQuestions_2(resQuestions);
+        setUpdateAllQuestions({
+            update: true,
+            value: { questId, questIdSec: singleQuestion._id }, //,
+            method: "delete",
+            oldValue: allQuestions,
+        });
 
         if (questId && currentQuestion === allQuestions.length - 1) {
             setCurrentQuestion(currentQuestion - 1);
@@ -297,7 +359,6 @@ const QuizEditorPage = () => {
                 ></span>
             ),
         });
-        console.log(status, "status");
 
         if (error.err === "404 quiz not found") {
             history.replaceState(null, "", "/");

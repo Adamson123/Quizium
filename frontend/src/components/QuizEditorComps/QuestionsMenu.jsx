@@ -84,7 +84,9 @@ const QuestionsMenu = ({
                             cursor-pointer rounded text-center  flex 
                             justify-center items-center relative font-bold 
                             text-3xl md:min-w-24 md:min-h-20 sxl:min-w-28 ${
-                                !imagePicked && "shinyShadow"
+                                !imagePicked
+                                    ? "shinyShadow opacity-[1]"
+                                    : "opacity-[0.3]"
                             }`}
                         >
                             {i + 1}

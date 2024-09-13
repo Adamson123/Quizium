@@ -13,7 +13,7 @@ const postOptions = (info) => {
 
 export const createUserFunc = async (info) => {
     try {
-        // await delayTest();
+       
         const res = await fetch(`/api/auth/signup`, postOptions(info));
         //const res = await axios.post(`http://localhost:3002/api/auth/signup`, info);
 

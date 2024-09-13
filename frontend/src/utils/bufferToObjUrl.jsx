@@ -1,5 +1,5 @@
 export const bufferToObjUrl = (arr) => {
-    if (!arr) {
+    if (!arr?.length || typeof arr === "string") {
         return;
     }
     const byteArray = new Uint8Array(arr);

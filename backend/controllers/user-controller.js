@@ -85,7 +85,11 @@ export const updatePersonalInfo = async (req, res) => {
 
     await UsersModel.findByIdAndUpdate({ _id: userId }, { name });
 
-    return res.status(200).json({ msg: "Name updated" });
+    const updatedUser = await UsersModel.findById({ _id: userId })
+        .select("-password")
+        .populate("profileImg");
+
+    return res.status(200).json({ msg: "Name updated", updatedUser });
 };
 
 //update password function

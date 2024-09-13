@@ -17,20 +17,54 @@ const Layout = ({ children, text, showHeader = true }) => {
 
     const [search, setSearch] = useState("");
     const [searchFocus, setSearchFocus] = useState(false);
-    const value = {
-        data,
-        refetch,
-        profileImage,
-        setProfileImage,
-        email,
-        name,
-        isLoading,
-        search,
-        setSearch,
-        userId: _id,
-        setSearchFocus,
-        searchFocus,
-    };
+
+    const [value, setValue] = useState({
+        refetch: () => {},
+        profileImage: "",
+        setProfileImage: () => {},
+        email: "",
+        name: "",
+        isLoading: "",
+        search: "",
+        setSearch: () => {},
+        userId: "",
+        setSearchFocus: () => {},
+        searchFocus: "",
+    });
+
+    useState(() => {
+        setValue({
+            refetch,
+            profileImage,
+            setProfileImage,
+            email,
+            name,
+            isLoading,
+            search,
+            setSearch,
+            userId: _id,
+            setSearchFocus,
+            searchFocus,
+            setValue,
+        });
+        console.log("val rerendered");
+    }, [data, search, searchFocus, profileImage]);
+
+    // const value = {
+
+    //     //data,
+    //     refetch,
+    //     profileImage,
+    //     setProfileImage,
+    //     email,
+    //     name,
+    //     isLoading,
+    //     search,
+    //     setSearch,
+    //     userId: _id,
+    //     setSearchFocus,
+    //     searchFocus,
+    // };
 
     return (
         <div className="flex flex-col">
@@ -42,6 +76,7 @@ const Layout = ({ children, text, showHeader = true }) => {
                         setSearch={setSearch}
                         searchFocus={searchFocus}
                         setSearchFocus={setSearchFocus}
+                        setValue={setValue}
                     />
                 )}
                 {children}

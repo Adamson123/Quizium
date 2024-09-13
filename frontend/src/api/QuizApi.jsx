@@ -110,7 +110,6 @@ export const searchQuizzes = async () => {
     ];
 
     const search = { query, category, scoring, min, max };
-    console.log(search);
 
     try {
         const res = await fetch(

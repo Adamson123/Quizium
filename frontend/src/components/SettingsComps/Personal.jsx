@@ -5,6 +5,8 @@ import toast from "react-hot-toast";
 import Loading from "../ui/Loading";
 import SettingInputComp from "./SettingInputComp";
 import { dataContext } from "../../layouts/Layout";
+import newUser from "../../assets/images/defaultProfile/newUser.png";
+import bufferToObjUrl from "../../utils/bufferToObjUrl";
 
 const Personal = () => {
     const value = useContext(dataContext);
@@ -60,13 +62,21 @@ const Personal = () => {
                 },
             });
 
-            const personalDataUpdRes = await promise;
-            await value?.refetch();
+            const res = await promise;
 
-            if (personalDataUpdRes.msg) {
-                value?.setProfileImage(URL.createObjectURL(imagePicked));
-                setImagePicked("");
-            }
+            let { profileImg, email, name, _id } = res.updatedUser;
+
+            const profileImage = profileImg
+                ? bufferToObjUrl(profileImg.image.data.data)
+                : newUser;
+
+            value?.setValue({ ...value, email, name, _id, profileImage });
+            // await value?.refetch();
+
+            // if (res.msg) {
+            //     value?.setProfileImage(URL.createObjectURL(imagePicked));
+            //     setImagePicked("");
+            // }
             //update profile image to make it reflect in other components it's used
         }
     };

@@ -1,7 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import NavMenu from "./NavMenu";
 import { useNavigate } from "react-router";
-const Header = ({ text, setSearch, search, searchFocus, setSearchFocus }) => {
+const Header = ({
+    text,
+    setSearch,
+    search,
+    searchFocus,
+    setSearchFocus,
+    setValue,
+}) => {
     const navigate = useNavigate();
     const [openNavMenu, setOpenNavMenu] = useState(false);
     const searchRef = useRef();
@@ -10,7 +17,13 @@ const Header = ({ text, setSearch, search, searchFocus, setSearchFocus }) => {
         if (!searchFocus) {
             searchRef?.current.blur();
         }
+        setValue((value) => (value = { ...value, searchFocus }));
     }, [searchFocus]);
+
+    useEffect(() => {
+        setValue((value) => (value = { ...value, search }));
+    }, [search]);
+
     return (
         <>
             <div

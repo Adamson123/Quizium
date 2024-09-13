@@ -126,6 +126,7 @@ const Personal = () => {
                             <input
                                 ref={uploadBtnRef}
                                 type="file"
+                                accept=".png, .jpg, .jpeg, .webp"
                                 onChange={chooseImage}
                                 // className="bg-transparent cursor-pointer absolute bottom-0 right-0 w-6 rounded-full"
                                 className="w-0 h-0 pointer-events-none"

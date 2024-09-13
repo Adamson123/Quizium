@@ -235,7 +235,6 @@ const QuizEditorPage = () => {
         if (!questId) {
             resQuestions = resQuestions.map((quest, index) => {
                 if (currentQuestion === index) {
-                    console.log("yes");
                     return { ...singleQuestion, image: "" };
                 } else {
                     return quest;

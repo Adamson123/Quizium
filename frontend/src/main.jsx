@@ -6,7 +6,6 @@ import "./css/global.css";
 import "./assets/boostrap-icons/bootstrap-icons.min.css";
 import { BrowserRouter as Router } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
-//import "react-toastify/ReactToastify.css"
 import { Toaster } from "react-hot-toast";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { clientID } from "./utils/envImport.jsx";

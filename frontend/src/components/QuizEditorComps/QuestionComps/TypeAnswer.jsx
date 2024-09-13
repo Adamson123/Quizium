@@ -13,8 +13,8 @@ const TypeAnswer = ({
     useEffect(() => {
         //adding text to typeAnswer divs , and will on be updated if question is updated in server
         if (
-            singleQuestion.questionType === "typeAnswer"
-            // && allQuestions_2 === allQuestions
+            singleQuestion.questionType === "typeAnswer" &&
+            allQuestions_2 === allQuestions
         ) {
             acceptedAns.current.forEach((_, i) => {
                 acceptedAns.current[i].innerText = singleQuestion.answer[i]

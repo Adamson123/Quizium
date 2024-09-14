@@ -18,6 +18,7 @@ Quizium is an advanced platform designed to help you create, play, and host quiz
     📊 Review detailed reports for every quiz you have played or hosted.
     🏆 Real-time score tracking for participants during live-hosted quizzes.
     🔐 Google Sign-In is integrated for secure and convenient login.
+    📱  Enjoy a seamless user experience on any device, thanks to our responsive design.
 
 ## 🔥 Scoring Methods
 

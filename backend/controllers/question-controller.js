@@ -112,7 +112,7 @@ export const updateQuestion = async (req, res) => {
         }
     }
 
-    await QuestionsModel.findOneAndUpdate(
+    const question = await QuestionsModel.findOneAndUpdate(
         {
             parentId: quiz._id,
             "questions._id": data._id,
@@ -127,6 +127,9 @@ export const updateQuestion = async (req, res) => {
                 "questions.$.answerOption": data.answerOption,
                 "questions.$.image": image?._id,
             },
+        },
+        {
+            new: true,
         }
     );
 
@@ -156,6 +159,9 @@ export const deleteQuestion = async (req, res) => {
             },
             {
                 $pull: { questions: { _id: data.questId } },
+            },
+            {
+                new: true,
             }
         );
 

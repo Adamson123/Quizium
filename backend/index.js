@@ -4,6 +4,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import http from "http";
+import helmet from "helmet";
 import { errorMiddleware } from "./middlewares/errorMiddleware.js";
 
 import { router as hostRouter } from "./routers/host-router.js";
@@ -31,6 +32,8 @@ const app = express();
 const __dirname = path.resolve();
 const server = http.createServer(app);
 
+app.use(express.json());
+app.use(helmet());
 app.use(
     cors({
         origin: [
@@ -50,8 +53,6 @@ let io = new Server(server, {
 });
 
 app.set("trust proxy", true);
-
-app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 

@@ -3897,6 +3897,10 @@ html {
   padding-right: 1.75rem;
 }
 
+.pr-\[35px\] {
+  padding-right: 35px;
+}
+
 .pt-1 {
   padding-top: 0.25rem;
 }
@@ -3943,6 +3947,18 @@ html {
 
 .pt-\[80px\] {
   padding-top: 80px;
+}
+
+.pr-\[25px\] {
+  padding-right: 25px;
+}
+
+.pr-\[20px\] {
+  padding-right: 20px;
+}
+
+.pr-\[15px\] {
+  padding-right: 15px;
 }
 
 .text-left {

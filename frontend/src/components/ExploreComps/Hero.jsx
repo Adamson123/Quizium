@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 const Hero = ({ setShowQuizPanel }) => {
     const navigate = useNavigate();
     return (
-        <div className="mb-14 flex gap-5 w-full pr-[35px]">
+        <div className="mb-14 flex gap-5 w-full pr-[15px]">
             <div
                 className="bg-blurryPurple p-5 rounded  w-[50%]
  flex flex-col justify-between h-auto items-start"

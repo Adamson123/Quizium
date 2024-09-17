@@ -3,11 +3,11 @@ import Header from "../components/PlayQuizComps/Header";
 import Question from "../components/PlayQuizComps/Question";
 import { useMutation, useQuery } from "react-query";
 import { getQuizWithQuestions } from "../api/QuizApi";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import NavLeftRight from "../components/PlayQuizComps/NavLeftRight";
 import StartQuizCount from "../components/PlayQuizComps/StartQuizCount";
 import { createResult } from "../api/ResultApi";
-//import { dataContext } from "../layouts/Layout";
+
 import ConfirmAction from "../components/ConfirmAction";
 import toast from "react-hot-toast";
 import TimeUp from "../components/PlayQuizComps/TimeUp";
@@ -88,7 +88,6 @@ const PlayQuizPage = ({ quizId, hostId, socket, userId }) => {
             hostId && lsRandomizedQuests ? JSON.parse(lsRandomizedQuests) : [];
 
         const randomizedQuestions = [];
-
         if (parsedIds.length) {
             //pushing it into randomized quests array according to the order the ids are saved in ls storage
             parsedIds.forEach((id) => {
@@ -98,8 +97,6 @@ const PlayQuizPage = ({ quizId, hostId, socket, userId }) => {
                 }
             });
         }
-
-        //
         if (!randomizedQuestions.length) {
             while (arr.length) {
                 const randomIndex = Math.floor(Math.random() * arr.length);
@@ -119,7 +116,6 @@ const PlayQuizPage = ({ quizId, hostId, socket, userId }) => {
                 JSON.stringify(randomizedQuestionsIds)
             );
         }
-
         return randomizedQuestions;
     };
     useEffect(() => {
@@ -193,7 +189,7 @@ const PlayQuizPage = ({ quizId, hostId, socket, userId }) => {
             return;
         }
         setStartQuiz(false);
-        console.log(timeSpent.current);
+
         /*to get entireTimeSpent we will substract time remaining 
         on the quiz from the raw(coming from the server) timeLimit  (entire)
         */
@@ -249,7 +245,7 @@ const PlayQuizPage = ({ quizId, hostId, socket, userId }) => {
         } = singleQuestion;
 
         const data = singleQuestion.image?.image.data.data;
-        const contentType = singleQuestion.image?.image.contentType;
+
         const validateAns = () => {
             let contain = true;
             const answersToLowerCase = answer.map((ans) => {

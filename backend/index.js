@@ -33,7 +33,7 @@ const __dirname = path.resolve();
 const server = http.createServer(app);
 
 app.use(express.json());
-app.use(helmet());
+//app.use(helmet());
 app.use(
     cors({
         origin: [

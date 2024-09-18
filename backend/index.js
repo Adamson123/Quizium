@@ -52,7 +52,7 @@ let io = new Server(server, {
     },
 });
 
-app.set("trust proxy", true);
+
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 

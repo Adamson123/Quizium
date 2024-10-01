@@ -22,7 +22,6 @@ it set for) */
 
 const PlayQuizPage = ({ quizId, hostId, socket, userId }) => {
     let { id } = useParams();
-
     id = quizId || id;
     const { data, isLoading, error, refetch } = useQuery(
         ["quiz-questions", id],
@@ -31,14 +30,15 @@ const PlayQuizPage = ({ quizId, hostId, socket, userId }) => {
             retry: false,
         }
     );
+
     const { mutateAsync: createResultFunc, error: createResultError } =
         useMutation(createResult);
+
     const navigate = useNavigate();
 
     const getResFromLocalStore = () => {
         let lsResult = sessionStorage.getItem(hostId);
         lsResult = lsResult ? JSON.parse(lsResult) : [];
-
         return hostId ? lsResult : [];
     };
 
@@ -97,6 +97,7 @@ const PlayQuizPage = ({ quizId, hostId, socket, userId }) => {
                 }
             });
         }
+
         if (!randomizedQuestions.length) {
             while (arr.length) {
                 const randomIndex = Math.floor(Math.random() * arr.length);
@@ -118,6 +119,7 @@ const PlayQuizPage = ({ quizId, hostId, socket, userId }) => {
         }
         return randomizedQuestions;
     };
+
     useEffect(() => {
         if (data) {
             setAllQuestions(
@@ -251,6 +253,7 @@ const PlayQuizPage = ({ quizId, hostId, socket, userId }) => {
             const answersToLowerCase = answer.map((ans) => {
                 return ans.toLowerCase();
             });
+
             id.forEach((ans) => {
                 //answer does not contain it set contain to false
                 if (
@@ -267,7 +270,7 @@ const PlayQuizPage = ({ quizId, hostId, socket, userId }) => {
                 ) {
                     contain = false;
                 }
-                // console.log(answersToLowerCase);
+               
             });
 
             if (!id.length) {
@@ -299,8 +302,6 @@ const PlayQuizPage = ({ quizId, hostId, socket, userId }) => {
                 seenExplanation: false,
             },
         ]);
-
-        //console.log(tSpent, "opp");
 
         if (id.length) {
             validateAns()
@@ -342,12 +343,12 @@ const PlayQuizPage = ({ quizId, hostId, socket, userId }) => {
                       duration: 2000,
                   });
         }
+
         if (data?.quiz.applyTime === "entire") {
             return;
         }
 
         if (!id.length) {
-            console.log("time up");
             return toast.error("Time up!");
         }
     };
@@ -360,7 +361,6 @@ const PlayQuizPage = ({ quizId, hostId, socket, userId }) => {
             }
         };
         window.addEventListener("beforeunload", preventReload);
-
         return () => {
             window.removeEventListener("beforeunload", preventReload);
         };
@@ -375,7 +375,6 @@ const PlayQuizPage = ({ quizId, hostId, socket, userId }) => {
             id: hostId,
             userId,
         });
-
         sessionStorage.setItem(hostId, JSON.stringify(allQuestionsResults));
         socket.on("get-host-info-res", (info) => {
             if (!info.err) {
@@ -384,7 +383,6 @@ const PlayQuizPage = ({ quizId, hostId, socket, userId }) => {
             quizEndedRef.current = true;
             setTimeUp(true);
             socket.disconnect();
-
             return;
         });
     }, [socket, allQuestionsResults, startQuiz]);
@@ -414,7 +412,7 @@ const PlayQuizPage = ({ quizId, hostId, socket, userId }) => {
                 ></span>
             ),
         });
-        //=== "404 quiz not found"
+       
         if (error?.err) {
             history.replaceState(null, "", "/");
             return navigate("/404");

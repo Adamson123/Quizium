@@ -41,7 +41,6 @@ const QuizEditorPage = () => {
     const [allQuestions, setAllQuestions] = useState([]);
     const [allQuestions_2, setAllQuestions_2] = useState([]);
 
-    //new data to be sent
     const [singleQuestion, setSingleQuestion] = useState([]);
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [showQuizPanel, setShowQuizPanel] = useState(false);
@@ -51,6 +50,7 @@ const QuizEditorPage = () => {
     const [showSaveNoti, setShowSaveNoti] = useState(false);
     const [showQuizValid, setShowQuizValid] = useState(false);
     const [showSaveOption, setShowSaveOption] = useState(false);
+
     const config = useMemo(() => {
         if (data) {
             const { quiz } = data;
@@ -196,13 +196,12 @@ const QuizEditorPage = () => {
         const formData = new FormData();
         formData.append("question", JSON.stringify(quizInfo));
         formData.append("file", image);
-
         const info = {
             data: formData,
             id,
         };
+        
         const promise = createQuestionFunc(info);
-
         toast.promise(promise, {
             loading: duplicate ? "Duplicating Question" : "Creating Question",
             success: (data) => {
@@ -214,7 +213,6 @@ const QuizEditorPage = () => {
         });
 
         const res = await promise;
-
         const resLength = res.quiz.questionsId.questions?.length;
         setUpdateAllQuestions({
             update: true,
@@ -233,23 +231,19 @@ const QuizEditorPage = () => {
             !updatingQuest
         ) {
             const formData = new FormData();
-
             formData.append("file", imagePicked);
-
-            console.log(formData.get("file"), "lte");
-
             formData.append("question", JSON.stringify(singleQuestion));
             const data = {
                 data: formData,
                 id,
             };
+
             const holdAllQuestions_2 = allQuestions_2;
             setAllQuestions_2(allQuestions);
 
             const res = await updateQuestionFunc(data);
             if (res.err) {
                 setAllQuestions_2(holdAllQuestions_2);
-
                 return toast.error("Error saving previous changes");
             }
 
@@ -291,7 +285,6 @@ const QuizEditorPage = () => {
         };
 
         const promise = deleteQuestionFunc(info);
-
         toast.promise(promise, {
             loading: questId ? "Deleting Question" : "Deleting Image",
             success: (data) => {
@@ -307,9 +300,7 @@ const QuizEditorPage = () => {
         if (res.err) {
             return;
         }
-
-        let resQuestions = res.quiz.questionsId.questions;
-
+        
         setUpdateAllQuestions({
             update: true,
             value: { questId, questIdSec: singleQuestion._id }, //,

@@ -19,13 +19,13 @@ import { jwtCheckAndVerify } from "./middlewares/jwtCheckAndVerify.js";
 import { Server } from "socket.io";
 import path from "path";
 import {
-    joinUser,
-    getHostInfo,
-    endLive,
-    startQuiz,
-    leaveRoom,
-    updatePoints,
-    quizEnded,
+  joinUser,
+  getHostInfo,
+  endLive,
+  startQuiz,
+  leaveRoom,
+  updatePoints,
+  quizEnded,
 } from "./controllers/host-controller.js";
 
 const app = express();
@@ -35,23 +35,16 @@ const server = http.createServer(app);
 app.use(express.json());
 //app.use(helmet());
 app.use(
-    cors({
-        origin: [
-            "http://192.168.43.224:5173",
-            "http://localhost:5173",
-            "http://127.0.0.1:5500",
-        ],
-        credentials: true,
-        methods: ["POST", "GET", "DELETE", "PATCH"],
-    })
+  cors({
+    origin: [
+      "http://192.168.43.224:5173",
+      "http://localhost:5173",
+      "http://127.0.0.1:5500",
+    ],
+    credentials: true,
+    methods: ["POST", "GET", "DELETE", "PATCH"],
+  })
 );
-
-let io = new Server(server, {
-    cors: {
-        origin: "*",
-    },
-});
-
 
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -67,37 +60,42 @@ app.use("/api/result", jwtCheckAndVerify, resultRouter);
 app.use("/api/host", jwtCheckAndVerify, hostRouter);
 
 app.get("/api", (req, res) => {
-    res.send("welcome to Quizium server🎉");
+  res.send("welcome to Quizium server🎉");
 });
 
 //if (process.env.NODE_ENV === "production") {
 app.use(express.static(path.join(__dirname, "../frontend", "dist")));
 app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
+  res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
 });
 ///}
 
 app.use(notFoundMiddleWare);
 app.use(errorMiddleware);
 
+let io = new Server(server, {
+  cors: {
+    origin: "*",
+  },
+});
 io = io.of("/host-live");
 
 io.on("connection", async (socket) => {
-    console.log("user connected with id:" + socket.id);
-    socket.on("testing", (msg) => {
-        console.log("Someone is testing", msg);
-        io.to(socket.id).emit("testing-res", "Responding");
-    });
-    getHostInfo(socket, io);
-    joinUser(socket, io);
-    startQuiz(socket, io);
-    leaveRoom(socket, io);
-    updatePoints(socket, io);
-    endLive(socket, io);
-    quizEnded(socket, io);
-    socket.on("disconnect", () => {
-        console.log("user with id:" + socket.id + " has been disconnected");
-    });
+  console.log("user connected with id:" + socket.id);
+  socket.on("testing", (msg) => {
+    console.log("Someone is testing", msg);
+    io.to(socket.id).emit("testing-res", "Responding");
+  });
+  getHostInfo(socket, io);
+  joinUser(socket, io);
+  startQuiz(socket, io);
+  leaveRoom(socket, io);
+  updatePoints(socket, io);
+  endLive(socket, io);
+  quizEnded(socket, io);
+  socket.on("disconnect", () => {
+    console.log("user with id:" + socket.id + " has been disconnected");
+  });
 });
 
 export default server;

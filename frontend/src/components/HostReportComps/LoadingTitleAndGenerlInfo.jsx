@@ -1,5 +1,3 @@
-import React from "react";
-
 const LoadingTitleAndGenerlInfo = () => {
     return (
         <div className="flex flex-col gap-3">

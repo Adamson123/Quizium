@@ -40,7 +40,7 @@ const ReportsRect = ({
         });
         const res = await promise;
         //setReports(res.results);
-        console.log(res);
+       
         refetchPlayed();
     };
 
@@ -62,8 +62,7 @@ const ReportsRect = ({
         });
         const res = await promise;
         //setReports(res.results);
-        console.log(res);
-
+        
         refetchHosted();
     };
 

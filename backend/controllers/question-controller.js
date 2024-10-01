@@ -13,7 +13,7 @@ export const createQuestion = async (req, res) => {
             400
         );
     }
-
+    
     const data = JSON.parse(req.body.question);
     if (!Object.keys(data).length) {
         throw new CustomError("Please provide quiz question", 400);
@@ -98,7 +98,6 @@ export const updateQuestion = async (req, res) => {
                     contentType: mimetype,
                 },
                 quizId: quiz._id,
-                // name: uuid(),
             });
         } else {
             console.log("already here");
@@ -107,7 +106,6 @@ export const updateQuestion = async (req, res) => {
                     data: buffer,
                     contentType: mimetype,
                 },
-                // name: uuid(),
             });
         }
     }
@@ -147,7 +145,6 @@ export const updateQuestion = async (req, res) => {
 };
 
 //delete question
-
 export const deleteQuestion = async (req, res) => {
     const quiz = req.quiz;
     const data = req.body;

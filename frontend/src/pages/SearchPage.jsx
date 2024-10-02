@@ -5,7 +5,7 @@ import QuizRect from "../components/SearchComps/QuizRect";
 import LoadingQuizzes from "../components/LibrayComps/LoadingQuizzes";
 import searchSvg from "../assets/svg/search3.svg";
 import QuizSettings from "../components/QuizSettings";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 const SearchPage = () => {
   const { refetch, isLoading, data, isRefetching } = useQuery(

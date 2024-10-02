@@ -59,7 +59,7 @@ const Filters = ({ refetch, isLoading }) => {
             "Pop Culture",
             "Academic",
             "Lifestyle",
-            "Miscellaneuos",
+            "Miscellaneous",
           ].map((category, index) => {
             return (
               <option value={category} key={index}>

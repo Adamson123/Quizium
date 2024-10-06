@@ -46,9 +46,9 @@ More features might be added in the future.
 
 ## 💻 Technologies Used
 
--   🟢 MongoDB
+-   🗄️ MongoDB
+-   🌿 Node.js
 -   ⚙️ Express
--   🔧 Node.js
 -   ⚛️ React
 -   🎨 Tailwind CSS
 

@@ -37,7 +37,7 @@ More features might be added in the future.
 -   📊 Review detailed reports for every quiz you have played or hosted.
 -   🏆 Real-time score tracking for participants during live-hosted quizzes.
 -   🔐 Google Sign-In is integrated for secure and convenient login.
--   📱 Enjoy a seamless user experience on any device, as Quizium is responsive 😍
+-   📱 Enjoy a seamless user experience on any device, as Quizium is responsive 😍.
 
 ## 🔥 Scoring Methods
 
@@ -146,7 +146,8 @@ More features might be added in the future.
 
 1. **POST `/`** - Host a quiz.
 2. **GET `/`** - Find a hosted quiz room based on the provided join code in the queries or find a host report based on the provided host ID in the queries.
-3. **GET `/`** - Get all host reports of a user.
+3. **GET `/user-hosts`** - Get all host reports of a user.
+4. **DELETE `/:id`** - Delete a host report.
 
 ## Link
 

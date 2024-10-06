@@ -31,7 +31,7 @@ More features might be added in the future.
 -   ⏲️ Set time limits for quizzes and provide descriptions to clarify rules or themes.
 -   📷 Add images to quiz questions for a richer experience.
 -   🤔 Choose from various question types: multiple-answer, true/false, or type-answer.
--   🎮 Host and play quizzes seamlessly—whether it's your own or others'.
+-   🎮 Host and play quizzes seamlessly, whether it's your own or others'.
 -   📝 Profile management: Update your profile image, username, or password with ease.
 -   📚 Access your library to view drafted, published, and favorite quizzes.
 -   📊 Review detailed reports for every quiz you have played or hosted.

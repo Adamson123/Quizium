@@ -71,7 +71,7 @@ const SubSettingsSec = ({
           value={quizSettings.category}
           onChange={handleQuizSettings}
           name="category"
-          className="py-2 px-3 bg-transparent
+          -3 bg-transparent
             border-grayTwo border rounded focus:border-shinyPurple
              outline-none text-[13px]"
         >

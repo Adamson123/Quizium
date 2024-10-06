@@ -13,10 +13,8 @@ const postOptions = (info) => {
 
 export const createUserFunc = async (info) => {
     try {
-       
         const res = await fetch(`/api/auth/signup`, postOptions(info));
         //const res = await axios.post(`http://localhost:3002/api/auth/signup`, info);
-
         const data = await res.json();
 
         if (!res.ok) {
@@ -111,7 +109,6 @@ export const resetPassword = async (info) => {
         return data;
     } catch (error) {
         console.log("error fr crt", error);
-
         throw { err: error.message };
     }
 };

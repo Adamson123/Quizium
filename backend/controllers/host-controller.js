@@ -35,8 +35,6 @@ export const createHost = async (req, res) => {
 
 export const getHost = async (req, res) => {
     const { joinCode, id } = req.query;
-    // console.log(joinCode, id);
-
     if (!joinCode && id)
         throw new CustomError("Please provide host code or id", 400);
 

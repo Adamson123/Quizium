@@ -141,7 +141,6 @@ export const updatePassword = async (req, res) => {
         );
 
     const hashedPassword = await hashPassword(newPassword);
-
     await UsersModel.findByIdAndUpdate(
         { _id: userId },
         { password: hashedPassword }

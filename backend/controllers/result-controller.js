@@ -6,13 +6,13 @@ import { ResultsModel } from "../models/ResultsModel.js";
 export const createResult = async (req, res) => {
     const data = req.body;
     if (!data) throw new CustomError("Please provide result", 400);
-    const quiz = await QuizInfosModel.findById(data.quizId);
 
+    const quiz = await QuizInfosModel.findById(data.quizId);
     if (!quiz) {
         throw new CustomError("404 quiz not found", 404);
     }
-    const userId = req.userId;
 
+    const userId = req.userId;
     //adding id of people that have played the quiz
     if (!quiz.numOfPlays.includes(userId)) {
         await QuizInfosModel.findByIdAndUpdate(data.quizId, {
@@ -21,8 +21,8 @@ export const createResult = async (req, res) => {
             },
         });
     }
-    const results = await ResultsModel.create({ ...data, resultOwner: userId });
 
+    const results = await ResultsModel.create({ ...data, resultOwner: userId });
     //saving to live session if the quiz played is live
     if (data.hostInfos) {
         await HostInfoModel.findByIdAndUpdate(

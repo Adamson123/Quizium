@@ -23,3 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
+trash.txt
+trash2.txt
+trash3.txt

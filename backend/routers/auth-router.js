@@ -13,6 +13,6 @@ export const router = express.Router();
 router.post("/signup", signup);
 router.post("/login", login);
 router.post("/google-login", googleLogin);
-router.patch("/reset-password", resetPassword);
 router.post("/reset-password-link", resetPasswordLink);
+router.patch("/reset-password", resetPassword);
 router.post("/logout", logout);

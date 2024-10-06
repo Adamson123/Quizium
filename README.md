@@ -50,7 +50,7 @@ More features might be added in the future.
 -   🌿 Node.js
 -   ⚙️ Express
 -   ⚛️ React
--   🎨 Tailwind CSS
+-   🎨 Tailwind CSS + daisyUi
 
 ## Installation
 

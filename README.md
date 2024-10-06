@@ -89,7 +89,7 @@ More features might be added in the future.
 
 ### Base URL
 
-`http://localhost:3000/api`
+`http://localhost:3002/api`
 
 ### Authentication
 

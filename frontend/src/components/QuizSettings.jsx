@@ -28,7 +28,7 @@ const QuizSettings = memo((props) => {
             props.config.applyTime === "entire"
               ? props.config.timeLimit / 60
               : props.config.timeLimit,
-        }
+        },
   );
 
   console.log("quiz settings rendered");
@@ -40,7 +40,7 @@ const QuizSettings = memo((props) => {
   const handleQuizSettings = (event) => {
     console.log(event.target.value);
     setQuizSettings(
-      (q) => (q = { ...q, [event.target.name]: event.target.value })
+      (q) => (q = { ...q, [event.target.name]: event.target.value }),
     );
   };
 
@@ -53,7 +53,7 @@ const QuizSettings = memo((props) => {
         setConvertingImage(true);
         optimizedImage = await convertToWebp(
           URL.createObjectURL(selectedImage),
-          selectedImage.name
+          selectedImage.name,
         );
         setConvertingImage(false);
       }
@@ -75,7 +75,7 @@ const QuizSettings = memo((props) => {
         ...quizSettings,
         timeLimit: toSeconds(),
         coverImg: "",
-      })
+      }),
     );
     formData.append("file", pickedImage);
 
@@ -153,7 +153,7 @@ const QuizSettings = memo((props) => {
                       applyTime: "entire",
                       visibility: "public",
                       category: "General Knowledge",
-                    })
+                    }),
                 );
               }
               setPickedImage("");
@@ -168,7 +168,7 @@ const QuizSettings = memo((props) => {
           <button
             type="submit"
             className="w-24 h-10 insetShadow rounded
-                     bg-shinyPurple text-[13px] clickable"
+              bg-shinyPurple text-[13px] clickable"
           >
             {!props.config ? "Create Quiz" : "Update Quiz"}
           </button>

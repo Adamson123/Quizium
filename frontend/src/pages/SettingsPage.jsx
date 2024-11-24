@@ -5,11 +5,6 @@ import Password from "../components/SettingsComps/Password";
 import SearchTrigger from "../components/SearchTrigger";
 
 const SettingsPage = () => {
-    //user info coming from the layout component
-    // const { refetch, profileImage, setProfileImage, email, name, isLoading } =
-    //     useContext(dataContext);
-    // const value = useContext(dataContext)
-
     return (
         <div
             className="pt-16 bg-secMainBg text-textColor min-h-screen flex 
@@ -28,14 +23,7 @@ const SettingsPage = () => {
          slg:max-w-full md:items-start gap-5 mt-7"
             >
                 {/* Personal info content*/}
-                <Personal
-                // email={email}
-                // isLoading={isLoading}
-                // name={name}
-                // profileImage={profileImage}
-                // refetch={refetch}
-                // setProfileImage={setProfileImage}
-                />
+                <Personal />
                 {/* Password content*/}
                 <Password />
             </div>

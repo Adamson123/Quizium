@@ -1,262 +1,246 @@
 @font-face {
-    font-family: agbalumo;
-    src: url(../assets/fonts/Agbalumo-Regular.ttf);
+  font-family: agbalumo;
+  src: url(../assets/fonts/Agbalumo-Regular.woff2);
 }
 
 @font-face {
-    font-family: isidoraBold;
-    src: url(../assets/fonts/IsidoraSansAltBold.otf);
+  font-family: isidoraBold;
+  src: url(../assets/fonts/IsidoraSansAltBold.woff2);
 }
 @font-face {
-    font-family: isidoraSemiBold;
-    src: url(../assets/fonts/IsidoraSansAltSemiBold.otf);
+  font-family: isidoraSemiBold;
+  src: url(../assets/fonts/IsidoraSansAltSemiBold.woff2);
 }
 @font-face {
-    font-family: isidoraReg;
-    src: url(../assets/fonts/IsidoraSansAltRegular.otf);
-}
-
-@font-face {
-    font-family: isidoraLight;
-    src: url(../assets/fonts/IsidoraSansAltLight.otf);
-}
-
-@font-face {
-    font-family: circularSpo;
-    src: url(../assets/fonts/CircularSpotifyTxT-Light.ttf);
+  font-family: isidoraReg;
+  src: url(../assets/fonts/IsidoraSansAltRegular.woff2);
 }
 
 .robotFont {
-    font-family: robotFont;
+  font-family: robotFont;
 }
 .robotoc {
-    font-family: robotoc;
+  font-family: robotoc;
 }
 
 .agbalumoFont {
-    font-family: agbalumo;
+  font-family: agbalumo;
 }
 .isidoraBold {
-    font-family: isidoraBold;
+  font-family: isidoraBold;
 }
 .isidoraSemiBold {
-    font-family: isidoraSemiBold;
+  font-family: isidoraSemiBold;
 }
 .isidoraReg {
-    font-family: isidoraReg;
-}
-.isidoraLight {
-    font-family: isidoraLight;
+  font-family: isidoraReg;
 }
 
 .insetShadow {
-    box-shadow: inset 0px -3.7px 0px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0px -3.7px 0px rgba(0, 0, 0, 0.3);
 }
 .outsetShadow {
-    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
 }
 .insetShadowTwo {
-    box-shadow: inset 0px -3px 0px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0px -3px 0px rgba(0, 0, 0, 0.3);
 }
 .topNavShadow {
-    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3);
 }
 .shinyShadow {
-    box-shadow: inset -2px -2px 18px rgba(255, 255, 255, 0.06);
+  box-shadow: inset -2px -2px 18px rgba(255, 255, 255, 0.06);
 }
 .shadowAround {
-    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.219),
-        -1px -1px 3px rgba(0, 0, 0, 0.219);
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.219),
+    -1px -1px 3px rgba(0, 0, 0, 0.219);
 }
 
 .shadowAround2 {
-    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.103),
-        -1px -1px 3px rgba(0, 0, 0, 0.103);
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.103),
+    -1px -1px 3px rgba(0, 0, 0, 0.103);
 }
 .dropShadow {
-    filter: drop-shadow(3px 1px 3.5px rgba(0, 0, 0, 0.37));
+  filter: drop-shadow(3px 1px 3.5px rgba(0, 0, 0, 0.37));
 }
 .adora {
-    font-family: adora;
-}
-.circularSpo {
-    font-family: circularSpo;
+  font-family: adora;
 }
 
 .clicked:hover {
-    scale: 0.9;
+  scale: 0.9;
 }
 
 .scrollbar {
-    scrollbar-width: none;
+  scrollbar-width: none;
 }
 
 [contenteditable="true"]:empty:not(:focus)::before {
-    content: attr(data-placeholder);
-    pointer-events: none;
-    display: block;
-    color: rgb(125, 124, 124);
+  content: attr(data-placeholder);
+  pointer-events: none;
+  display: block;
+  color: rgb(125, 124, 124);
 }
 
 .clickable:hover {
-    transform: scale(0.97);
+  transform: scale(0.97);
 }
 .clickable {
-    transition: transform 0.1s;
+  transition: transform 0.1s;
 }
 .optionChecked0,
 .optionChecked1,
 .optionChecked2,
 .optionChecked3 {
-    border-width: 2px;
+  border-width: 2px;
 }
 
 .optionChecked0:checked {
-    background: #e779c1;
+  background: #e779c1;
 }
 
 .optionChecked1:checked {
-    background: #408fb9;
+  background: #408fb9;
 }
 .optionChecked2:checked {
-    background: #e8bf05;
+  background: #e8bf05;
 }
 .optionChecked3:checked {
-    background: #e48775;
+  background: #e48775;
 }
 .optionsChecked {
-    border-color: rgb(249, 0, 158);
-    border-width: 1px;
+  border-color: rgb(249, 0, 158);
+  border-width: 1px;
 }
 .optionsChecked:checked {
-    background: rgb(249, 0, 158);
+  background: rgb(249, 0, 158);
 }
 
 .fill button {
-    transition: border 0.5s ease-out;
+  transition: border 0.5s ease-out;
 }
 .fill:hover span {
-    transition: color 0.5s ease-out;
+  transition: color 0.5s ease-out;
 }
 
 .fill:hover button {
-    border-color: rgb(255, 255, 255);
+  border-color: rgb(255, 255, 255);
 }
 
 .fill:hover span {
-    color: rgb(255, 255, 255);
+  color: rgb(255, 255, 255);
 }
 .toCenter {
-    position: absolute;
-    top: 50%;
-    right: 50%;
-    transform: translateX(-50%);
-    /*transform: translateY(-50%);*/
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  transform: translateX(-50%);
+  /*transform: translateY(-50%);*/
 }
 .tickColor:checked::before {
-    content: "\2713";
-    color: white;
-    text-align: center;
-    font-size: 11px;
-    font-weight: bold;
+  content: "\2713";
+  color: white;
+  text-align: center;
+  font-size: 11px;
+  font-weight: bold;
 }
 .tickColor::before {
-    content: "";
-    display: block;
-    width: 100%;
-    height: 100%;
-    background: transparent;
-    color: transparent;
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  color: transparent;
 }
 .absoluteUpQuestImg {
-    position: absolute;
-    flex-direction: column;
-    display: flex;
-    top: 50%;
-    transform: translateY(-50%);
-    justify-content: center;
-    align-items: center;
-    gap: 2;
-    color: rgb(125, 124, 124);
+  position: absolute;
+  flex-direction: column;
+  display: flex;
+  top: 50%;
+  transform: translateY(-50%);
+  justify-content: center;
+  align-items: center;
+  gap: 2;
+  color: rgb(125, 124, 124);
 }
 .progressBar[value]::-webkit-progress-value {
-    background: rgb(249, 0, 158);
+  background: rgb(249, 0, 158);
 }
 .progressBarRed[value]::-webkit-progress-value {
-    background: rgb(239 68 68);
+  background: rgb(239 68 68);
 }
 
 .optionAppear {
-    animation: optionAppear 0.3s ease forwards;
+  animation: optionAppear 0.3s ease forwards;
 }
 .scaleUp {
-    transition: 0.2s transform ease;
+  transition: 0.2s transform ease;
 }
 @keyframes optionAppear {
-    from {
-        scale: 0;
-    }
-    to {
-        scale: 1;
-    }
+  from {
+    scale: 0;
+  }
+  to {
+    scale: 1;
+  }
 }
 
 @keyframes countAnim {
-    0% {
-        transform: scale(1);
-        opacity: 1;
-    }
-    100% {
-        transform: scale(12);
-        opacity: 0;
-    }
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(12);
+    opacity: 0;
+  }
 }
 
 .count {
-    animation: countAnim 1s ease-in-out 6;
-    opacity: 0;
+  animation: countAnim 1s ease-in-out 6;
+  opacity: 0;
 }
 .popBlock {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
 }
 .choiceAlert:hover {
-    opacity: 0;
+  opacity: 0;
 }
 .choiceAlert {
-    background: blue;
+  background: blue;
 }
 .hideScroll {
-    scrollbar-width: none;
+  scrollbar-width: none;
 }
 .dark {
-    --mainBg: 10, 8, 45;
-    --sec-mainBg: 26, 16, 61;
-    --text-color: 255, 255, 255;
-    --shiny-purple: 249, 0, 158;
-    --blurry-purple: 249, 0, 158, 0.3;
-    --light-gray: 94, 98, 99;
-    --gray-one: 46, 55, 86;
-    --gray-two: 125, 124, 124;
-    --gray-third: 156, 163, 175;
-    --gray-fourth: 60, 64, 65;
-    --gray-five: 107 114 128;
-    --transparent-black: 0, 0, 0, 0.59;
-    --placeholder: 255, 255, 255, 0.45;
+  --mainBg: 10, 8, 45;
+  --sec-mainBg: 26, 16, 61;
+  --text-color: 255, 255, 255;
+  --shiny-purple: 249, 0, 158;
+  --blurry-purple: 249, 0, 158, 0.3;
+  --light-gray: 94, 98, 99;
+  --gray-one: 46, 55, 86;
+  --gray-two: 125, 124, 124;
+  --gray-third: 156, 163, 175;
+  --gray-fourth: 60, 64, 65;
+  --gray-five: 107 114 128;
+  --transparent-black: 0, 0, 0, 0.59;
+  --placeholder: 255, 255, 255, 0.45;
 }
 
 .light {
-    --mainBg: 255, 255, 255;
-    --text-color: 0, 0, 0;
-    --shiny-purple: 249, 0, 158;
-    --blurry-purple: 249, 0, 158, 0.3;
-    --light-gray: 94, 98, 99;
-    --gray-one: 200, 200, 200;
-    --gray-two: 155, 124, 124;
-    --gray-third: 156, 163, 175;
-    --gray-fourth: 60, 164, 65;
-    --placeholder: 0, 0, 0, 0.45;
+  --mainBg: 255, 255, 255;
+  --text-color: 0, 0, 0;
+  --shiny-purple: 249, 0, 158;
+  --blurry-purple: 249, 0, 158, 0.3;
+  --light-gray: 94, 98, 99;
+  --gray-one: 200, 200, 200;
+  --gray-two: 155, 124, 124;
+  --gray-third: 156, 163, 175;
+  --gray-fourth: 60, 164, 65;
+  --placeholder: 0, 0, 0, 0.45;
 }

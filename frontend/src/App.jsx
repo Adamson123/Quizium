@@ -1,3 +1,4 @@
+import React from "react";
 import { Navigate, Route, Routes } from "react-router";
 const SignupPage = React.lazy(() => import("./pages/SignupPage"));
 const LoginPage = React.lazy(() => import("./pages/LoginPage"));

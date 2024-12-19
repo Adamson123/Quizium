@@ -1,26 +1,30 @@
 import { Navigate, Route, Routes } from "react-router";
-import SignupPage from "./pages/SignupPage";
-import LoginPage from "./pages/LoginPage";
-import ProtectedRoutes from "./pages/ProtectedRoutes";
-import Layout from "./layouts/Layout";
-import ExplorePage from "./pages/ExplorePage";
-import SettingsPage from "./pages/SettingsPage";
-import QuizEditorPage from "./pages/QuizEditorPage";
-import LibraryPage from "./pages/LibraryPage";
-import DetailsPage from "./pages/DetailsPage";
-import PlayQuizPage from "./pages/PlayQuizPage";
-import ResultPage from "./pages/ResultPage";
-import HostLivePage from "./pages/HostLivePage";
-import JoinLivePage from "./pages/JoinLivePage";
-import Join from "./components/JoinLiveComps/Join";
-import Room from "./components/JoinLiveComps/Room";
-import PlayLiveQuizPage from "./pages/PlayLiveQuizPage";
-import ReportsPage from "./pages/ReportsPage";
-import HostReportPage from "./pages/HostReportPage";
-import SearchPage from "./pages/SearchPage";
-import ResetPasswordPage from "./pages/ResetPasswordPage";
-import ForgotPassword from "./components/ResetPasswordComps/ForgotPassword";
-import ResetPassword from "./components/ResetPasswordComps/ResetPassword";
+const SignupPage = React.lazy(() => import("./pages/SignupPage"));
+const LoginPage = React.lazy(() => import("./pages/LoginPage"));
+const ProtectedRoutes = React.lazy(() => import("./pages/ProtectedRoutes"));
+const Layout = React.lazy(() => import("./layouts/Layout"));
+const ExplorePage = React.lazy(() => import("./pages/ExplorePage"));
+const SettingsPage = React.lazy(() => import("./pages/SettingsPage"));
+const QuizEditorPage = React.lazy(() => import("./pages/QuizEditorPage"));
+const LibraryPage = React.lazy(() => import("./pages/LibraryPage"));
+const DetailsPage = React.lazy(() => import("./pages/DetailsPage"));
+const PlayQuizPage = React.lazy(() => import("./pages/PlayQuizPage"));
+const ResultPage = React.lazy(() => import("./pages/ResultPage"));
+const HostLivePage = React.lazy(() => import("./pages/HostLivePage"));
+const JoinLivePage = React.lazy(() => import("./pages/JoinLivePage"));
+const Join = React.lazy(() => import("./components/JoinLiveComps/Join"));
+const Room = React.lazy(() => import("./components/JoinLiveComps/Room"));
+const PlayLiveQuizPage = React.lazy(() => import("./pages/PlayLiveQuizPage"));
+const ReportsPage = React.lazy(() => import("./pages/ReportsPage"));
+const HostReportPage = React.lazy(() => import("./pages/HostReportPage"));
+const SearchPage = React.lazy(() => import("./pages/SearchPage"));
+const ResetPasswordPage = React.lazy(() => import("./pages/ResetPasswordPage"));
+const ForgotPassword = React.lazy(() =>
+  import("./components/ResetPasswordComps/ForgotPassword")
+);
+const ResetPassword = React.lazy(() =>
+  import("./components/ResetPasswordComps/ResetPassword")
+);
 import { Link } from "react-router-dom";
 
 function App() {
